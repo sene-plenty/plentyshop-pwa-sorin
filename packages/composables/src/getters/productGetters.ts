@@ -8,7 +8,7 @@ import type { Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getName(product: Product): string {
-  return 'Name';
+  return product.texts.name1;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,6 +42,9 @@ function getCoverImage(product: Product): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFiltered(products: Product[], filters: ProductFilter): Product[] {
+  // TODO: test only
+  products[0].images = ['https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg'];
+  return products;
   return [
     {
       _id: 1,

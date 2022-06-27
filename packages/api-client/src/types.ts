@@ -1,6 +1,10 @@
 export type TODO = unknown;
 
-export type Setttings = TODO;
+export type Settings = {
+  api: {
+    url: string
+  }
+};
 
 export type Endpoints = TODO;
 
