@@ -1,7 +1,7 @@
 import { ProductsSearchParams } from '@vue-storefront/core';
 import { Product, Context } from 'src/types';
 
-export async function getProduct(context: Context, params: ProductsSearchParams): Promise<Product> {
+export async function getProduct(context: Context, params: ProductsSearchParams): Promise<Product[]> {
   const url = new URL('/rest/io/variations', context.config.api.url);
 
   // TODO: for test purposes we hardcode the id 1007
