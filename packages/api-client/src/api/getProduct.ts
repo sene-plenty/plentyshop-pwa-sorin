@@ -1,5 +1,5 @@
-import { Context, ProductsSearchParams } from '@vue-storefront/core';
-import { Product } from 'src/types';
+import { ProductsSearchParams } from '@vue-storefront/core';
+import { Product, Context } from 'src/types';
 
 export async function getProduct(context: Context, params: ProductsSearchParams): Promise<Product> {
   const url = new URL('/rest/io/variations', context.config.api.url);

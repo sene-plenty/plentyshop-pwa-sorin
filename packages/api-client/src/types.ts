@@ -1,3 +1,6 @@
+import { IntegrationContext, ApiClientMethods, ProductsSearchParams } from '@vue-storefront/core';
+import { AxiosInstance } from 'axios';
+
 export type TODO = unknown;
 
 export type Settings = {
@@ -61,3 +64,13 @@ export type Store = TODO;
 export type Wishlist = TODO;
 
 export type WishlistItem = TODO;
+
+export type ClientInstance = AxiosInstance;
+
+export interface PlentymarketsApiMethods {
+  getProduct(
+    params: ProductsSearchParams
+  ): Product[]
+}
+
+export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;
