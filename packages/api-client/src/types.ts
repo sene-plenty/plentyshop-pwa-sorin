@@ -31,7 +31,57 @@ export type OrderItem = TODO;
 
 export type PasswordResetResult = TODO;
 
-export type Product = TODO;
+export type Product = {
+    texts: {
+      name1: string,
+      name2: string,
+      name3: string,
+      description: string,
+      shortDescription: string,
+      urlPath: string,
+      lang: string
+    },
+    images: {
+      all: {
+        position: string,
+        names: {
+          imageId: number,
+          name: string,
+          alternate: string,
+          lang: string
+        }
+        url: string,
+        urlMiddle: string,
+        urlPreview: string
+      }[],
+      variation: {
+        position: string,
+        names: {
+          imageId: number,
+          name: string,
+          alternate: string,
+          lang: string
+        }
+        url: string,
+        urlMiddle: string,
+        urlPreview: string
+      }[],
+    },
+    defaultCategories: {
+      id: number,
+      parentCategoryId: number,
+      level: 2
+    }[]
+  name: string,
+  variation: {
+    id: number
+  },
+  sku: string,
+  prices: {
+    rrp: any,
+    default: any
+  }
+};
 
 export type ProductFilter = TODO;
 
