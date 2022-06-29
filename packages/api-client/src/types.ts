@@ -17,7 +17,23 @@ export type Cart = TODO;
 
 export type CartItem = TODO;
 
-export type Category = TODO;
+export type CategoryDetails = {
+  name: string,
+  lang: string,
+  nameUrl: string,
+  metaTitle: string,
+  imagePath: string,
+  image2Path: string,
+};
+
+export type Category = {
+  id: number,
+  type: string,
+  // TODO: maybe implement correct type
+  itemCount: any,
+  childCount: number,
+  details: CategoryDetails
+};
 
 export type Coupon = TODO;
 
@@ -39,7 +55,8 @@ export type Product = {
       description: string,
       shortDescription: string,
       urlPath: string,
-      lang: string
+      lang: string,
+      technicalData: string
     },
     images: {
       all: {
