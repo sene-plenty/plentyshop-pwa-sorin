@@ -1,12 +1,11 @@
-import { ProductsSearchParams } from '@vue-storefront/core';
-import { Product, Context } from 'src/types';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Category, Context } from 'src/types';
 
-export async function getCategory(context: Context, params: ProductsSearchParams): Promise<Product[]> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export async function getCategory(context: Context, params: any): Promise<Category[]> {
 
-  const url: URL = new URL('/rest/io/category', context.config.api.url);
-  params.catId && url.searchParams.set('categoryId', params.catId[0]);
-  url.searchParams.set('itemsPerPage', params.limit);
+  const url: URL = new URL('/rest/io/categorytree/', context.config.api.url);
   const { data } = await context.client.get(url.href);
-  return data.data.itemList.documents.map(document => document.data);
-
+  return data.data;
 }

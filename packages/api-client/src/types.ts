@@ -32,7 +32,8 @@ export type Category = {
   // TODO: maybe implement correct type
   itemCount: any,
   childCount: number,
-  details: CategoryDetails
+  children: Category[],
+  details: CategoryDetails[]
 };
 
 export type Coupon = TODO;
@@ -53,10 +54,10 @@ export type Product = {
       name2: string,
       name3: string,
       description: string,
+      technicalData: string,
       shortDescription: string,
       urlPath: string,
       lang: string,
-      technicalData: string
     },
     images: {
       all: {
@@ -137,7 +138,10 @@ export type ClientInstance = AxiosInstance;
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
-  ): Product[]
+  ): Product[],
+  getCategory(
+    params: any
+  ): Category []
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;

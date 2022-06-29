@@ -131,11 +131,11 @@
     </div>
 
     <LazyHydrate when-visible>
-      <RelatedProducts
+      <!-- <RelatedProducts
         :products="relatedProducts"
         :loading="relatedLoading"
         title="Match it with"
-      />
+      /> -->
     </LazyHydrate>
 
     <LazyHydrate when-visible>
