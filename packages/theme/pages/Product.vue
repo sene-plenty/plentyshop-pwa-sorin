@@ -1,5 +1,10 @@
 <template>
-  <div id="product">
+  <SfLoader
+    v-if="isProductLoading"
+    :loading="productloading"
+  >
+  </SfLoader>
+  <div id="product" v-else>
     <SfBreadcrumbs
       class="breadcrumbs desktop-only"
       :breadcrumbs="breadcrumbs"
@@ -146,23 +151,24 @@
 </template>
 <script>
 import {
-  SfProperty,
-  SfHeading,
-  SfPrice,
-  SfRating,
-  SfSelect,
   SfAddToCart,
-  SfTabs,
-  SfGallery,
-  SfIcon,
-  SfImage,
-  SfBanner,
   SfAlert,
-  SfSticky,
-  SfReview,
+  SfBanner,
   SfBreadcrumbs,
   SfButton,
-  SfColor
+  SfColor,
+  SfGallery,
+  SfHeading,
+  SfIcon,
+  SfImage,
+  SfLoader,
+  SfPrice,
+  SfProperty,
+  SfRating,
+  SfReview,
+  SfSelect,
+  SfSticky,
+  SfTabs
 } from '@storefront-ui/vue';
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
@@ -180,7 +186,7 @@ export default {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
-    const { products, search } = useProduct('products');
+    const { products, search, loading: isProductLoading } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
     const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
@@ -232,30 +238,32 @@ export default {
       addItem,
       loading,
       productGetters,
-      productGallery
+      productGallery,
+      isProductLoading
     };
   },
   components: {
-    SfAlert,
-    SfColor,
-    SfProperty,
-    SfHeading,
-    SfPrice,
-    SfRating,
-    SfSelect,
+    InstagramFeed,
+    LazyHydrate,
+    RelatedProducts,
     SfAddToCart,
-    SfTabs,
-    SfGallery,
-    SfIcon,
-    SfImage,
+    SfAlert,
     SfBanner,
-    SfSticky,
-    SfReview,
     SfBreadcrumbs,
     SfButton,
-    InstagramFeed,
-    RelatedProducts,
-    LazyHydrate
+    SfColor,
+    SfGallery,
+    SfHeading,
+    SfIcon,
+    SfImage,
+    SfLoader,
+    SfPrice,
+    SfProperty,
+    SfRating,
+    SfReview,
+    SfSelect,
+    SfSticky,
+    SfTabs
   },
   data() {
     return {
