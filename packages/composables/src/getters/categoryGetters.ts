@@ -11,6 +11,22 @@ function getTree(category: Category): AgnosticCategoryTree {
   };
 }
 
+function findCategoryBySlug(categories: Category[], slug: string): Category {
+  for (const category of categories) {
+    if (category.details[0].nameUrl === slug) {
+      return category;
+    }
+    if (category.children) {
+      const foundCategory = findCategoryBySlug(category.children, slug);
+
+      if (foundCategory) {
+        return foundCategory;
+      }
+    }
+  }
+}
+
 export const categoryGetters: CategoryGetters<Category> = {
-  getTree
+  getTree,
+  findCategoryBySlug
 };

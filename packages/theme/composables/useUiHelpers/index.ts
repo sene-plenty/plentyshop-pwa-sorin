@@ -1,11 +1,13 @@
 
+import { useRoute } from '@nuxtjs/composition-api';
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useUiHelpers = () => {
   const getFacetsFromURL = () => {
-    console.warn('[VSF] please implement useUiHelpers.getFacets.');
+    const route = useRoute();
 
     return {
-      categorySlug: 'wohnzimmer',
+      categorySlug: route.value.path.split('/').pop(),
       page: 1
     } as any;
   };

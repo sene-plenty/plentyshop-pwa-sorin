@@ -21,8 +21,9 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
     url = new URL('/rest/io/item/search', context.config.api.url);
     url.searchParams.set('query', params.term);
   } else {
+    const categoryId = params.categoryId?.toString() || '16';
     url = new URL('/rest/io/category', context.config.api.url);
-    url.searchParams.set('categoryId', '16');
+    url.searchParams.set('categoryId', categoryId);
     if (params.limit) {
       url.searchParams.set('items', params.limit);
     }
