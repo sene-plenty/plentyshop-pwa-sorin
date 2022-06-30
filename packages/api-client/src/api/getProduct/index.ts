@@ -20,11 +20,11 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   } else if (params.term) {
     url = new URL('/rest/io/item/search', context.config.api.url);
     url.searchParams.set('query', params.term);
-  } else if (params.input.categorySlug || params.catId) {
+  } else {
     url = new URL('/rest/io/category', context.config.api.url);
     url.searchParams.set('categoryId', '16');
     if (params.limit) {
-      url.searchParams.set('itemsPerPage', params.limit);
+      url.searchParams.set('items', params.limit);
     }
   }
   const { data } = await context.client.get(url.href);

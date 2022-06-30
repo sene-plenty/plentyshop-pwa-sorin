@@ -8,7 +8,7 @@
         <SfCarouselItem class="carousel__item" v-for="(product, i) in products" :key="i">
           <SfProductCard
             :title="productGetters.getName(product)"
-            :image="addBasePath(product.images[0].url)"
+            :image="addBasePath(product.images.all[0].urlMiddle)"
             :regular-price="$n(productGetters.getFormattedPrice(productGetters.getPrice(product).regular), 'currency')"
             :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
             :max-rating="5"

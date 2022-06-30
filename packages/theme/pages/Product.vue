@@ -42,8 +42,8 @@
           </div>
         </div>
         <div>
-          <p v-html="productGetters.getShortDescription(product)" class="product__description desktop-only">
-          </p>
+          <div v-html="productGetters.getShortDescription(product)" class="product__description desktop-only">
+          </div>
           <SfButton class="sf-button--text desktop-only product__guide">
             {{ $t('Size guide') }}
           </SfButton>

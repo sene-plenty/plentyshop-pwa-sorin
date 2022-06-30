@@ -18,8 +18,8 @@ function getSlug(product: Product): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(product: Product): AgnosticPrice {
   return {
-    regular: product.prices.default.price.value,
-    special: product.prices.rrp.price.value
+    special: product.prices.default.price.value,
+    regular: product.prices.rrp.price.value
   };
 }
 
@@ -70,7 +70,7 @@ function getId(product: Product): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFormattedPrice(price: number): string {
-  return '';
+  return price.toString();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
