@@ -131,7 +131,7 @@ export type Store = TODO;
 
 export type Wishlist = TODO;
 
-export type WishlistItem = TODO;
+export type WishlistItem = any;
 
 export type ClientInstance = AxiosInstance;
 

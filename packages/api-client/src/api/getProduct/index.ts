@@ -26,14 +26,11 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
     if (params.limit) {
       url.searchParams.set('itemsPerPage', params.limit);
     }
-
-    console.log(url);
   }
   const { data } = await context.client.get(url.href);
   if (params.id) {
     return data.data.documents.map(document => document.data);
   } else {
-    console.log(data.data.itemList.documents.map(document => document.data));
     return data.data.itemList.documents.map(document => document.data);
   }
 }
