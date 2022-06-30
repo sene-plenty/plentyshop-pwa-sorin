@@ -20,15 +20,20 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   } else if (params.term) {
     url = new URL('/rest/io/item/search', context.config.api.url);
     url.searchParams.set('query', params.term);
-  } else {
+  } else if (params.input.categorySlug || params.catId) {
     url = new URL('/rest/io/category', context.config.api.url);
-    params.catId && url.searchParams.set('categoryId', params.catId[0]);
-    url.searchParams.set('itemsPerPage', params.limit);
+    url.searchParams.set('categoryId', '16');
+    if (params.limit) {
+      url.searchParams.set('itemsPerPage', params.limit);
+    }
+
+    console.log(url);
   }
   const { data } = await context.client.get(url.href);
   if (params.id) {
     return data.data.documents.map(document => document.data);
   } else {
+    console.log(data.data.itemList.documents.map(document => document.data));
     return data.data.itemList.documents.map(document => document.data);
   }
 }
