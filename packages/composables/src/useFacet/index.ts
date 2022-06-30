@@ -11,7 +11,7 @@ const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<SearchParams>) => {
 
-    const data = await context.$plentymarkets.api.getProduct(params);
+    const data = await context.$plentymarkets.api.getProduct(params.input);
     return data;
   }
 };
