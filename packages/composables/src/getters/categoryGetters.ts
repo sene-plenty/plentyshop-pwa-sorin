@@ -1,11 +1,11 @@
 import { CategoryGetters, AgnosticCategoryTree } from '@vue-storefront/core';
-import type { Category } from '@vue-storefront/plentymarkets-api';
+import type { Category, CategoryDetails } from '@vue-storefront/plentymarkets-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTree(category: Category): AgnosticCategoryTree {
   return {
-    label: category.details[0].name,
-    slug: category.details[0].nameUrl,
+    label: getCategoryDetails(category.details).name,
+    slug: getCategoryDetails(category.details).nameUrl,
     items: category.children ? category.children.map(cat => getTree(cat)) : [],
     isCurrent: false
   };
@@ -13,7 +13,7 @@ function getTree(category: Category): AgnosticCategoryTree {
 
 function findCategoryBySlug(categories: Category[], slug: string): Category {
   for (const category of categories) {
-    if (category.details[0].nameUrl === slug) {
+    if (getCategoryDetails(category.details).nameUrl === slug) {
       return category;
     }
     if (category.children) {
@@ -26,7 +26,13 @@ function findCategoryBySlug(categories: Category[], slug: string): Category {
   }
 }
 
+function getCategoryDetails(details:CategoryDetails[]): CategoryDetails {
+  // TODO  return correct details for selected language and webstoreId
+  return details[0];
+}
+
 export const categoryGetters: CategoryGetters<Category> = {
   getTree,
-  findCategoryBySlug
+  findCategoryBySlug,
+  getCategoryDetails
 };
