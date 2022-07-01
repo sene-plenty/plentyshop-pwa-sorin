@@ -2,7 +2,8 @@ import {
   AgnosticMediaGalleryItem,
   AgnosticAttribute,
   AgnosticPrice,
-  ProductGetters
+  ProductGetters,
+  AgnosticBreadcrumb
 } from '@vue-storefront/core';
 import type { Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
 
@@ -12,7 +13,7 @@ function getName(product: Product): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSlug(product: Product): string {
-  return 'slug' + product.variation.id;
+  return product.texts.urlPath.split('/').pop() + '_' + product.variation.id;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -26,6 +27,22 @@ function getPrice(product: Product): AgnosticPrice {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   return _itemImageFilter(product);
+}
+
+function getBreadcrumbs(product: Product): AgnosticBreadcrumb [] {
+  const urlPaths: string[] = product.texts.urlPath.split('/');
+  return [
+    {
+      text: 'Home',
+      link: '/'
+    },
+    ...urlPaths.map((path) => {
+      return {
+        text: path,
+        link: `/c/${path}`
+      };
+    })
+  ];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -116,5 +133,6 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getId,
   getFormattedPrice,
   getTotalReviews,
-  getAverageRating
+  getAverageRating,
+  getBreadcrumbs
 };

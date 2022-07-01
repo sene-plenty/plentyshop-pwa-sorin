@@ -8,7 +8,7 @@ import {
   AgnosticBreadcrumb,
   AgnosticFacet
 } from '@vue-storefront/core';
-import type { Facet, FacetSearchCriteria } from '@vue-storefront/plentymarkets-api';
+import type { Facet, FacetSearchCriteria, Product } from '@vue-storefront/plentymarkets-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticFacet[] {
@@ -30,18 +30,12 @@ function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree {
-  return {
-    label: '',
-    slug: '',
-    items: null,
-    isCurrent: false,
-    count: 0
-  };
+  return params.data.tree;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProducts(products: FacetSearchResult<Facet>): any {
-  return products.data;
+function getProducts(products: FacetSearchResult<Facet>): Product[] {
+  return products.data.products;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

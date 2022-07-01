@@ -15,8 +15,8 @@ const useUiHelpers = () => {
   // eslint-disable-next-line
   const getCatLink = (category): string => {
     console.warn('[VSF] please implement useUiHelpers.getCatLink.');
-
-    return '/';
+    console.log('__category', category);
+    return `/c/${category.slug}`;
   };
 
   // eslint-disable-next-line
