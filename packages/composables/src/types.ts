@@ -1,6 +1,7 @@
 import {
   ProductsSearchParams
 } from '@vue-storefront/core';
+import { ReviewSearchParams } from '@vue-storefront/plentymarkets-api';
 
 export type TODO = any;
 
@@ -12,7 +13,7 @@ export type UseFacetSearchParams = TODO;
 
 export type UseProductSearchParams = ProductsSearchParams;
 
-export type UseReviewSearchParams = TODO;
+export type UseReviewSearchParams = ReviewSearchParams;
 
 export type UseReviewAddParams = TODO;
 

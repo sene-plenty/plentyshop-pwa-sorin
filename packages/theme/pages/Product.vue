@@ -210,7 +210,7 @@ export default {
     onSSR(async () => {
       await search({ id: id.value });
       await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
-      await searchReviews({ productId: id.value });
+      await searchReviews({ productId: id.value, itemId: product.value.item.id });
     });
 
     const updateFilter = (filter) => {
@@ -229,8 +229,8 @@ export default {
       product,
       reviews,
       reviewGetters,
-      averageRating: computed(() => productGetters.getAverageRating(product.value)),
-      totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
+      averageRating: computed(() => reviewGetters.getAverageRating(productReviews.value)),
+      totalReviews: computed(() => reviewGetters.getTotalReviews(productReviews.value)),
       relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
       relatedLoading,
       options,
