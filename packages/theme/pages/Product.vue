@@ -452,6 +452,7 @@ export default {
 }
 .breadcrumbs {
   margin: var(--spacer-base) auto var(--spacer-lg);
+  text-transform: capitalize;
 }
 @keyframes moveicon {
   0% {

@@ -6,6 +6,7 @@ import {
   AgnosticBreadcrumb
 } from '@vue-storefront/core';
 import type { Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
+import { languageHelper } from 'src/helpers/language';
 
 function getName(product: Product): string {
   return product.texts.name1;
@@ -19,8 +20,8 @@ function getSlug(product: Product): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(product: Product): AgnosticPrice {
   return {
-    special: product.prices.default.price.value,
-    regular: product.prices.rrp.price.value
+    special: product.prices?.default?.price?.value || 0,
+    regular: product.prices?.rrp?.price?.value || 0
   };
 }
 
@@ -31,17 +32,35 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
 
 function getBreadcrumbs(product: Product): AgnosticBreadcrumb [] {
   const urlPaths: string[] = product.texts.urlPath.split('/');
+  const locale = languageHelper.lang;
+  let langPrefix = '/';
+  if (locale !== languageHelper.defaultLang) {
+    langPrefix = `/${locale}`;
+  }
+  const urls = [];
+  urlPaths.forEach(() => {
+    urlPaths.pop();
+    urls.push(urlPaths.join('/'));
+  });
+
+  urls.reverse();
+
   return [
     {
       text: 'Home',
-      link: '/'
+      link: langPrefix
     },
-    ...urlPaths.map((path) => {
+
+    ...urls.map((path) => {
       return {
-        text: path,
-        link: `/c/${path}`
+        text: path.split('/').pop(),
+        link: `${langPrefix}/c/${path}`
       };
-    })
+    }),
+    {
+      text: product.texts.name1,
+      link: ''
+    }
   ];
 }
 
