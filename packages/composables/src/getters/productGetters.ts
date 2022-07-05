@@ -1,3 +1,4 @@
+import { categoryGetters } from './categoryGetters';
 import {
   AgnosticMediaGalleryItem,
   AgnosticAttribute,
@@ -5,8 +6,7 @@ import {
   ProductGetters,
   AgnosticBreadcrumb
 } from '@vue-storefront/core';
-import type { Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
-import { languageHelper } from 'src/helpers/language';
+import type { Category, Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
 
 function getName(product: Product): string {
   return product.texts.name1;
@@ -30,31 +30,18 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   return _itemImageFilter(product);
 }
 
-function getBreadcrumbs(product: Product): AgnosticBreadcrumb [] {
-  const urlPaths: string[] = product.texts.urlPath.split('/');
-  const locale = languageHelper.lang;
-  let langPrefix = '/';
-  if (locale !== languageHelper.defaultLang) {
-    langPrefix = `/${locale}`;
-  }
-  const urls = [];
-  urlPaths.forEach(() => {
-    urlPaths.pop();
-    urls.push(urlPaths.join('/'));
-  });
-
-  urls.reverse();
-
+function getBreadcrumbs(product: Product, categoryPath: Category[]): AgnosticBreadcrumb [] {
   return [
     {
       text: 'Home',
-      link: langPrefix
+      link: '/'
     },
 
-    ...urls.map((path) => {
+    ...categoryPath.map((category) => {
+      const categoryDetails = categoryGetters.getCategoryDetails(category.details);
       return {
-        text: path.split('/').pop(),
-        link: `${langPrefix}/c/${path}`
+        text: categoryDetails.name,
+        link: categoryDetails.nameUrl
       };
     }),
     {
