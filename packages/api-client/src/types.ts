@@ -101,6 +101,64 @@ export type Product = {
 
 export type ProductFilter = TODO;
 
+export declare type ReviewItem = {
+  id: number,
+  title: string,
+  isVisible: true,
+   createdAt: string,
+   updatedAt: string,
+    authorName: string,
+    feedbackComment: {
+      commentId: string,
+      commentRelationType: string,
+      commentRelationTargetId: string,
+      comment: {
+        id: number,
+        message: string,
+        isVisible: string,
+        createdAt: string,
+        updatedAt: string
+      }
+    },
+    feedbackRating: {
+      ratingId: string,
+      ratingRelationType: string,
+      ratingRelationTargetId: string,
+      rating: {
+      id: string,
+      ratingValue: string,
+      isVisible: string,
+      createdAt: string,
+      updatedAt: string
+      }
+    },
+    targetRelation: {
+      feedbackId: string,
+      feedbackRelationType: string,
+      feedbackRelationTargetId: string,
+      variationAttributes: [],
+      targetRelationLabel: string,
+      targetRelationName: [],
+      feedbackRelationParentTargetId: number
+    },
+    sourceRelation: [
+      feedbackId: string,
+      feedbackRelationType: string,
+      feedbackRelationSourceId: string,
+      sourceRelationLabel: string,
+      sourceRelationTypeLabel: string,
+      feedback: {
+          id: number,
+          title: string,
+          isVisible: boolean,
+          createdAt: string,
+          updatedAt: string,
+          authorName: string
+      }
+    ],
+    replies: []
+};
+
 export type Facet = {
   products: Product[],
   tree: AgnosticCategoryTree
@@ -108,7 +166,25 @@ export type Facet = {
 
 export type Review = TODO;
 
-export type ReviewItem = TODO;
+export declare type Review = {
+  feedbacks: ReviewItem[],
+  itemAttributes: [],
+  pagination: {
+    page: number,
+    lastPage: number,
+    isLastPage: true
+  },
+  counts: {
+    ratingsCountOf1: string,
+    ratingsCountOf2: string,
+    ratingsCountOf3: string,
+    ratingsCountOf4: string,
+    ratingsCountOf5: string,
+    ratingsCountTotal: string,
+    averageValue: string,
+    highestCount: string
+  }
+};
 
 export type User = TODO;
 
@@ -138,13 +214,21 @@ export type WishlistItem = any;
 
 export type ClientInstance = AxiosInstance;
 
+export type ReviewSearchParams = {
+  productId: string,
+  itemId: number
+}
+
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
   ): Product[],
   getCategory(
     params: any
-  ): Category []
+  ): Category [],
+  getReview(
+    prams: ReviewSearchParams
+  ): Review
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;
