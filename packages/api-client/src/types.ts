@@ -164,9 +164,7 @@ export type Facet = {
   tree: AgnosticCategoryTree
 };
 
-export type Review = TODO;
-
-export declare type Review = {
+export type Review = {
   feedbacks: ReviewItem[],
   itemAttributes: [],
   pagination: {
