@@ -21,14 +21,14 @@ function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCrit
   console.log(params);
   return params.data.facets.map((group) => {
     return {
-      id: group.id,
+      id: group.id.toString(),
       label: group.name,
       count: group.count,
       options: group.values.map((filter) => {
         return {
           type: group.type,
-          id: filter.id,
-          value: group.name
+          id: filter.name.toString(),
+          value: filter.id
         };
       })
     };

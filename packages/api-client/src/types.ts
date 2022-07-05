@@ -104,23 +104,23 @@ export type ProductFilter = TODO;
 export type Filter = {
       id: number,
       name: string,
-      cssClass: string,
-      position: number,
-      count: number,
-      selected: boolean
+      cssClass?: string,
+      position?: number,
+      count?: number,
+      selected?: boolean
 }
 
 export type FilterGroup = {
   count: number,
-  cssClass: string,
+  cssClass?: string,
   id: number,
-  maxResultCount: string,
-  minHitCount: string,
+  maxResultCount?: string,
+  minHitCount?: string,
   name: string,
-  position: number,
-  sort: string,
+  position?: number,
+  sort?: string,
   type: string,
-  values: Filter[]
+  values?: Filter[]
 }
 
 export type Facet = {
