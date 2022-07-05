@@ -27,8 +27,8 @@ function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCrit
       options: group.values.map((filter) => {
         return {
           type: group.type,
-          id: filter.name.toString(),
-          value: filter.id
+          id: filter.id.toString(),
+          value: filter.name.toString()
         };
       })
     };
