@@ -1,29 +1,38 @@
 
-import { useRoute } from '@nuxtjs/composition-api';
+import { useRoute, getCurrentInstance } from '@nuxtjs/composition-api';
+
+const getContext = () => {
+  const vm = getCurrentInstance();
+  return vm.root.proxy;
+};
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useUiHelpers = () => {
+
+  const context = getContext();
   const getFacetsFromURL = () => {
     const route = useRoute();
-
+    const { query, params } = context.$router.currentRoute;
+    console.log(query, params);
     return {
       categorySlug: route.value.path.split('/').pop(),
-      page: 1
+      page: 1,
+      sort: query.sort || 'latest'
     } as any;
   };
 
   // eslint-disable-next-line
   const getCatLink = (category): string => {
     console.warn('[VSF] please implement useUiHelpers.getCatLink.');
-
-    return '/';
+    console.log('__category', category);
+    return `/c/${category.slug}`;
   };
 
   // eslint-disable-next-line
   const changeSorting = (sort) => {
     console.warn('[VSF] please implement useUiHelpers.changeSorting.');
-
-    return 'latest';
+    const { query } = context.$router.currentRoute;
+    context.$router.push({ query: { ...query, sort } });
   };
 
   // eslint-disable-next-line

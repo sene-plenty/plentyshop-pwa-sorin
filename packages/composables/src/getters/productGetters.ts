@@ -2,9 +2,11 @@ import {
   AgnosticMediaGalleryItem,
   AgnosticAttribute,
   AgnosticPrice,
-  ProductGetters
+  ProductGetters,
+  AgnosticBreadcrumb
 } from '@vue-storefront/core';
 import type { Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
+import { languageHelper } from 'src/helpers/language';
 
 function getName(product: Product): string {
   return product.texts.name1;
@@ -12,20 +14,54 @@ function getName(product: Product): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSlug(product: Product): string {
-  return 'slug' + product.variation.id;
+  return product.texts.urlPath.split('/').pop() + '_' + product.variation.id;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(product: Product): AgnosticPrice {
   return {
-    special: product.prices.default.price.value,
-    regular: product.prices.rrp.price.value
+    special: product.prices?.default?.price?.value || 0,
+    regular: product.prices?.rrp?.price?.value || 0
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   return _itemImageFilter(product);
+}
+
+function getBreadcrumbs(product: Product): AgnosticBreadcrumb [] {
+  const urlPaths: string[] = product.texts.urlPath.split('/');
+  const locale = languageHelper.lang;
+  let langPrefix = '/';
+  if (locale !== languageHelper.defaultLang) {
+    langPrefix = `/${locale}`;
+  }
+  const urls = [];
+  urlPaths.forEach(() => {
+    urlPaths.pop();
+    urls.push(urlPaths.join('/'));
+  });
+
+  urls.reverse();
+
+  return [
+    {
+      text: 'Home',
+      link: langPrefix
+    },
+
+    ...urls.map((path) => {
+      return {
+        text: path.split('/').pop(),
+        link: `${langPrefix}/c/${path}`
+      };
+    }),
+    {
+      text: product.texts.name1,
+      link: ''
+    }
+  ];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -116,5 +152,6 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getId,
   getFormattedPrice,
   getTotalReviews,
-  getAverageRating
+  getAverageRating,
+  getBreadcrumbs
 };

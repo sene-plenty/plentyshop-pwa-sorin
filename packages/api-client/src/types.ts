@@ -1,4 +1,4 @@
-import { IntegrationContext, ApiClientMethods, ProductsSearchParams } from '@vue-storefront/core';
+import { IntegrationContext, ApiClientMethods, ProductsSearchParams, AgnosticCategoryTree } from '@vue-storefront/core';
 import { AxiosInstance } from 'axios';
 
 export type TODO = unknown;
@@ -37,8 +37,6 @@ export type Category = {
 };
 
 export type Coupon = TODO;
-
-export type Facet = TODO;
 
 export type FacetSearchCriteria = TODO;
 
@@ -160,6 +158,13 @@ export declare type ReviewItem = {
     ],
     replies: []
 };
+
+export type Facet = {
+  products: Product[],
+  tree: AgnosticCategoryTree
+};
+
+export type Review = TODO;
 
 export declare type Review = {
   feedbacks: ReviewItem[],

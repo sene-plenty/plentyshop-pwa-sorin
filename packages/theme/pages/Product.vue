@@ -199,7 +199,7 @@ export default {
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
-    // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
+    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value));
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
       mobile: { url: addBasePath(img.small) },
       desktop: { url: addBasePath(img.normal) },
@@ -239,7 +239,8 @@ export default {
       loading,
       productGetters,
       productGallery,
-      isProductLoading
+      isProductLoading,
+      breadcrumbs
     };
   },
   components: {
@@ -290,27 +291,7 @@ export default {
       detailsIsActive: false,
       brand:
           'Brand name is the perfect pairing of quality and design. This label creates major everyday vibes with its collection of modern brooches, silver and gold jewellery, or clips it back with hair accessories in geo styles.',
-      careInstructions: 'Do not wash!',
-      breadcrumbs: [
-        {
-          text: 'Home',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Category',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Pants',
-          route: {
-            link: '#'
-          }
-        }
-      ]
+      careInstructions: 'Do not wash!'
     };
   }
 };
@@ -471,6 +452,7 @@ export default {
 }
 .breadcrumbs {
   margin: var(--spacer-base) auto var(--spacer-lg);
+  text-transform: capitalize;
 }
 @keyframes moveicon {
   0% {

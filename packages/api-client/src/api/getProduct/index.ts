@@ -27,6 +27,9 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
     if (params.limit) {
       url.searchParams.set('items', params.limit);
     }
+    if (params.sort) {
+      url.searchParams.set('sorting', params.sort);
+    }
   }
   const { data } = await context.client.get(url.href);
   if (params.id) {
