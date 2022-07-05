@@ -25,11 +25,11 @@ const factoryParams = {
     if (category) {
       params.input.categoryId = category.id;
     }
-
-    const data = await context.$plentymarkets.api.getProduct(params.input);
+    const data = await context.$plentymarkets.api.getFacet(params.input);
     return {
-      products: data,
-      tree
+      products: data.products,
+      tree,
+      facets: data.facets
     } as Facet;
   }
 };

@@ -101,10 +101,38 @@ export type Product = {
 
 export type ProductFilter = TODO;
 
+export type Filter = {
+      id: number,
+      name: string,
+      cssClass: string,
+      position: number,
+      count: number,
+      selected: boolean
+}
+
+export type FilterGroup = {
+  count: number,
+  cssClass: string,
+  id: number,
+  maxResultCount: string,
+  minHitCount: string,
+  name: string,
+  position: number,
+  sort: string,
+  type: string,
+  values: Filter[]
+}
+
 export type Facet = {
   products: Product[],
-  tree: AgnosticCategoryTree
+  tree: AgnosticCategoryTree,
+  facets: FilterGroup []
 };
+
+export type CategoryPage = {
+  products: Product[],
+  facets: FilterGroup[]
+}
 
 export type Review = TODO;
 
@@ -144,7 +172,10 @@ export interface PlentymarketsApiMethods {
   ): Product[],
   getCategory(
     params: any
-  ): Category []
+  ): Category [],
+  getFacet(
+    params: any
+  ): CategoryPage
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;

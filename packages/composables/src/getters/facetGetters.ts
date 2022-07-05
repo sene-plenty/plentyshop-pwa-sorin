@@ -18,7 +18,21 @@ function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticGroupedFacet[] {
-  return [];
+  console.log(params);
+  return params.data.facets.map((group) => {
+    return {
+      id: group.id,
+      label: group.name,
+      count: group.count,
+      options: group.values.map((filter) => {
+        return {
+          type: group.type,
+          id: filter.id,
+          value: group.name
+        };
+      })
+    };
+  });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
