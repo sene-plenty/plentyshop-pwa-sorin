@@ -50,7 +50,11 @@ function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree {
-  return params.data.tree;
+  return params?.data?.tree || {
+    label: 'Placeholder',
+    items: [],
+    isCurrent: false
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

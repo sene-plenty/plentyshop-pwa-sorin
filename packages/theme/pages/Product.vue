@@ -1,7 +1,7 @@
 <template>
   <SfLoader
-    v-if="isProductLoading"
-    :loading="isProductLoading"
+    v-if="isProductLoading || relatedLoading || isProductLoading || isProductReviewsLoading"
+    :loading="true"
   >
   </SfLoader>
   <div id="product" v-else>
@@ -109,7 +109,7 @@
                 </template>
               </SfProperty>
             </SfTab>
-            <SfTab title="Read reviews" v-if="!isProductReviewsLoading && reviews.length">
+            <SfTab title="Read reviews" v-if="reviews.length">
               <SfReview
                 v-for="review in reviews"
                 :key="reviewGetters.getReviewId(review)"
