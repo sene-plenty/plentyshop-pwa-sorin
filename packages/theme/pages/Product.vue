@@ -1,7 +1,7 @@
 <template>
   <SfLoader
-    v-if="isProductLoading"
-    :loading="isProductLoading"
+    v-if="isProductLoading || relatedLoading || isProductLoading || isProductReviewsLoading"
+    :loading="true"
   >
   </SfLoader>
   <div id="product" v-else>
@@ -109,7 +109,7 @@
                 </template>
               </SfProperty>
             </SfTab>
-            <SfTab title="Read reviews" v-if="!isProductReviewsLoading && reviews.length">
+            <SfTab title="Read reviews" v-if="reviews.length">
               <SfReview
                 v-for="review in reviews"
                 :key="reviewGetters.getReviewId(review)"
@@ -174,7 +174,7 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@vue-storefront/plentymarkets';
+import { useProduct, useCart, productGetters, useReview, reviewGetters, useCategory, categoryGetters } from '@vue-storefront/plentymarkets';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
@@ -198,8 +198,11 @@ export default {
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
-    // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
-    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value));
+    // categories required for the breadcrumbs
+    const { categories: categories2, loading: categoriesLoading } = useCategory('categories');
+    const categoryPath = computed(() => !categoriesLoading.value && categoryGetters.findCategoryPathById(categories2.value, parseInt(categories.value[0])));
+    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value, categoryPath.value));
+
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
       mobile: { url: addBasePath(img.small) },
       desktop: { url: addBasePath(img.normal) },
@@ -224,6 +227,7 @@ export default {
     };
 
     return {
+      categories,
       updateFilter,
       configuration,
       product,
@@ -241,7 +245,8 @@ export default {
       productGallery,
       isProductLoading,
       isProductReviewsLoading,
-      breadcrumbs
+      breadcrumbs,
+      categoryPath
     };
   },
   components: {
