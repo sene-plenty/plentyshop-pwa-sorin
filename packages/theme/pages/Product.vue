@@ -1,7 +1,7 @@
 <template>
   <SfLoader
     v-if="isProductLoading"
-    :loading="productloading"
+    :loading="isProductLoading"
   >
   </SfLoader>
   <div id="product" v-else>
@@ -109,7 +109,7 @@
                 </template>
               </SfProperty>
             </SfTab>
-            <SfTab title="Read reviews">
+            <SfTab title="Read reviews" v-if="!isProductReviewsLoading && reviews.length">
               <SfReview
                 v-for="review in reviews"
                 :key="reviewGetters.getReviewId(review)"
@@ -189,7 +189,7 @@ export default {
     const { products, search, loading: isProductLoading } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
-    const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
+    const { reviews: productReviews, search: searchReviews, loading: isProductReviewsLoading } = useReview('productReviews');
 
     const id = computed(() => route.value.params.id);
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
@@ -210,7 +210,7 @@ export default {
     onSSR(async () => {
       await search({ id: id.value });
       await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
-      await searchReviews({ productId: id.value });
+      await searchReviews({ productId: id.value, itemId: product.value.item.id });
     });
 
     const updateFilter = (filter) => {
@@ -229,8 +229,8 @@ export default {
       product,
       reviews,
       reviewGetters,
-      averageRating: computed(() => productGetters.getAverageRating(product.value)),
-      totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
+      averageRating: computed(() => reviewGetters.getAverageRating(productReviews.value)),
+      totalReviews: computed(() => reviewGetters.getTotalReviews(productReviews.value)),
       relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
       relatedLoading,
       options,
@@ -240,6 +240,7 @@ export default {
       productGetters,
       productGallery,
       isProductLoading,
+      isProductReviewsLoading,
       breadcrumbs
     };
   },
