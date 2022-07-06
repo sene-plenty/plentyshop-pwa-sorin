@@ -192,11 +192,6 @@ export type CategoryPage = {
   facets: FilterGroup[]
 }
 
-export type Review = TODO;
-
-export type ReviewItem = TODO;
-
-
 export type Review = {
   feedbacks: ReviewItem[],
   itemAttributes: [],
