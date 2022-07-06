@@ -19,7 +19,8 @@ const useUiHelpers = () => {
     return {
       categorySlug: route.value.path.split('/').pop(),
       page: 1,
-      sort: query.sort || 'latest'
+      sort: query.sort,
+      facets: query.facets
     } as any;
   };
 
@@ -32,7 +33,6 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const changeSorting = (sort) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSorting.');
     const { query } = context.$router.currentRoute;
     context.$router.push({ query: { ...query, sort } });
   };
@@ -56,14 +56,10 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const changeFilters = (filters) => {
-    console.log(Object.values(filters));
     context.$router.push({
       query: {
         ...getFiltersDataFromUrl(context, false),
-        facets: Object.values(filters).filter((entry: string []) => {
-          console.log(entry);
-          return entry.length > 0;
-        }).join(',')
+        facets: Object.values(filters).filter((entry: string []) => entry.length > 0).join(',')
       }
     });
   };

@@ -59,8 +59,8 @@ function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
       type: 'sort'
     }
   ].map(o => ({ ...o, selected: o.id === params.input.sort }));
-  const selected = options.find(o => o.id === params.input.sort)?.id || 'latest';
-  return { selected, options};
+  const selected = options.find(o => o.id === params.input.sort)?.id;
+  return { selected, options };
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree {
