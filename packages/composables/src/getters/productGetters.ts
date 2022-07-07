@@ -10,19 +10,19 @@ import type { Category, Product, ProductFilter } from '@vue-storefront/plentymar
 import { languageHelper } from 'src/helpers/language';
 
 function getName(product: Product): string {
-  return product.texts.name1;
+  return product?.texts?.name1 ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSlug(product: Product): string {
-  return product.texts.urlPath.split('/').pop() + '_' + product.variation.id;
+  return product?.texts?.urlPath.split('/').pop() ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(product: Product): AgnosticPrice {
   return {
-    special: product.prices?.default?.price?.value || 0,
-    regular: product.prices?.rrp?.price?.value || 0
+    special: product.prices?.default?.price?.value ?? 0,
+    regular: product.prices?.rrp?.price?.value ?? 0
   };
 }
 
@@ -56,7 +56,7 @@ function getBreadcrumbs(product: Product, categoryPath?: Category[]): AgnosticBr
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCoverImage(product: Product): string {
-  return _itemImageFilter(product)[0].small;
+  return product ? _itemImageFilter(product)[0].small : '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -72,31 +72,31 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDescription(product: Product): string {
-  return product.texts.description;
+  return product?.texts?.description ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShortDescription(product: Product): string {
-  return product.texts.shortDescription || product.texts.description;
+  return product?.texts?.shortDescription ?? product?.texts?.description ?? '';
 }
 
 function getTechnicalData(product: Product): string {
-  return product.texts.technicalData || '';
+  return product.texts.technicalData ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCategoryIds(product: Product): string[] {
-  return product.defaultCategories.map(category => category.id.toString());
+  return product?.defaultCategories?.map(category => category.id.toString()) ?? [''];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(product: Product): string {
-  return product.variation.id.toString();
+  return product?.variation?.id.toString() ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFormattedPrice(price: number): string {
-  return price.toString();
+  return price?.toString() ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -110,6 +110,15 @@ function getAverageRating(product: Product): number {
 }
 
 export function _itemImageFilter(product: Product): { small: string, normal: string, big: string }[] {
+  if (!product) {
+    return [
+      {
+        small: '',
+        normal: '',
+        big: ''
+      }
+    ];
+  }
 
   const images = product.images;
   const imagesAccessor = images.variation?.length ? 'variation' : 'all';

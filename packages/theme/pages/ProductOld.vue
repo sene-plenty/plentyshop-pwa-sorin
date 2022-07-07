@@ -1,5 +1,10 @@
 <template>
-  <div id="product">
+  <SfLoader
+    v-if="isProductLoading || relatedLoading || isProductLoading || isProductReviewsLoading"
+    :loading="true"
+  >
+  </SfLoader>
+  <div id="product" v-else>
     <SfBreadcrumbs
       class="breadcrumbs desktop-only"
       :breadcrumbs="breadcrumbs"
@@ -25,7 +30,7 @@
         </div>
         <div class="product__price-and-rating">
           <SfPrice
-            :regular="$n(productGetters.getPrice(product).regular, 'currency')"
+            :regular="$n(productGetters.getPrice(product).regular)"
             :special="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
           />
           <div>
@@ -42,9 +47,8 @@
           </div>
         </div>
         <div>
-          <p class="product__description desktop-only">
-            {{ description }}
-          </p>
+          <div v-html="productGetters.getShortDescription(product)" class="product__description desktop-only">
+          </div>
           <SfButton class="sf-button--text desktop-only product__guide">
             {{ $t('Size guide') }}
           </SfButton>
@@ -89,8 +93,7 @@
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
             <SfTab title="Description">
-              <div class="product__description">
-                  {{ $t('Product description') }}
+              <div v-html="productGetters.getDescription(product)" class="product__description">
               </div>
               <SfProperty
                 v-for="(property, i) in properties"
@@ -106,7 +109,7 @@
                 </template>
               </SfProperty>
             </SfTab>
-            <SfTab title="Read reviews">
+            <SfTab title="Read reviews" v-if="reviews.length">
               <SfReview
                 v-for="review in reviews"
                 :key="reviewGetters.getReviewId(review)"
@@ -125,18 +128,7 @@
               title="Additional Information"
               class="product__additional-info"
             >
-            <div class="product__additional-info">
-              <p class="product__additional-info__title">{{ $t('Brand') }}</p>
-              <p>{{ brand }}</p>
-              <p class="product__additional-info__title">{{ $t('Instruction1') }}</p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction2') }}
-              </p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction3') }}
-              </p>
-              <p>{{ careInstructions }}</p>
-            </div>
+            <div v-html="productGetters.getTechnicalData(product)" class="product__additional-info"></div>
             </SfTab>
           </SfTabs>
         </LazyHydrate>
@@ -159,29 +151,30 @@
 </template>
 <script>
 import {
-  SfProperty,
-  SfHeading,
-  SfPrice,
-  SfRating,
-  SfSelect,
   SfAddToCart,
-  SfTabs,
-  SfGallery,
-  SfIcon,
-  SfImage,
-  SfBanner,
   SfAlert,
-  SfSticky,
-  SfReview,
+  SfBanner,
   SfBreadcrumbs,
   SfButton,
-  SfColor
+  SfColor,
+  SfGallery,
+  SfHeading,
+  SfIcon,
+  SfImage,
+  SfLoader,
+  SfPrice,
+  SfProperty,
+  SfRating,
+  SfReview,
+  SfSelect,
+  SfSticky,
+  SfTabs
 } from '@storefront-ui/vue';
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@vue-storefront/plentymarkets';
+import { useProduct, useCart, productGetters, useReview, reviewGetters, useCategory, categoryGetters } from '@vue-storefront/plentymarkets';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
@@ -193,10 +186,10 @@ export default {
     const qty = ref(1);
     const route = useRoute();
     const router = useRouter();
-    const { products, search } = useProduct('products');
+    const { products, search, loading: isProductLoading } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
-    const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
+    const { reviews: productReviews, search: searchReviews, loading: isProductReviewsLoading } = useReview('productReviews');
 
     const id = computed(() => route.value.params.id);
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
@@ -205,19 +198,22 @@ export default {
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
-    // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
-    // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
+    // categories required for the breadcrumbs
+    const { categories: categories2, loading: categoriesLoading } = useCategory('categories');
+    const categoryPath = computed(() => !categoriesLoading.value && categoryGetters.findCategoryPathById(categories2.value, parseInt(categories.value[0])));
+    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value, categoryPath.value));
+
     const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
       mobile: { url: addBasePath(img.small) },
       desktop: { url: addBasePath(img.normal) },
       big: { url: addBasePath(img.big) },
-      alt: product.value._name || product.value.name
+      alt: 'test'
     })));
 
     onSSR(async () => {
       await search({ id: id.value });
       await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
-      await searchReviews({ productId: id.value });
+      await searchReviews({ productId: id.value, itemId: product.value.item.id });
     });
 
     const updateFilter = (filter) => {
@@ -231,13 +227,14 @@ export default {
     };
 
     return {
+      categories,
       updateFilter,
       configuration,
       product,
       reviews,
       reviewGetters,
-      averageRating: computed(() => productGetters.getAverageRating(product.value)),
-      totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
+      averageRating: computed(() => reviewGetters.getAverageRating(productReviews.value)),
+      totalReviews: computed(() => reviewGetters.getTotalReviews(productReviews.value)),
       relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
       relatedLoading,
       options,
@@ -245,30 +242,35 @@ export default {
       addItem,
       loading,
       productGetters,
-      productGallery
+      productGallery,
+      isProductLoading,
+      isProductReviewsLoading,
+      breadcrumbs,
+      categoryPath
     };
   },
   components: {
-    SfAlert,
-    SfColor,
-    SfProperty,
-    SfHeading,
-    SfPrice,
-    SfRating,
-    SfSelect,
+    InstagramFeed,
+    LazyHydrate,
+    RelatedProducts,
     SfAddToCart,
-    SfTabs,
-    SfGallery,
-    SfIcon,
-    SfImage,
+    SfAlert,
     SfBanner,
-    SfSticky,
-    SfReview,
     SfBreadcrumbs,
     SfButton,
-    InstagramFeed,
-    RelatedProducts,
-    LazyHydrate
+    SfColor,
+    SfGallery,
+    SfHeading,
+    SfIcon,
+    SfImage,
+    SfLoader,
+    SfPrice,
+    SfProperty,
+    SfRating,
+    SfReview,
+    SfSelect,
+    SfSticky,
+    SfTabs
   },
   data() {
     return {
@@ -295,27 +297,7 @@ export default {
       detailsIsActive: false,
       brand:
           'Brand name is the perfect pairing of quality and design. This label creates major everyday vibes with its collection of modern brooches, silver and gold jewellery, or clips it back with hair accessories in geo styles.',
-      careInstructions: 'Do not wash!',
-      breadcrumbs: [
-        {
-          text: 'Home',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Category',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Pants',
-          route: {
-            link: '#'
-          }
-        }
-      ]
+      careInstructions: 'Do not wash!'
     };
   }
 };
@@ -476,6 +458,7 @@ export default {
 }
 .breadcrumbs {
   margin: var(--spacer-base) auto var(--spacer-lg);
+  text-transform: capitalize;
 }
 @keyframes moveicon {
   0% {
