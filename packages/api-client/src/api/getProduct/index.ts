@@ -1,5 +1,5 @@
 import { ProductsSearchParams } from '@vue-storefront/core';
-import { Product, Context, Review } from 'src/types';
+import { Product, Context, ReviewAvarage } from 'src/types';
 
 export async function getProduct(context: Context, params: ProductsSearchParams): Promise<Product[]> {
 
@@ -36,7 +36,7 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   }
 }
 
-async function getFeedbackAvarage(context: Context, itemIds: string[]): Promise<Review> {
+async function getFeedbackAvarage(context: Context, itemIds: string[]): Promise<ReviewAvarage> {
   const urlFeedbackStars: URL = new URL(`/rest/feedbacks/feedback/helper/counts/${itemIds[0]}`, context.config.api.url);
   urlFeedbackStars.searchParams.set('allowFeedbacksOnlyIfPurchased', 'false');
   urlFeedbackStars.searchParams.set('numberOfFeedbacks', '100');

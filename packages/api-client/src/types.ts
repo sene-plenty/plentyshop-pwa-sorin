@@ -113,7 +113,10 @@ export type Review = {
     page: number,
     lastPage: number,
     isLastPage: true
-  },
+  }
+};
+
+export type ReviewAvarage = {
   counts: {
     ratingsCountOf1: string,
     ratingsCountOf2: string,
@@ -124,7 +127,7 @@ export type Review = {
     averageValue: string,
     highestCount: string
   }
-};
+}
 
 export type Product = {
   texts: {
@@ -180,7 +183,7 @@ prices: {
   rrp: any,
   default: any
 },
-feedback: Review
+feedback: ReviewAvarage
 };
 
 export type Facet = {
