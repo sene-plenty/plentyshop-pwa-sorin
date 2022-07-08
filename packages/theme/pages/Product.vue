@@ -42,9 +42,8 @@
           </div>
         </div>
         <div>
-          <p class="product__description desktop-only">
-            {{ description }}
-          </p>
+          <div v-html="productGetters.getShortDescription(product)" class="product__description desktop-only">
+          </div>
           <SfButton class="sf-button--text desktop-only product__guide">
             {{ $t('Size guide') }}
           </SfButton>
@@ -89,8 +88,7 @@
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
             <SfTab title="Description">
-              <div class="product__description">
-                  {{ $t('Product description') }}
+              <div v-html="productGetters.getDescription(product)" class="product__description">
               </div>
               <SfProperty
                 v-for="(property, i) in properties"
@@ -125,18 +123,7 @@
               title="Additional Information"
               class="product__additional-info"
             >
-            <div class="product__additional-info">
-              <p class="product__additional-info__title">{{ $t('Brand') }}</p>
-              <p>{{ brand }}</p>
-              <p class="product__additional-info__title">{{ $t('Instruction1') }}</p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction2') }}
-              </p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction3') }}
-              </p>
-              <p>{{ careInstructions }}</p>
-            </div>
+              <div v-html="productGetters.getTechnicalData(product)" class="product__additional-info"></div>
             </SfTab>
           </SfTabs>
         </LazyHydrate>
