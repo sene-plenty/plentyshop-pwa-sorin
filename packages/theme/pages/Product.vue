@@ -211,13 +211,13 @@ export default {
       mobile: { url: addBasePath(img.small) },
       desktop: { url: addBasePath(img.normal) },
       big: { url: addBasePath(img.big) },
-      alt: product.value._name || product.value.name
+      alt: productGetters.getName(product.value)
     })));
 
     onSSR(async () => {
       await search({ id: id.value });
       await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
-      await searchReviews({ productId: id.value });
+      await searchReviews({ productId: productGetters.getItemId(product.value) });
     });
 
     const updateFilter = (filter) => {

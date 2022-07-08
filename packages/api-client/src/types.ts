@@ -92,6 +92,9 @@ export type Product = {
   variation: {
     id: number
   },
+  item: {
+    id: number
+  },
   sku: string,
   prices: {
     rrp: any,

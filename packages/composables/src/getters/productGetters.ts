@@ -21,8 +21,8 @@ function getSlug(product: Product): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(product: Product): AgnosticPrice {
   return {
-    special: product.prices?.default?.price?.value ?? 0,
-    regular: product.prices?.rrp?.price?.value ?? 0
+    special: product?.prices?.default?.price?.value ?? 0,
+    regular: product?.prices?.rrp?.price?.value ?? 0
   };
 }
 
@@ -95,6 +95,11 @@ function getId(product: Product): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getItemId(product: Product): string {
+  return product?.item?.id.toString() ?? '';
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFormattedPrice(price: number): string {
   return price?.toString() ?? '';
 }
@@ -152,5 +157,6 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getFormattedPrice,
   getTotalReviews,
   getAverageRating,
-  getBreadcrumbs: getBreadcrumbs
+  getBreadcrumbs: getBreadcrumbs,
+  getItemId
 };
