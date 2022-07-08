@@ -42,7 +42,7 @@ function findCategoryPathById(categories: Category[], id: number, path: Category
 }
 
 function getCategoryDetails(details:CategoryDetails[]): CategoryDetails {
-  // TODO  return correct details for selected language and webstoreId
+  // TODO:  return correct details for selected language and webstoreId
   return details[0];
 }
 

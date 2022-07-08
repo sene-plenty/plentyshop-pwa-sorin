@@ -31,7 +31,7 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
     product[0].feedback = await getFeedbackAvarage(context, [product[0].item.id.toString()]);
     return product;
   } else {
-    // TODO load feedback for products
+    // TODO: load feedback for products
     return data.data.itemList.documents.map(document => document.data);
   }
 }
