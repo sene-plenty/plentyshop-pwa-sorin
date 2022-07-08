@@ -46,62 +46,6 @@ export type OrderItem = TODO;
 
 export type PasswordResetResult = TODO;
 
-export type Product = {
-    texts: {
-      name1: string,
-      name2: string,
-      name3: string,
-      description: string,
-      technicalData: string,
-      shortDescription: string,
-      urlPath: string,
-      lang: string,
-    },
-    images: {
-      all: {
-        position: string,
-        names: {
-          imageId: number,
-          name: string,
-          alternate: string,
-          lang: string
-        }
-        url: string,
-        urlMiddle: string,
-        urlPreview: string
-      }[],
-      variation: {
-        position: string,
-        names: {
-          imageId: number,
-          name: string,
-          alternate: string,
-          lang: string
-        }
-        url: string,
-        urlMiddle: string,
-        urlPreview: string
-      }[],
-    },
-    defaultCategories: {
-      id: number,
-      parentCategoryId: number,
-      level: 2
-    }[]
-  name: string,
-  variation: {
-    id: number
-  },
-  item: {
-    id: number
-  },
-  sku: string,
-  prices: {
-    rrp: any,
-    default: any
-  }
-};
-
 export type ProductFilter = TODO;
 
 export declare type ReviewItem = {
@@ -162,11 +106,6 @@ export declare type ReviewItem = {
     replies: []
 };
 
-export type Facet = {
-  products: Product[],
-  tree: AgnosticCategoryTree
-};
-
 export type Review = {
   feedbacks: ReviewItem[],
   itemAttributes: [],
@@ -185,6 +124,68 @@ export type Review = {
     averageValue: string,
     highestCount: string
   }
+};
+
+export type Product = {
+  texts: {
+    name1: string,
+    name2: string,
+    name3: string,
+    description: string,
+    technicalData: string,
+    shortDescription: string,
+    urlPath: string,
+    lang: string,
+  },
+  images: {
+    all: {
+      position: string,
+      names: {
+        imageId: number,
+        name: string,
+        alternate: string,
+        lang: string
+      }
+      url: string,
+      urlMiddle: string,
+      urlPreview: string
+    }[],
+    variation: {
+      position: string,
+      names: {
+        imageId: number,
+        name: string,
+        alternate: string,
+        lang: string
+      }
+      url: string,
+      urlMiddle: string,
+      urlPreview: string
+    }[],
+  },
+  defaultCategories: {
+    id: number,
+    parentCategoryId: number,
+    level: 2
+  }[]
+name: string,
+variation: {
+  id: number
+},
+item: {
+  id: number
+},
+sku: string,
+prices: {
+  rrp: any,
+  default: any
+},
+feedback: Review
+};
+
+export type Facet = {
+  products: Product[],
+  tree: AgnosticCategoryTree
 };
 
 export type User = TODO;

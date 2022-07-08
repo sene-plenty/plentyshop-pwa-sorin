@@ -106,12 +106,12 @@ function getFormattedPrice(price: number): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalReviews(product: Product): number {
-  return 0;
+  return Number(product?.feedback?.counts?.ratingsCountTotal);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAverageRating(product: Product): number {
-  return 0;
+  return Number(product?.feedback?.counts?.averageValue);
 }
 
 export function _itemImageFilter(product: Product): { small: string, normal: string, big: string }[] {
