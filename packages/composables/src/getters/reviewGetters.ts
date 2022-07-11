@@ -33,12 +33,12 @@ function getReviewDate(item: ReviewItem): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalReviews(review: Review): number {
-  return Number(review?.counts?.ratingsCountTotal);
+  return 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAverageRating(review: Review): number {
-  return Number(review?.counts?.averageValue);
+  return 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

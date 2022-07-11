@@ -1,5 +1,5 @@
 import { ProductsSearchParams } from '@vue-storefront/core';
-import { Product, Context } from 'src/types';
+import { Product, Context, ReviewAvarage } from 'src/types';
 
 export async function getProduct(context: Context, params: ProductsSearchParams): Promise<Product[]> {
 
@@ -12,6 +12,7 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
     url = new URL('/rest/io/item/search', context.config.api.url);
     url.searchParams.set('query', params.term);
   } else {
+
     const categoryId = params.categoryId?.toString() || '16';
     url = new URL('/rest/io/category', context.config.api.url);
     url.searchParams.set('categoryId', categoryId);
@@ -26,8 +27,19 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   const { data } = await context.client.get(url.href);
 
   if (params.id) {
-    return data.data.documents.map(document => document.data);
+    const product: Product[] = data.data.documents.map(document => document.data);
+    product[0].feedback = await getFeedbackAvarage(context, [product[0].item.id.toString()]);
+    return product;
   } else {
+    // TODO: load feedback for products
     return data.data.itemList.documents.map(document => document.data);
   }
+}
+
+async function getFeedbackAvarage(context: Context, itemIds: string[]): Promise<ReviewAvarage> {
+  const urlFeedbackStars: URL = new URL(`/rest/feedbacks/feedback/helper/counts/${itemIds[0]}`, context.config.api.url);
+  urlFeedbackStars.searchParams.set('allowFeedbacksOnlyIfPurchased', 'false');
+  urlFeedbackStars.searchParams.set('numberOfFeedbacks', '100');
+  const { data } = await context.client.get(urlFeedbackStars.href);
+  return data;
 }
