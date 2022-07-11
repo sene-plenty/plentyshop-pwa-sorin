@@ -14,4 +14,8 @@ export class languageHelper {
     const { locales } = router.app.$i18n;
     return locales;
   }
+
+  public static get langPrefix(): string {
+    return this.defaultLang !== this.lang ? this.lang : '';
+  }
 }

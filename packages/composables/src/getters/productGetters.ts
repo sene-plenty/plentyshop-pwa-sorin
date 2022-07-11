@@ -1,3 +1,4 @@
+import { categoryGetters } from './categoryGetters';
 import {
   AgnosticMediaGalleryItem,
   AgnosticAttribute,
@@ -5,23 +6,23 @@ import {
   ProductGetters,
   AgnosticBreadcrumb
 } from '@vue-storefront/core';
-import type { Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
+import type { Category, Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
 import { languageHelper } from 'src/helpers/language';
 
 function getName(product: Product): string {
-  return product.texts.name1;
+  return product?.texts?.name1 ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSlug(product: Product): string {
-  return product.texts.urlPath.split('/').pop() + '_' + product.variation.id;
+  return product?.texts?.urlPath.split('/').pop() ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(product: Product): AgnosticPrice {
   return {
-    special: product.prices?.default?.price?.value || 0,
-    regular: product.prices?.rrp?.price?.value || 0
+    special: product?.prices?.default?.price?.value ?? 0,
+    regular: product?.prices?.rrp?.price?.value ?? 0
   };
 }
 
@@ -30,31 +31,20 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   return _itemImageFilter(product);
 }
 
-function getBreadcrumbs(product: Product): AgnosticBreadcrumb [] {
-  const urlPaths: string[] = product.texts.urlPath.split('/');
-  const locale = languageHelper.lang;
-  let langPrefix = '/';
-  if (locale !== languageHelper.defaultLang) {
-    langPrefix = `/${locale}`;
-  }
-  const urls = [];
-  urlPaths.forEach(() => {
-    urlPaths.pop();
-    urls.push(urlPaths.join('/'));
-  });
-
-  urls.reverse();
+function getBreadcrumbs(product: Product, categoryPath?: Category[]): AgnosticBreadcrumb [] {
+  categoryPath = categoryPath?.length ? categoryPath : [];
 
   return [
     {
       text: 'Home',
-      link: langPrefix
+      link: '/'
     },
 
-    ...urls.map((path) => {
+    ...categoryPath.map((category) => {
+      const categoryDetails = categoryGetters.getCategoryDetails(category.details);
       return {
-        text: path.split('/').pop(),
-        link: `${langPrefix}/c/${path}`
+        text: categoryDetails.name,
+        link: `/${languageHelper.langPrefix}/c/` + categoryDetails.nameUrl
       };
     }),
     {
@@ -66,7 +56,7 @@ function getBreadcrumbs(product: Product): AgnosticBreadcrumb [] {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCoverImage(product: Product): string {
-  return _itemImageFilter(product)[0].small;
+  return product ? _itemImageFilter(product)[0].small : '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,44 +72,58 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDescription(product: Product): string {
-  return product.texts.description;
+  return product?.texts?.description ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShortDescription(product: Product): string {
-  return product.texts.shortDescription || product.texts.description;
+  return product?.texts?.shortDescription ?? product?.texts?.description ?? '';
 }
 
 function getTechnicalData(product: Product): string {
-  return product.texts.technicalData || '';
+  return product.texts.technicalData ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCategoryIds(product: Product): string[] {
-  return product.defaultCategories.map(category => category.id.toString());
+  return product?.defaultCategories?.map(category => category.id.toString()) ?? [''];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(product: Product): string {
-  return product.variation.id.toString();
+  return product?.variation?.id.toString() ?? '';
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getItemId(product: Product): string {
+  return product?.item?.id.toString() ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFormattedPrice(price: number): string {
-  return price.toString();
+  return price?.toString() ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalReviews(product: Product): number {
-  return 0;
+  return Number(product?.feedback?.counts?.ratingsCountTotal);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAverageRating(product: Product): number {
-  return 0;
+  return Number(product?.feedback?.counts?.averageValue);
 }
 
 export function _itemImageFilter(product: Product): { small: string, normal: string, big: string }[] {
+  if (!product) {
+    return [
+      {
+        small: '',
+        normal: '',
+        big: ''
+      }
+    ];
+  }
 
   const images = product.images;
   const imagesAccessor = images.variation?.length ? 'variation' : 'all';
@@ -153,5 +157,6 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getFormattedPrice,
   getTotalReviews,
   getAverageRating,
-  getBreadcrumbs
+  getBreadcrumbs: getBreadcrumbs,
+  getItemId
 };

@@ -27,13 +27,28 @@ function findCategoryBySlug(categories: Category[], slug: string): Category {
   }
 }
 
+function findCategoryPathById(categories: Category[], id: number, path: Category[] = []): Category[] {
+  for (const category of categories) {
+    if (category.id === id) {
+      return [...path, category];
+    }
+    if (category.children) {
+      const foundPath = findCategoryPathById(category.children, id, [...path, category]);
+      if (foundPath?.length > path?.length) {
+        return foundPath;
+      }
+    }
+  }
+}
+
 function getCategoryDetails(details:CategoryDetails[]): CategoryDetails {
-  // TODO  return correct details for selected language and webstoreId
+  // TODO:  return correct details for selected language and webstoreId
   return details[0];
 }
 
 export const categoryGetters: CategoryGetters<Category> = {
   getTree,
   findCategoryBySlug,
-  getCategoryDetails
+  getCategoryDetails,
+  findCategoryPathById
 };

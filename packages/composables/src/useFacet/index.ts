@@ -15,7 +15,6 @@ const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<SearchParams>) => {
 
-    // TODO this sometimes causes an error while switching categories or singleItem
     const { categories } = useCategory('categories');
 
     const category = categoryGetters.findCategoryBySlug(categories.value, params.input.categorySlug);

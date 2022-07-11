@@ -14,8 +14,7 @@ const useUiHelpers = () => {
   const context = getContext();
   const getFacetsFromURL = () => {
     const route = useRoute();
-    const { query, params } = context.$router.currentRoute;
-    console.log(query, params);
+    const { query } = context.$router.currentRoute;
     return {
       categorySlug: route.value.path.split('/').pop(),
       page: 1,
@@ -26,8 +25,6 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const getCatLink = (category): string => {
-    console.warn('[VSF] please implement useUiHelpers.getCatLink.');
-    console.log('__category', category);
     return `/c/${category.slug}`;
   };
 
