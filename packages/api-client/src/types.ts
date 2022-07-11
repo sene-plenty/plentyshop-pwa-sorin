@@ -211,12 +211,14 @@ feedback: ReviewAvarage
 export type Facet = {
   products: Product[],
   tree: AgnosticCategoryTree,
-  facets: FilterGroup []
+  facets: FilterGroup [],
+  pagination: any
 };
 
 export type CategoryPage = {
   products: Product[],
-  facets: FilterGroup[]
+  facets: FilterGroup[],
+  pagination: any
 }
 
 export type User = TODO;

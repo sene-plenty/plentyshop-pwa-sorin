@@ -17,9 +17,10 @@ const useUiHelpers = () => {
     const { query } = context.$router.currentRoute;
     return {
       categorySlug: route.value.path.split('/').pop(),
-      page: 1,
+      page: parseInt(query.page as string, 10) || 1,
       sort: query.sort,
-      facets: query.facets
+      facets: query.facets,
+      itemsPerPage: parseInt(query.itemsPerPage as string) || 20
     } as any;
   };
 
@@ -62,8 +63,13 @@ const useUiHelpers = () => {
   };
 
   // eslint-disable-next-line
-  const changeItemsPerPage = (itemsPerPage) => {
-    console.warn('[VSF] please implement useUiHelpers.changeItemsPerPage.');
+  const changeItemsPerPage = (itemsPerPage: number) => {
+    context.$router.push({
+      query: {
+        ...getFiltersDataFromUrl(context, false),
+        itemsPerPage
+      }
+    });
   };
 
   // eslint-disable-next-line

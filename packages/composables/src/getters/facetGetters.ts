@@ -18,7 +18,6 @@ function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticGroupedFacet[] {
-  console.log(params);
   return params.data.facets.map((group) => {
     return {
       id: group.id.toString(),
@@ -79,11 +78,11 @@ function getProducts(products: FacetSearchResult<Facet>): Product[] {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
   return {
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: 1,
-    itemsPerPage: 10,
-    pageOptions: []
+    currentPage: params.input.page,
+    totalPages: Math.ceil(Number(params.data.pagination.total) / Number(params.input.itemsPerPage)),
+    totalItems: params.data.pagination.total,
+    itemsPerPage: params.input.itemsPerPage,
+    pageOptions: params.data.pagination.perPageOptioons
   };
 }
 

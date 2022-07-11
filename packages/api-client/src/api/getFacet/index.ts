@@ -8,8 +8,12 @@ export async function getFacet(context: Context, params: any): Promise<CategoryP
   const categoryId = params.categoryId?.toString() || '16';
   const url = new URL('/rest/io/category', context.config.api.url);
   url.searchParams.set('categoryId', categoryId);
-  if (params.limit) {
-    url.searchParams.set('items', params.limit);
+
+  if (params.page) {
+    url.searchParams.set('page', params.page);
+  }
+  if (params.itemsPerPage) {
+    url.searchParams.set('items', params.itemsPerPage);
   }
   if (params.sort) {
     url.searchParams.set('sorting', params.sort);
@@ -21,6 +25,9 @@ export async function getFacet(context: Context, params: any): Promise<CategoryP
 
   return {
     products: data.data.itemList.documents.map(document => document.data),
+    pagination: {
+      totals: data.data.itemList.total
+    },
     facets: data.data.facets
   };
 }
