@@ -76,11 +76,20 @@ function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProducts(products: FacetSearchResult<Facet>): Product[] {
-  return products.data.products;
+  return products?.data?.products ?? [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
+  if (!params.data.pagination) {
+    return {
+      currentPage: 1,
+      totalPages: 1,
+      totalItems: 1,
+      itemsPerPage: 1,
+      pageOptions: [20, 40, 100]
+    };
+  }
   return {
     currentPage: params.input.page,
     totalPages: Math.ceil(Number(params.data.pagination.total) / Number(params.input.itemsPerPage)),
