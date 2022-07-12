@@ -81,21 +81,15 @@ function getProducts(products: FacetSearchResult<Facet>): Product[] {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
-  if (!params.data.pagination) {
-    return {
-      currentPage: 1,
-      totalPages: 1,
-      totalItems: 1,
-      itemsPerPage: 1,
-      pageOptions: [20, 40, 100]
-    };
-  }
+  const totals = params.data?.pagination?.total || 1;
+  const pageOptions = params.data?.pagination?.perPageOptioons || [20, 40, 100];
+
   return {
     currentPage: params.input.page,
-    totalPages: Math.ceil(Number(params.data.pagination.total) / Number(params.input.itemsPerPage)),
+    totalPages: Math.ceil(Number(totals) / Number(params.input.itemsPerPage)),
     totalItems: params.data.pagination.total,
     itemsPerPage: params.input.itemsPerPage,
-    pageOptions: params.data.pagination.perPageOptioons
+    pageOptions: pageOptions
   };
 }
 
