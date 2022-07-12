@@ -54,12 +54,21 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const changeFilters = (filters) => {
-    context.$router.push({
-      query: {
-        ...getFiltersDataFromUrl(context, false),
-        facets: Object.values(filters).filter((entry: string []) => entry.length > 0).join(',')
-      }
-    });
+    const filtersIds = Object.values(filters).filter((entry: string []) => entry.length > 0).join(',');
+    if (filtersIds) {
+      context.$router.push({
+        query: {
+          ...getFiltersDataFromUrl(context, false),
+          facets: filtersIds
+        }
+      });
+    } else {
+      context.$router.push({
+        query: {
+          ...getFiltersDataFromUrl(context, false)
+        }
+      });
+    }
   };
 
   // eslint-disable-next-line
