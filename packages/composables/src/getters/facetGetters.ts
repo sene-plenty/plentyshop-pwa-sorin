@@ -19,6 +19,9 @@ function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticGroupedFacet[] {
   const selectedFacets = params.input?.facets?.split(',');
+  if (!params?.data?.facets) {
+    return [];
+  }
 
   return params.data.facets.map((group) => {
     return {
