@@ -83,11 +83,12 @@ function getProducts(products: FacetSearchResult<Facet>): Product[] {
 function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
   const totals = params.data?.pagination?.total || 1;
   const pageOptions = params.data?.pagination?.perPageOptioons || [20, 40, 100];
+  const totalItems = params.data?.pagination?.total || 1;
 
   return {
     currentPage: params.input.page,
     totalPages: Math.ceil(Number(totals) / Number(params.input.itemsPerPage)),
-    totalItems: params.data.pagination.total,
+    totalItems: totalItems,
     itemsPerPage: params.input.itemsPerPage,
     pageOptions: pageOptions
   };
