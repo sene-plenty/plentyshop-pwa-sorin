@@ -59,14 +59,14 @@ export type Filter = {
 
 export type FilterGroup = {
   count: number,
-  cssClass?: string,
   id: number,
+  name: string,
+  type: string,
+  cssClass?: string,
   maxResultCount?: string,
   minHitCount?: string,
-  name: string,
   position?: number,
   sort?: string,
-  type: string,
   values?: Filter[]
 }
 
