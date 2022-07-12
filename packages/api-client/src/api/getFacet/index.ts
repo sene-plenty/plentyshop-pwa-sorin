@@ -1,9 +1,9 @@
 import { CategoryPage } from './../../types';
 import { Context } from 'src/types';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function getFacet(context: Context, params: any): Promise<CategoryPage> {
+  // TODO: use default category id
   const categoryId = params.categoryId?.toString() || '16';
   const url = new URL('/rest/io/category', context.config.api.url);
   url.searchParams.set('categoryId', categoryId);
