@@ -29,6 +29,7 @@ function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCrit
         return {
           selected: selectedFacets && selectedFacets.includes(filter.id.toString()),
           type: group.type,
+          count: filter.count,
           id: filter.id.toString(),
           value: filter.name.toString()
         };
