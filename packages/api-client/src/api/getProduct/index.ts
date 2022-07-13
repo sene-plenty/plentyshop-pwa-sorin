@@ -1,5 +1,5 @@
 import { ProductsSearchParams } from '@vue-storefront/core';
-import { Product, Context, ReviewAvarage } from 'src/types';
+import { Product, Context, ReviewAvarage, ProductVariation } from 'src/types';
 
 export async function getProduct(context: Context, params: ProductsSearchParams): Promise<Product[]> {
 
@@ -29,6 +29,8 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   if (params.id) {
     const product: Product[] = data.data.documents.map(document => document.data);
     product[0].feedback = await getFeedbackAvarage(context, [product[0].item.id.toString()]);
+    product[0].variationAttributes = getDummyAttributes();
+    product[0].variations = getDummyVariations();
     return product;
   } else {
     // TODO: load feedback for products
@@ -42,4 +44,40 @@ async function getFeedbackAvarage(context: Context, itemIds: string[]): Promise<
   urlFeedbackStars.searchParams.set('numberOfFeedbacks', '100');
   const { data } = await context.client.get(urlFeedbackStars.href);
   return data;
+}
+
+function getDummyAttributes() {
+  return [
+    {
+      attributeId: 1,
+      position: 1,
+      name: 'Farbe',
+      type: 'dropdown',
+      values: [
+        { attributeValueId: 3, position: 3, imageUrl: '', name: 'rot' },
+        { attributeValueId: 4, position: 4, imageUrl: '', name: 'weiß' }
+      ]
+    }
+  ];
+}
+
+function getDummyVariations(): ProductVariation[] {
+  return [
+    {
+      variationId: 1065,
+      isSalable: true,
+      unitCombinationId: 1,
+      unitId: 1,
+      unitName: '1 Stück',
+      attributes: [{ attributeId: 1, attributeValueId: 3 }]
+    },
+    {
+      variationId: 1066,
+      isSalable: true,
+      unitCombinationId: 1,
+      unitId: 1,
+      unitName: '1 Stück',
+      attributes: [{ attributeId: 1, attributeValueId: 4 }]
+    }
+  ];
 }

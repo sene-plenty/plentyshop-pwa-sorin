@@ -1,3 +1,4 @@
+import { ProductVariation } from './../../../api-client/src/types';
 import { categoryGetters } from './categoryGetters';
 import {
   AgnosticMediaGalleryItem,
@@ -67,7 +68,31 @@ function getFiltered(products: Product[], filters: ProductFilter): Product[] {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAttributes(products: Product[] | Product, filterByAttributeName?: string[]): Record<string, AgnosticAttribute | string> {
-  return {};
+  const isSingleProduct = !Array.isArray(products);
+  const productList = isSingleProduct ? [products] : products;
+  const attributes = {};
+
+  productList.forEach(product => {
+    product.variationAttributes.forEach(attribute => {
+      attribute.values.forEach(attributeValue => {
+        if (!attributes[attribute.attributeId]) {
+          attributes[attribute.attributeId] = {
+            name: attribute.name,
+            value: { [attributeValue.attributeValueId]: attributeValue.name },
+            label: attribute.name
+          } as AgnosticAttribute;
+        } else {
+          attributes[attribute.attributeId].value[attributeValue.attributeValueId] = attributeValue.name;
+        }
+      });
+    });
+  });
+
+  return attributes;
+}
+
+function getVariariationById(product: Product, variationId: number): ProductVariation {
+  return product.variations.find(variation => variation.variationId === variationId);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -81,7 +106,7 @@ function getShortDescription(product: Product): string {
 }
 
 function getTechnicalData(product: Product): string {
-  return product.texts.technicalData ?? '';
+  return product?.texts.technicalData ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -158,5 +183,6 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getTotalReviews,
   getAverageRating,
   getBreadcrumbs: getBreadcrumbs,
-  getItemId
+  getItemId,
+  getVariariationById
 };

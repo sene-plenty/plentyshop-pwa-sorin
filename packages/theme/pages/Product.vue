@@ -64,6 +64,23 @@
               {{size.label}}
             </SfSelectOption>
           </SfSelect>
+
+          <SfSelect
+            class="sf-select--underlined product__select-size"
+            v-for="(option, key) in options"
+            @input="selectedOption => updateFilter({ selectedOption })"
+            :key="key"
+            :label="option.label"
+          >
+            <SfSelectOption
+              v-for="(optionValue, valueKey) in option.value"
+              :key="valueKey"
+              :value="valueKey"
+            >
+            {{optionValue}}
+            </SfSelectOption>
+          </SfSelect>
+
           <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
             <p class="product__color-label">{{ $t('Color') }}:</p>
             <SfColor
@@ -208,11 +225,11 @@ export default {
     });
 
     const updateFilter = (filter) => {
+      productGetters.getVariariationById(product.value, filter);
       router.push({
-        path: route.value.path,
-        query: {
-          ...configuration.value,
-          ...filter
+        // TODO: add slug
+        params: {
+          id: 1009
         }
       });
     };
