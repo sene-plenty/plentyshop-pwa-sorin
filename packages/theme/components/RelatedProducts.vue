@@ -55,8 +55,8 @@ export default {
     const { addItem: addItemToCart, isInCart } = useCart();
     const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
     const removeProductFromWishlist = (productItem) => {
-      const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-      const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variation.sku === productItem.sku);
+      const productsInWishlist = computed(() => wishlistGetters.getItems(wishlist.value));
+      const product = productsInWishlist.value.find(wishlistProduct => wishlistGetters.getId(wishlistProduct) === productGetters.getId(productItem));
       removeItemFromWishlist({ product });
     };
     return {

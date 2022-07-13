@@ -243,9 +243,9 @@ export type ShippingProvider = TODO;
 
 export type Store = TODO;
 
-export type Wishlist = TODO;
-
 export type WishlistItem = Product;
+
+export type Wishlist = { items: WishlistItem[] };
 
 export type ClientInstance = AxiosInstance;
 
@@ -257,18 +257,29 @@ export type ReviewSearchParams = {
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
-  ): Product[],
+  ): Promise<Product[]>,
+
   getCategory(
     params: any
-  ): Category [],
+  ): Promise<Category[]>,
 
   getFacet(
     params: any
-  ): CategoryPage,
+  ): Promise<CategoryPage>,
 
   getReview(
     prams: ReviewSearchParams
-  ): Review
+  ): Promise<Review>,
+
+  getWishlist(): Promise<Wishlist>,
+
+  addWishlistItem(
+    productId: number
+  ): Promise<boolean>,
+
+  removeWishlistItem(
+    productId: number
+  ): Promise<boolean>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;

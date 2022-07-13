@@ -8,6 +8,7 @@ import {
 } from '@vue-storefront/core';
 import type { Category, Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
 import { languageHelper } from 'src/helpers/language';
+import { productImageFilter } from '../helpers/productImageFilter';
 
 function getName(product: Product): string {
   return product?.texts?.name1 ?? '';
@@ -28,7 +29,7 @@ function getPrice(product: Product): AgnosticPrice {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGallery(product: Product): AgnosticMediaGalleryItem[] {
-  return _itemImageFilter(product);
+  return productImageFilter(product);
 }
 
 function getBreadcrumbs(product: Product, categoryPath?: Category[]): AgnosticBreadcrumb [] {
@@ -56,7 +57,7 @@ function getBreadcrumbs(product: Product, categoryPath?: Category[]): AgnosticBr
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCoverImage(product: Product): string {
-  return product ? _itemImageFilter(product)[0].small : '';
+  return product ? productImageFilter(product)[0].small : '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -112,33 +113,6 @@ function getTotalReviews(product: Product): number {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAverageRating(product: Product): number {
   return Number(product?.feedback?.counts?.averageValue);
-}
-
-export function _itemImageFilter(product: Product): { small: string, normal: string, big: string }[] {
-  if (!product) {
-    return [
-      {
-        small: '',
-        normal: '',
-        big: ''
-      }
-    ];
-  }
-
-  const images = product.images;
-  const imagesAccessor = images.variation?.length ? 'variation' : 'all';
-  const result = [];
-
-  images[imagesAccessor].forEach(image => {
-    result.push({
-      small: image.urlPreview || image.urlMiddle,
-      normal: image.urlMiddle,
-      big: image.url || image.urlMiddle,
-      position: image.position
-    });
-  });
-
-  return result;
 }
 
 export const productGetters: ProductGetters<Product, ProductFilter> = {
