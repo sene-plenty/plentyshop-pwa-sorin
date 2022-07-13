@@ -11,6 +11,8 @@ import type {
 } from '../types';
 import { Facet } from '@vue-storefront/plentymarkets-api';
 
+const ITEMS_PER_PAGE = [20, 40, 100];
+
 const factoryParams = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   search: async (context: Context, params: FacetSearchResult<SearchParams>) => {
@@ -24,11 +26,15 @@ const factoryParams = {
     if (category) {
       params.input.categoryId = category.id;
     }
-
-    const data = await context.$plentymarkets.api.getProduct(params.input);
+    const data = await context.$plentymarkets.api.getFacet(params.input);
     return {
-      products: data,
-      tree
+      products: data.products,
+      tree,
+      facets: data.facets,
+      pagination: {
+        perPageOptioons: ITEMS_PER_PAGE,
+        total: data.pagination.totals
+      }
     } as Facet;
   }
 };

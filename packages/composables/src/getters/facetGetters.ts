@@ -18,7 +18,27 @@ function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticGroupedFacet[] {
-  return [];
+  const selectedFacets = params.input?.facets?.split(',');
+  if (!params?.data?.facets) {
+    return [];
+  }
+
+  return params.data.facets.map((group) => {
+    return {
+      id: group.id.toString(),
+      label: group.name,
+      count: group.count,
+      options: group.values.map((filter) => {
+        return {
+          selected: selectedFacets && selectedFacets.includes(filter.id.toString()),
+          type: group.type,
+          count: filter.count,
+          id: filter.id.toString(),
+          value: filter.name.toString()
+        };
+      })
+    };
+  });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,8 +65,8 @@ function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
       type: 'sort'
     }
   ].map(o => ({ ...o, selected: o.id === params.input.sort }));
-  const selected = options.find(o => o.id === params.input.sort)?.id || 'latest';
-  return { selected, options};
+  const selected = options.find(o => o.id === params.input.sort)?.id;
+  return { selected, options };
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree {
@@ -59,17 +79,21 @@ function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProducts(products: FacetSearchResult<Facet>): Product[] {
-  return products.data.products;
+  return products?.data?.products ?? [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
+  const totals = params.data?.pagination?.total || 1;
+  const pageOptions = params.data?.pagination?.perPageOptioons || [20, 40, 100];
+  const totalItems = params.data?.pagination?.total || 1;
+
   return {
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: 1,
-    itemsPerPage: 10,
-    pageOptions: []
+    currentPage: params.input.page,
+    totalPages: Math.ceil(Number(totals) / Number(params.input.itemsPerPage)),
+    totalItems: totalItems,
+    itemsPerPage: params.input.itemsPerPage,
+    pageOptions: pageOptions
   };
 }
 

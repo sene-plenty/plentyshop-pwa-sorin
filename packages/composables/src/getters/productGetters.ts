@@ -81,7 +81,7 @@ function getShortDescription(product: Product): string {
 }
 
 function getTechnicalData(product: Product): string {
-  return product.texts.technicalData ?? '';
+  return product?.texts?.technicalData ?? '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
