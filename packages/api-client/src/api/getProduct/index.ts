@@ -29,7 +29,7 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   if (params.id) {
     const product: Product[] = data.data.documents.map(document => document.data);
     product[0].feedback = await getFeedbackAvarage(context, [product[0].item.id.toString()]);
-    product[0].variationAttributes = getDummyAttributes();
+    product[0].productAttributes = getDummyAttributes();
     product[0].variations = getDummyVariations();
     return product;
   } else {

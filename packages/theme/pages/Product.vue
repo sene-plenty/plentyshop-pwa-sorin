@@ -47,30 +47,16 @@
           <SfButton class="sf-button--text desktop-only product__guide">
             {{ $t('Size guide') }}
           </SfButton>
-          <SfSelect
-            v-e2e="'size-select'"
-            v-if="options.size"
-            :value="configuration.size"
-            @input="size => updateFilter({ size })"
-            label="Size"
-            class="sf-select--underlined product__select-size"
-            :required="true"
-          >
-            <SfSelectOption
-              v-for="size in options.size"
-              :key="size.value"
-              :value="size.value"
-            >
-              {{size.label}}
-            </SfSelectOption>
-          </SfSelect>
 
           <SfSelect
             class="sf-select--underlined product__select-size"
+            v-e2e="'size-select'"
             v-for="(option, key) in options"
-            @input="selectedOption => updateFilter({ selectedOption })"
+            @input="optionValueKey => selectAttribute(key, optionValueKey)"
             :key="key"
             :label="option.label"
+            :value="selectedAttributes[key]"
+            :required="true"
           >
             <SfSelectOption
               v-for="(optionValue, valueKey) in option.value"
@@ -81,7 +67,7 @@
             </SfSelectOption>
           </SfSelect>
 
-          <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
+          <!-- <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
             <p class="product__color-label">{{ $t('Color') }}:</p>
             <SfColor
               v-for="(color, i) in options.color"
@@ -90,7 +76,7 @@
               class="product__color"
               @click="updateFilter({ color: color.value })"
             />
-          </div>
+          </div> -->
           <SfAddToCart
             v-e2e="'product_add-to-cart'"
             :stock="stock"
@@ -184,11 +170,12 @@ import {
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
+import { ref, computed, useRoute, useRouter, reactive } from '@nuxtjs/composition-api';
 import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@vue-storefront/plentymarkets';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
+import Vue from 'vue';
 
 export default {
   name: 'Product',
@@ -202,12 +189,15 @@ export default {
     const { addItem, loading } = useCart();
     const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
 
+    const selectedAttributes = reactive({});
+
     const id = computed(() => route.value.params.id);
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
     const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
     const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
+    const variationIdToSelect = computed(() => productGetters.getVariationIdForAttributes(product.value, selectedAttributes));
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
     // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
@@ -218,24 +208,36 @@ export default {
       alt: productGetters.getName(product.value)
     })));
 
-    onSSR(async () => {
-      await search({ id: id.value });
-      await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
-      await searchReviews({ productId: productGetters.getItemId(product.value) });
-    });
-
-    const updateFilter = (filter) => {
-      productGetters.getVariariationById(product.value, filter);
+    const selectAttribute = (attributeId, attributeValueId) => {
+      Vue.set(selectedAttributes, attributeId, attributeValueId);
       router.push({
         // TODO: add slug
         params: {
-          id: 1009
+          id: variationIdToSelect.value
         }
       });
     };
 
+    const preselectAttributes = () => {
+      for (const attribute of product.value.attributes) {
+        Vue.set(selectedAttributes, attribute.attributeId, attribute.valueId.toString());
+      }
+    };
+
+    onSSR(async () => {
+      await search({ id: id.value });
+
+      preselectAttributes();
+
+      await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
+      await searchReviews({ productId: productGetters.getItemId(product.value) });
+    });
+
+    if (product.value) {
+      preselectAttributes();
+    }
+
     return {
-      updateFilter,
       configuration,
       product,
       reviews,
@@ -249,7 +251,9 @@ export default {
       addItem,
       loading,
       productGetters,
-      productGallery
+      productGallery,
+      selectAttribute,
+      selectedAttributes
     };
   },
   components: {

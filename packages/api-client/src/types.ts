@@ -148,10 +148,14 @@ export type ProductVariation = {
   unitCombinationId: number,
   unitId: number,
   unitName: string,
-  attributes: [{ attributeId: number, attributeValueId: number }]
+  attributes: { attributeId: number, attributeValueId: number }[]
 }
 
 export type Product = {
+  attributes: {
+    attributeId: number,
+    valueId: number
+  }[],
   texts: {
     name1: string,
     name2: string,
@@ -206,7 +210,7 @@ prices: {
   default: any
 },
 feedback: ReviewAvarage,
-variationAttributes: ProductAttribute[],
+productAttributes: ProductAttribute[],
 variations: ProductVariation[]
 };
 

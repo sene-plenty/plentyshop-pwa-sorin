@@ -1,4 +1,3 @@
-import { ProductVariation } from './../../../api-client/src/types';
 import { categoryGetters } from './categoryGetters';
 import {
   AgnosticMediaGalleryItem,
@@ -7,7 +6,7 @@ import {
   ProductGetters,
   AgnosticBreadcrumb
 } from '@vue-storefront/core';
-import type { Category, Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
+import type { Category, Product, ProductFilter, ProductVariation } from '@vue-storefront/plentymarkets-api';
 import { languageHelper } from 'src/helpers/language';
 
 function getName(product: Product): string {
@@ -73,7 +72,7 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
   const attributes = {};
 
   productList.forEach(product => {
-    product.variationAttributes.forEach(attribute => {
+    product.productAttributes.forEach(attribute => {
       attribute.values.forEach(attributeValue => {
         if (!attributes[attribute.attributeId]) {
           attributes[attribute.attributeId] = {
@@ -89,6 +88,31 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
   });
 
   return attributes;
+}
+
+function getVariationAttributes(product: Product): { attributeId: number, attributeValueId: number }[] {
+  return product.attributes.map(attribute => {
+    return {
+      attributeId: attribute.attributeId,
+      attributeValueId: attribute.valueId
+    };
+  });
+}
+
+function getVariationIdForAttributes(product: Product, selectedAttributes: { attributeId: string, attributeValueId: string }): number {
+  const variations = product.variations;
+  const result = variations.find(variation => {
+    for (const selectedAttributeId in selectedAttributes) {
+      const selectedAttributeValueId = selectedAttributes[selectedAttributeId];
+      const found = variation.attributes.find(attr => attr.attributeId === parseInt(selectedAttributeId) && attr.attributeValueId === parseInt(selectedAttributeValueId));
+
+      if (found) {
+        return found;
+      }
+    }
+  });
+
+  return result.variationId;
 }
 
 function getVariariationById(product: Product, variationId: number): ProductVariation {
@@ -184,5 +208,7 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getAverageRating,
   getBreadcrumbs: getBreadcrumbs,
   getItemId,
-  getVariariationById
+  getVariariationById,
+  getVariationAttributes,
+  getVariationIdForAttributes
 };
