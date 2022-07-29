@@ -7,7 +7,6 @@ import {
   AgnosticBreadcrumb
 } from '@vue-storefront/core';
 import type { Category, Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
-import { languageHelper } from 'src/helpers/language';
 
 function getName(product: Product): string {
   return product?.texts?.name1 ?? '';
@@ -31,9 +30,11 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   return _itemImageFilter(product);
 }
 
-function getBreadcrumbs(product: Product, categoryPath?: Category[]): AgnosticBreadcrumb [] {
-  categoryPath = categoryPath?.length ? categoryPath : [];
-
+function getBreadcrumbs(product: Product, categories?: Category[]): AgnosticBreadcrumb [] {
+  if (categories.length <= 0) {
+    return [];
+  }
+  const categoryPath = categoryGetters.findCategoryPathById(categories, product.defaultCategories[0].id);
   return [
     {
       text: 'Home',
@@ -44,7 +45,7 @@ function getBreadcrumbs(product: Product, categoryPath?: Category[]): AgnosticBr
       const categoryDetails = categoryGetters.getCategoryDetails(category.details);
       return {
         text: categoryDetails.name,
-        link: `/${languageHelper.langPrefix}/c/` + categoryDetails.nameUrl
+        link: categoryDetails.nameUrl
       };
     }),
     {
