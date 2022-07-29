@@ -100,6 +100,7 @@ function getVariationAttributes(product: Product): { attributeId: number, attrib
   });
 }
 
+// TODO: implement multiple attributes & item content (inhalt)
 function getVariationIdForAttributes(product: Product, selectedAttributes: { attributeId: string, attributeValueId: string }): number {
   const variations = product.variations;
   const result = variations.find(variation => {

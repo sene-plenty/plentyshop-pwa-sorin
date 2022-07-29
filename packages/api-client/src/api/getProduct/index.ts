@@ -27,11 +27,11 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   const { data } = await context.client.get(url.href);
 
   if (params.id) {
-    // TODO: move this assignments to php controller & don't use arrays
-    const product: Product[] = data[0].documents.map(document => document.data);
+    // info: requires stable7 deploy (29.07.2022)
+    const product: Product[] = data.item.documents.map(document => document.data);
     product[0].feedback = await getFeedbackAvarage(context, [product[0].item.id.toString()]);
-    product[0].productAttributes = data[1].attributes;
-    product[0].variations = data[1].variations;
+    product[0].productAttributes = data.attributes;
+    product[0].variations = data.variations;
     return product;
   } else {
     // TODO: load feedback for products
