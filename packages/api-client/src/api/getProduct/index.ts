@@ -1,11 +1,11 @@
 import { ProductsSearchParams } from '@vue-storefront/core';
-import { Product, Context, ReviewAvarage, ProductVariation } from 'src/types';
+import { Product, Context, ReviewAvarage } from 'src/types';
 
 export async function getProduct(context: Context, params: ProductsSearchParams): Promise<Product[]> {
 
   let url: URL;
   if (params.id) {
-    url = new URL('/rest/io/variations', context.config.api.url);
+    url = new URL(`/rest/storefront/items/${ params.id }?withVariationAttributeMap=true`, context.config.api.url);
     url.searchParams.set('variationIds[]', params.id);
     url.searchParams.set('resultFieldTemplate', 'SingleItem');
   } else if (params.term) {
@@ -27,10 +27,11 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   const { data } = await context.client.get(url.href);
 
   if (params.id) {
-    const product: Product[] = data.data.documents.map(document => document.data);
+    // TODO: move this assignments to php controller & don't use arrays
+    const product: Product[] = data[0].documents.map(document => document.data);
     product[0].feedback = await getFeedbackAvarage(context, [product[0].item.id.toString()]);
-    product[0].productAttributes = getDummyAttributes();
-    product[0].variations = getDummyVariations();
+    product[0].productAttributes = data[1].attributes;
+    product[0].variations = data[1].variations;
     return product;
   } else {
     // TODO: load feedback for products
@@ -44,40 +45,4 @@ async function getFeedbackAvarage(context: Context, itemIds: string[]): Promise<
   urlFeedbackStars.searchParams.set('numberOfFeedbacks', '100');
   const { data } = await context.client.get(urlFeedbackStars.href);
   return data;
-}
-
-function getDummyAttributes() {
-  return [
-    {
-      attributeId: 1,
-      position: 1,
-      name: 'Farbe',
-      type: 'dropdown',
-      values: [
-        { attributeValueId: 3, position: 3, imageUrl: '', name: 'rot' },
-        { attributeValueId: 4, position: 4, imageUrl: '', name: 'weiß' }
-      ]
-    }
-  ];
-}
-
-function getDummyVariations(): ProductVariation[] {
-  return [
-    {
-      variationId: 1065,
-      isSalable: true,
-      unitCombinationId: 1,
-      unitId: 1,
-      unitName: '1 Stück',
-      attributes: [{ attributeId: 1, attributeValueId: 3 }]
-    },
-    {
-      variationId: 1066,
-      isSalable: true,
-      unitCombinationId: 1,
-      unitId: 1,
-      unitName: '1 Stück',
-      attributes: [{ attributeId: 1, attributeValueId: 4 }]
-    }
-  ];
 }
