@@ -31,23 +31,17 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
 }
 
 function getBreadcrumbs(product: Product, categories?: Category[]): AgnosticBreadcrumb [] {
-  if (categories.length <= 0) {
+  if (categories.length <= 0 || !product) {
     return [];
   }
-  const categoryPath = categoryGetters.findCategoryPathById(categories, product.defaultCategories[0].id);
+
+  const breadcrumbs = categoryGetters.getMappedBreadcrumbs(categories, product.defaultCategories[0].id);
   return [
     {
       text: 'Home',
       link: '/'
     },
-
-    ...categoryPath.map((category) => {
-      const categoryDetails = categoryGetters.getCategoryDetails(category.details);
-      return {
-        text: categoryDetails.name,
-        link: categoryDetails.nameUrl
-      };
-    }),
+    ...breadcrumbs,
     {
       text: product.texts.name1,
       link: ''
