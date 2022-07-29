@@ -6,11 +6,11 @@ import {
   AgnosticPagination,
   AgnosticSort,
   AgnosticBreadcrumb,
-
   AgnosticFacet
 } from '@vue-storefront/core';
-import type { Facet, FacetSearchCriteria, Product } from '@vue-storefront/plentymarkets-api';
+import type { Category, Facet, FacetSearchCriteria, Product } from '@vue-storefront/plentymarkets-api';
 import { useContext } from '@nuxtjs/composition-api';
+import { categoryGetters } from './categoryGetters';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticFacet[] {
@@ -101,7 +101,17 @@ function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getBreadcrumbs(params: FacetSearchResult<Facet>): AgnosticBreadcrumb[] {
+function getBreadcrumbs(params: FacetSearchResult<Facet>, categories?: Category[]): AgnosticBreadcrumb[] {
+  const categoryPath = categoryGetters.findCategoryPathById(categories, params.input.categoryId);
+  if (categoryPath) {
+    return categoryPath.map((category) => {
+      const categoryDetails = categoryGetters.getCategoryDetails(category.details);
+      return {
+        text: categoryDetails.name,
+        link: categoryDetails.nameUrl
+      };
+    });
+  }
   return [];
 }
 
