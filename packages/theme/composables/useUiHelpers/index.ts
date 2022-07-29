@@ -6,6 +6,8 @@ const getContext = () => {
   return vm.root.proxy;
 };
 
+const nonFilters = ['page', 'sort', 'term', 'itemsPerPage'];
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useUiHelpers = () => {
 
@@ -15,8 +17,10 @@ const useUiHelpers = () => {
     const { query } = context.$router.currentRoute;
     return {
       categorySlug: route.value.path.split('/').pop(),
-      page: 1,
-      sort: query.sort || 'latest'
+      page: parseInt(query.page as string, 10) || 1,
+      sort: query.sort,
+      facets: query.facets,
+      itemsPerPage: parseInt(query.itemsPerPage as string) || 20
     } as any;
   };
 
@@ -31,14 +35,50 @@ const useUiHelpers = () => {
     context.$router.push({ query: { ...query, sort } });
   };
 
-  // eslint-disable-next-line
-  const changeFilters = (filters) => {
-    console.warn('[VSF] please implement useUiHelpers.changeFilters.');
+  const reduceFilters = (query) => (prev, curr) => {
+    const makeArray = Array.isArray(query[curr]) || nonFilters.includes(curr);
+
+    return {
+      ...prev,
+      [curr]: makeArray ? query[curr] : [query[curr]]
+    };
+  };
+
+  const getFiltersDataFromUrl = (context, onlyFilters) => {
+    const { query } = context.$router.history.current;
+
+    return Object.keys(query)
+      .filter(f => onlyFilters ? !nonFilters.includes(f) : nonFilters.includes(f))
+      .reduce(reduceFilters(query), {});
   };
 
   // eslint-disable-next-line
-  const changeItemsPerPage = (itemsPerPage) => {
-    console.warn('[VSF] please implement useUiHelpers.changeItemsPerPage.');
+  const changeFilters = (filters) => {
+    const filtersIds = Object.values(filters).filter((entry: string []) => entry.length > 0).join(',');
+    if (filtersIds) {
+      context.$router.push({
+        query: {
+          ...getFiltersDataFromUrl(context, false),
+          facets: filtersIds
+        }
+      });
+    } else {
+      context.$router.push({
+        query: {
+          ...getFiltersDataFromUrl(context, false)
+        }
+      });
+    }
+  };
+
+  // eslint-disable-next-line
+  const changeItemsPerPage = (itemsPerPage: number) => {
+    context.$router.push({
+      query: {
+        ...getFiltersDataFromUrl(context, false),
+        itemsPerPage
+      }
+    });
   };
 
   // eslint-disable-next-line

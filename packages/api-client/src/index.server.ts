@@ -3,6 +3,7 @@ import axios from 'axios';
 import type { Settings, Endpoints } from './types';
 import { getProduct } from './api/getProduct';
 import { getCategory } from './api/getCategory';
+import { getFacet } from './api/getFacet';
 import { getReview } from './api/getReview';
 
 function onCreate(settings: Settings) {
@@ -20,6 +21,7 @@ const { createApiClient } = apiClientFactory<Settings, Endpoints>({
   api: {
     getProduct,
     getCategory,
+    getFacet,
     getReview
   }
 });
