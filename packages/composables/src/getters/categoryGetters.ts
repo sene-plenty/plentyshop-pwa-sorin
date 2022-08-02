@@ -1,4 +1,5 @@
-import { CategoryGetters, AgnosticCategoryTree } from '@vue-storefront/core';
+import { useContext } from '@nuxtjs/composition-api';
+import { CategoryGetters, AgnosticCategoryTree, AgnosticBreadcrumb } from '@vue-storefront/core';
 import type { Category, CategoryDetails } from '@vue-storefront/plentymarkets-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -41,6 +42,19 @@ function findCategoryPathById(categories: Category[], id: number, path: Category
   }
 }
 
+function getMappedBreadcrumbs(categories: Category[], categoryId: number): AgnosticBreadcrumb[] {
+  const categoryPath = findCategoryPathById(categories, categoryId);
+  const context = useContext();
+
+  return categoryPath.map((category) => {
+    const categoryDetails = getCategoryDetails(category.details);
+    return {
+      text: categoryDetails.name,
+      link: context.app.localePath('/c/' + categoryDetails.nameUrl)
+    };
+  });
+}
+
 function getCategoryDetails(details:CategoryDetails[]): CategoryDetails {
   // TODO:  return correct details for selected language and webstoreId
   return details[0];
@@ -50,5 +64,6 @@ export const categoryGetters: CategoryGetters<Category> = {
   getTree,
   findCategoryBySlug,
   getCategoryDetails,
-  findCategoryPathById
+  findCategoryPathById,
+  getMappedBreadcrumbs
 };

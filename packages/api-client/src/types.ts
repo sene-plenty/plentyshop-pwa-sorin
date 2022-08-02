@@ -48,6 +48,28 @@ export type PasswordResetResult = TODO;
 
 export type ProductFilter = TODO;
 
+export type Filter = {
+      id: number,
+      name: string,
+      cssClass?: string,
+      position?: number,
+      count?: number,
+      selected?: boolean
+}
+
+export type FilterGroup = {
+  count: number,
+  id: number,
+  name: string,
+  type: string,
+  cssClass?: string,
+  maxResultCount?: string,
+  minHitCount?: string,
+  position?: number,
+  sort?: string,
+  values?: Filter[]
+}
+
 export declare type ReviewItem = {
   id: number,
   title: string,
@@ -188,8 +210,16 @@ feedback: ReviewAvarage
 
 export type Facet = {
   products: Product[],
-  tree: AgnosticCategoryTree
+  tree: AgnosticCategoryTree,
+  facets: FilterGroup [],
+  pagination: any
 };
+
+export type CategoryPage = {
+  products: Product[],
+  facets: FilterGroup[],
+  pagination: any
+}
 
 export type User = TODO;
 
@@ -231,6 +261,11 @@ export interface PlentymarketsApiMethods {
   getCategory(
     params: any
   ): Category [],
+
+  getFacet(
+    params: any
+  ): CategoryPage,
+
   getReview(
     prams: ReviewSearchParams
   ): Review
