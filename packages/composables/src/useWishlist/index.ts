@@ -12,12 +12,14 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
     const data = await context.$plentymarkets.api.getWishlist();
+    // console.log('load wishlist', data);
     return data;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentWishlist, product }) => {
     await context.$plentymarkets.api.addWishlistItem(product.variation.id);
+    // console.log('add item to wishlist', product, currentWishlist);
     // TODO: get wishlist from composable and return
     return { items: []};
   },
