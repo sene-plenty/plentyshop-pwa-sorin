@@ -1,5 +1,3 @@
-const middlewareCookies = require('./extensions/middleware-cookies.ts');
-
 module.exports = {
   integrations: {
     plentymarkets: {
@@ -8,8 +6,7 @@ module.exports = {
         api: {
           url: 'https://mevofvd5omld.c01-14.plentymarkets.com'
         }
-      },
-      extensions: extensions => [...extensions, middlewareCookies]
+      }
     }
   }
 };
