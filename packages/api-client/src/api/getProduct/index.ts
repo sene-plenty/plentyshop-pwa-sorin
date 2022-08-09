@@ -30,8 +30,15 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
     // info: requires stable7 deploy (29.07.2022)
     const product: Product[] = data.item.documents.map(document => document.data);
     product[0].feedback = await getFeedbackAvarage(context, [product[0].item.id.toString()]);
-    product[0].productAttributes = data.attributes;
-    product[0].variations = data.variations;
+
+    // set the variation attribute map into the variations data
+    if (data.attributes || data.variations) {
+      product[0].variationAttributeMap = {
+        attributes: data.attributes,
+        variations: data.variations
+      };
+    }
+
     return product;
   } else {
     // TODO: load feedback for products

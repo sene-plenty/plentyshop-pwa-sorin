@@ -232,8 +232,10 @@ prices: {
   default: any
 },
 feedback: ReviewAvarage,
-productAttributes: ProductAttribute[],
-variations: ProductVariation[]
+variationAttributeMap?: {
+  attributes: ProductAttribute[],
+  variations: ProductVariation[]
+}
 };
 
 export type Facet = {
