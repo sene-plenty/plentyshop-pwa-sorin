@@ -220,8 +220,10 @@ export default {
     };
 
     const preselectAttributes = () => {
-      for (const attribute of product.value.attributes) {
-        Vue.set(selectedAttributes, attribute.attributeId, attribute.valueId.toString());
+      if (product.value?.variationAttributeMap) {
+        for (const attribute of product.value.attributes) {
+          Vue.set(selectedAttributes, attribute.attributeId, attribute.valueId.toString());
+        }
       }
     };
 

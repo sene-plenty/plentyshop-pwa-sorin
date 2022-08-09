@@ -34,7 +34,7 @@ function getBreadcrumbs(product: Product, categories?: Category[]): AgnosticBrea
   if (categories.length <= 0) {
     return [];
   }
-  const categoryPath = categoryGetters.findCategoryPathById(categories, product.defaultCategories[0].id);
+  const categoryPath = categoryGetters.findCategoryPathById(categories, product.defaultCategories[0]?.id);
   return [
     {
       text: 'Home',
@@ -73,7 +73,7 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
   const attributes = {};
 
   productList.forEach(product => {
-    product.productAttributes.forEach(attribute => {
+    product.variationAttributeMap?.attributes.forEach(attribute => {
       attribute.values.forEach(attributeValue => {
         if (!attributes[attribute.attributeId]) {
           attributes[attribute.attributeId] = {
@@ -102,7 +102,7 @@ function getVariationAttributes(product: Product): { attributeId: number, attrib
 
 // TODO: implement multiple attributes & item content (inhalt)
 function getVariationIdForAttributes(product: Product, selectedAttributes: { attributeId: string, attributeValueId: string }): number {
-  const variations = product.variations;
+  const variations = product.variationAttributeMap.variations;
   const result = variations.find(variation => {
     for (const selectedAttributeId in selectedAttributes) {
       const selectedAttributeValueId = selectedAttributes[selectedAttributeId];
@@ -118,7 +118,7 @@ function getVariationIdForAttributes(product: Product, selectedAttributes: { att
 }
 
 function getVariariationById(product: Product, variationId: number): ProductVariation {
-  return product.variations.find(variation => variation.variationId === variationId);
+  return product.variationAttributeMap.variations.find(variation => variation.variationId === variationId);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
