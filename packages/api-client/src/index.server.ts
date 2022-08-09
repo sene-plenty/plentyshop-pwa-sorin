@@ -1,21 +1,15 @@
 import {ApiClientExtension, apiClientFactory} from '@vue-storefront/core';
 import axios from 'axios';
-import type {Settings, Endpoints} from './types';
+import type {Endpoints, Settings} from './types';
 import {getProduct} from './api/getProduct';
 import {getCategory} from './api/getCategory';
 import {getFacet} from './api/getFacet';
 import {getReview} from './api/getReview';
 import {addWishlistItem, getWishlist, removeWishlistItem} from './api/getWishlist';
+import {isArray} from 'util';
 
 const PLENTY_ID = 'plentyID';
-let sessionId = '';
-let cookies = '';
-
-const getSessionIdValue = (cookies: string): string => {
-  const keyValue = cookies.split(';').find(cookie => cookie.includes(PLENTY_ID));
-  const value = keyValue.split('=')[1];
-  return value;
-};
+let cookies: string | string[] = '';
 
 function onCreate(settings: Settings) {
   const client = axios.create({
@@ -25,17 +19,17 @@ function onCreate(settings: Settings) {
 
   // Add a response interceptor
   client.interceptors.response.use((response) => {
-    if (response.headers['set-cookie'] && response.headers['set-cookie'][0].includes(PLENTY_ID)) {
-      sessionId = getSessionIdValue(response.headers['set-cookie'][0]);
-      cookies = response.headers['set-cookie'][0];
-    }
+    // sessionId = getSessionIdValue(response.headers['set-cookie'][0]);
+    console.log('response intercept');
+    cookies = response.headers['set-cookie'];
     return response;
   }, (error) => {
     return Promise.reject(error);
   });
 
   client.interceptors.request.use((request) => {
-    request.headers.cookie = cookies;
+    request.headers.cookie = isArray(cookies) ? cookies[0] : cookies;
+    console.log('request intercept');
     return request;
   }, (error) => {
     return Promise.reject(error);
@@ -51,7 +45,9 @@ const tokenExtension: ApiClientExtension = {
   name: 'tokenExtension',
   hooks: (req, res) => ({
     beforeCreate: ({configuration}) => {
-      res.cookie(PLENTY_ID, sessionId);
+      // res.cookie(PLENTY_ID, sessionId);
+      cookies = req.headers.cookies ?? '';
+      console.log('beforeCreate');
       return {
         ...configuration,
         state: {
@@ -66,6 +62,12 @@ const tokenExtension: ApiClientExtension = {
           }
         }
       };
+    },
+    afterCall: ({ response }) => {
+      console.log('afterCall');
+      res.set('set-cookie', cookies);
+      cookies = '';
+      return response;
     }
   })
 };

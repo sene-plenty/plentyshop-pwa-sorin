@@ -3,10 +3,17 @@ import { AxiosInstance } from 'axios';
 
 export type TODO = unknown;
 
+export type ConfigState = {
+  getCookies: () => string,
+  getSessionId: () => string,
+  setSessionId: (token: string) => void
+};
+
 export type Settings = {
   api: {
     url: string
-  }
+  },
+  state: ConfigState
 };
 
 export type Endpoints = TODO;
