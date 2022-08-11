@@ -100,21 +100,26 @@ function getVariationAttributes(product: Product): { attributeId: number, attrib
   });
 }
 
-// TODO: implement multiple attributes & item content (inhalt)
 function getVariationIdForAttributes(product: Product, selectedAttributes: { attributeId: string, attributeValueId: string }): number {
   const variations = product.variationAttributeMap.variations;
-  const result = variations.find(variation => {
-    for (const selectedAttributeId in selectedAttributes) {
-      const selectedAttributeValueId = selectedAttributes[selectedAttributeId];
-      const found = variation.attributes.find(attr => attr.attributeId === parseInt(selectedAttributeId) && attr.attributeValueId === parseInt(selectedAttributeValueId));
 
-      if (found) {
-        return found;
+  const result = variations.find(variation => {
+    // TODO: check if the contentUnitId is matching
+    for (const selectedAttributeId in selectedAttributes) {
+      const selectedAttributeValueId = parseInt(selectedAttributes[selectedAttributeId]);
+
+      const variationAttribute = variation.attributes.find(variationAttribute =>
+        variationAttribute.attributeId === parseInt(selectedAttributeId));
+
+      if (variationAttribute && variationAttribute.attributeValueId !== selectedAttributeValueId) {
+        return false;
       }
     }
+
+    return true;
   });
 
-  return result.variationId;
+  return result?.variationId;
 }
 
 function getVariariationById(product: Product, variationId: number): ProductVariation {

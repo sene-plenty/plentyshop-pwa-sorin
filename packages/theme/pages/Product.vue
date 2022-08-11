@@ -198,7 +198,6 @@ export default {
     const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
-    const variationIdToSelect = computed(() => productGetters.getVariationIdForAttributes(product.value, selectedAttributes));
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
     const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value, breadcrumbCategories.value));
@@ -211,12 +210,16 @@ export default {
 
     const selectAttribute = (attributeId, attributeValueId) => {
       Vue.set(selectedAttributes, attributeId, attributeValueId);
-      router.push({
-        // TODO: add slug
-        params: {
-          id: variationIdToSelect.value
-        }
-      });
+      const variationIdToSelect = productGetters.getVariationIdForAttributes(product.value, selectedAttributes);
+
+      if (variationIdToSelect) {
+        router.push({
+          // TODO: add slug
+          params: {
+            id: variationIdToSelect
+          }
+        });
+      }
     };
 
     const preselectAttributes = () => {
