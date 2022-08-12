@@ -91,20 +91,26 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
   return attributes;
 }
 
-function getVariationAttributes(product: Product): { attributeId: number, attributeValueId: number }[] {
-  return product.attributes.map(attribute => {
-    return {
-      attributeId: attribute.attributeId,
-      attributeValueId: attribute.valueId
-    };
-  });
+function getUnits(product: Product): Record<number, string> {
+  const units = {};
+
+  if (product.variationAttributeMap?.variations) {
+    for (const variation of product.variationAttributeMap.variations) {
+      units[variation.unitCombinationId] = variation.unitName;
+    }
+  }
+
+  return units;
 }
 
-function getVariationIdForAttributes(product: Product, selectedAttributes: { attributeId: string, attributeValueId: string }): number {
+function getVariationIdForAttributes(product: Product, selectedAttributes: Record<number, string>, unitCombinationId: string | null): number {
   const variations = product.variationAttributeMap.variations;
 
   const result = variations.find(variation => {
-    // TODO: check if the contentUnitId is matching
+    if (unitCombinationId && parseInt(unitCombinationId) !== variation.unitCombinationId) {
+      return false;
+    }
+
     for (const selectedAttributeId in selectedAttributes) {
       const selectedAttributeValueId = parseInt(selectedAttributes[selectedAttributeId]);
 
@@ -216,6 +222,6 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getBreadcrumbs: getBreadcrumbs,
   getItemId,
   getVariariationById,
-  getVariationAttributes,
-  getVariationIdForAttributes
+  getVariationIdForAttributes,
+  getUnits
 };

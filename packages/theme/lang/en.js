@@ -158,5 +158,6 @@ export default {
   'name-a-z': 'Name A-Z',
   'name-z-a': 'Name Z-A',
   'price-up': 'Price ⬆',
-  'price-down': 'Price ⬇'
+  'price-down': 'Price ⬇',
+  'content': 'Content'
 };

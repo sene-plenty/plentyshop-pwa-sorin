@@ -52,7 +52,7 @@
             class="sf-select--underlined product__select-size"
             v-e2e="'size-select'"
             v-for="(option, key) in options"
-            @input="optionValueKey => selectAttribute(key, optionValueKey)"
+            @input="optionValueKey => selectOption(key, optionValueKey)"
             :key="key"
             :label="option.label"
             :value="selectedAttributes[key]"
@@ -67,16 +67,23 @@
             </SfSelectOption>
           </SfSelect>
 
-          <!-- <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
-            <p class="product__color-label">{{ $t('Color') }}:</p>
-            <SfColor
-              v-for="(color, i) in options.color"
-              :key="i"
-              :color="color.value"
-              class="product__color"
-              @click="updateFilter({ color: color.value })"
-            />
-          </div> -->
+          <SfSelect
+            class="sf-select--underlined product__select-size"
+            v-e2e="'content-select'"
+            :label="$t('content')"
+            :required="true"
+            v-model="selectedUnit"
+            @input="optionValueKey => selectOption()"
+          >
+            <SfSelectOption
+              v-for="(unitName, unitCombinationId) in units"
+              :key="unitCombinationId"
+              :value="unitCombinationId"
+            >
+              {{ unitName }}
+            </SfSelectOption>
+          </SfSelect>
+
           <SfAddToCart
             v-e2e="'product_add-to-cart'"
             :stock="stock"
@@ -195,7 +202,8 @@ export default {
     const id = computed(() => route.value.params.id);
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
     const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
-    const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
+    const units = computed(() => productGetters.getUnits(product.value));
+    const selectedUnit = ref(null);
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
@@ -208,9 +216,12 @@ export default {
       alt: productGetters.getName(product.value)
     })));
 
-    const selectAttribute = (attributeId, attributeValueId) => {
-      Vue.set(selectedAttributes, attributeId, attributeValueId);
-      const variationIdToSelect = productGetters.getVariationIdForAttributes(product.value, selectedAttributes);
+    const selectOption = (attributeId, attributeValueId) => {
+      if (attributeId && attributeValueId) {
+        Vue.set(selectedAttributes, attributeId, attributeValueId);
+      }
+
+      const variationIdToSelect = productGetters.getVariationIdForAttributes(product.value, selectedAttributes, selectedUnit.value);
 
       if (variationIdToSelect) {
         router.push({
@@ -224,8 +235,17 @@ export default {
 
     const preselectAttributes = () => {
       if (product.value?.variationAttributeMap) {
+        // set attributes
         for (const attribute of product.value.attributes) {
           Vue.set(selectedAttributes, attribute.attributeId, attribute.valueId.toString());
+        }
+
+        // set unit
+        const variation = product.value.variationAttributeMap.variations.find(variation =>
+          variation.variationId === product.value.variation.id);
+
+        if (variation) {
+          selectedUnit.value = variation.unitCombinationId.toString();
         }
       }
     };
@@ -244,7 +264,6 @@ export default {
     }
 
     return {
-      configuration,
       product,
       reviews,
       reviewGetters,
@@ -258,9 +277,11 @@ export default {
       loading,
       productGetters,
       productGallery,
-      selectAttribute,
       selectedAttributes,
-      breadcrumbs
+      breadcrumbs,
+      units,
+      selectedUnit,
+      selectOption
     };
   },
   components: {
