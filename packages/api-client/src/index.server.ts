@@ -8,16 +8,19 @@ import {getReview} from './api/getReview';
 import {addWishlistItem, getWishlist, removeWishlistItem} from './api/getWishlist';
 import {isArray} from 'util';
 
-const PLENTY_ID = 'plentyID';
 let cookies: string | string[] = '';
 
-const getSessionIdCookie = (cookies: string): string => {
-  if (cookies.includes(PLENTY_ID)) {
-    const start = cookies.indexOf(PLENTY_ID);
-    const end = cookies.indexOf(';', start);
-    return cookies.substring(start, end);
-  }
-  return '';
+const cookieBlacklist = ['domain', 'secure', 'httponly'];
+
+const filterCookies = (cookies: string): string => {
+  cookieBlacklist.forEach((blacklistedCookie) => {
+    if (cookies.includes(blacklistedCookie)) {
+      const start = cookies.indexOf(blacklistedCookie);
+      const end = cookies.indexOf(';', start) + 1;
+      cookies = cookies.replace(cookies.slice(start, end), '');
+    }
+  });
+  return cookies;
 };
 
 function onCreate(settings: Settings) {
@@ -28,9 +31,7 @@ function onCreate(settings: Settings) {
 
   // Add a response interceptor
   client.interceptors.response.use((response) => {
-    // sessionId = getSessionIdValue(response.headers['set-cookie'][0]);
-    cookies = getSessionIdCookie(response.headers['set-cookie'][0]);
-    console.log('response intercept', cookies);
+    cookies = filterCookies(response.headers['set-cookie'][0]);
     return response;
   }, (error) => {
     return Promise.reject(error);
@@ -38,7 +39,6 @@ function onCreate(settings: Settings) {
 
   client.interceptors.request.use((request) => {
     request.headers.cookie = isArray(cookies) ? cookies[0] : cookies;
-    console.log('request intercept');
     return request;
   }, (error) => {
     return Promise.reject(error);
@@ -54,26 +54,10 @@ const tokenExtension: ApiClientExtension = {
   name: 'tokenExtension',
   hooks: (req, res) => ({
     beforeCreate: ({configuration}) => {
-      // res.cookie(PLENTY_ID, sessionId);
       cookies = req.headers.cookie ?? '';
-      console.log('beforeCreate');
-      return {
-        ...configuration,
-        state: {
-          getCookies: () => cookies,
-          getSessionId: () => req.cookies[PLENTY_ID],
-          setSessionId: (token) => {
-            if (!token) {
-              delete req.cookies[PLENTY_ID];
-              return;
-            }
-            res.cookie(PLENTY_ID, JSON.stringify(token));
-          }
-        }
-      };
+      return configuration;
     },
     afterCall: ({ response }) => {
-      console.log('afterCall');
       res.set('set-cookie', cookies);
       cookies = '';
       return response;

@@ -5,17 +5,17 @@ import {Context} from '../../types';
 export async function getWishlist(context: Context, params: any): Promise<any> {
   const url: URL = new URL('/rest/io/itemWishList/', context.config.api.url);
   const { data } = await context.client.get(url.href);
-  return { items: data.data.documents };
+  const items = data.data.documents.map((wishListItem) => wishListItem.data);
+  return { items };
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function addWishlistItem(context: Context, productId: number): Promise<boolean> {
   const url: URL = new URL('/rest/io/itemWishList', context.config.api.url);
-  url.searchParams.set('variationId', String(productId));
 
   // {"id":null,"contactId":0,"plentyId":34831,"variationId":1005,"quantity":0,"createdAt":"2022-07-12 10:49:02"}
-  const { data } = await context.client.get(url.href);
-  return Boolean(data.variationId);
+  const { data } = await context.client.post(url.href, { variationId: productId });
+  return data;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

@@ -11,11 +11,9 @@ const plugin: Plugin = ({ app }) => {
     app.$vsf.$plentymarkets.client.interceptors.response.use((response) => {
       if (response.headers) {
         const setCookie = isArray(response.headers['set-cookie']) ? response.headers['set-cookie'][0] : response.headers['set-cookie'];
-        console.log('res');
         if (setCookie) {
           app.context.res.setHeader('set-cookie', setCookie);
           app.$vsf.$plentymarkets.config.cookies = setCookie;
-          console.log('res cookies: ', app.$vsf.$plentymarkets.config.cookies);
         }
       }
       return response;
@@ -23,8 +21,8 @@ const plugin: Plugin = ({ app }) => {
 
     app.$vsf.$plentymarkets.client.interceptors.request.use((request) => {
       let reqCookies = '';
-      if (app.$vsf.$plentymarkets.config.cookies || app.$vsf.$plentymarkets.config.axios.cookie) {
-        reqCookies = app.$vsf.$plentymarkets.config.cookies ?? app.$vsf.$plentymarkets.config.axios.cookie;
+      if (app.$vsf.$plentymarkets.config.cookies) {
+        reqCookies = app.$vsf.$plentymarkets.config.cookies;
       } else {
         Object.entries(app.$cookies.getAll()).forEach(([key, val]) => {
           reqCookies += `${key}=${val}; `;
