@@ -12,29 +12,27 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
     const data = await context.$plentymarkets.api.getWishlist();
-    // console.log('load wishlist', data);
     return data;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentWishlist, product }) => {
     await context.$plentymarkets.api.addWishlistItem(product.variation.id);
-    // console.log('add item to wishlist', product, currentWishlist);
-    // TODO: get wishlist from composable and return
-    return { items: []};
+    currentWishlist.items.push(product);
+    return currentWishlist;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentWishlist, product }) => {
     await context.$plentymarkets.api.removeWishlistItem(product.variation.id);
-    // TODO: get wishlist from composable and return
-    return { items: []};
+    currentWishlist.items = currentWishlist.items.filter((item: WishlistItem) => item.variation.id !== product.variation.id);
+    return currentWishlist;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentWishlist }) => {
     console.log('Mocked: useWishlist.clear');
-    // TODO: implement
+    // TODO: implement clear method
     return { items: []};
   },
 
