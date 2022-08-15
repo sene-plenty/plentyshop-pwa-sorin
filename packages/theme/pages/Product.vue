@@ -88,11 +88,13 @@
             v-e2e="'product_add-to-cart'"
             :stock="stock"
             v-model="qty"
-            :disabled="loading"
+            :disabled="loading || !variationIdToSelect"
             :canAddToCart="stock > 0"
             class="product__add-to-cart"
             @click="addItem({ product, quantity: parseInt(qty) })"
           />
+
+          <p v-if="!variationIdToSelect">{{ $t('productPleaseSelectVariation') }}</p>
         </div>
 
         <LazyHydrate when-idle>
@@ -204,6 +206,7 @@ export default {
     const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
     const units = computed(() => productGetters.getUnits(product.value));
     const selectedUnit = ref(null);
+    const variationIdToSelect = computed(() => productGetters.getVariationIdForAttributes(product.value, selectedAttributes, selectedUnit.value));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
@@ -221,13 +224,11 @@ export default {
         Vue.set(selectedAttributes, attributeId, attributeValueId);
       }
 
-      const variationIdToSelect = productGetters.getVariationIdForAttributes(product.value, selectedAttributes, selectedUnit.value);
-
-      if (variationIdToSelect) {
+      if (variationIdToSelect.value) {
         router.push({
           // TODO: add slug
           params: {
-            id: variationIdToSelect
+            id: variationIdToSelect.value
           }
         });
       }
@@ -281,7 +282,8 @@ export default {
       breadcrumbs,
       units,
       selectedUnit,
-      selectOption
+      selectOption,
+      variationIdToSelect
     };
   },
   components: {
