@@ -40,7 +40,6 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isInWishlist: (context: Context, { currentWishlist, product }) => {
-    console.log('cw', currentWishlist);
     const matchingItem = currentWishlist?.items.find(wishlistItem => wishlistGetters.getId(wishlistItem) === productGetters.getId(product));
     return Boolean(matchingItem);
   }

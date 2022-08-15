@@ -11,6 +11,15 @@ import {isArray} from 'util';
 const PLENTY_ID = 'plentyID';
 let cookies: string | string[] = '';
 
+const getSessionIdCookie = (cookies: string): string => {
+  if (cookies.includes(PLENTY_ID)) {
+    const start = cookies.indexOf(PLENTY_ID);
+    const end = cookies.indexOf(';', start);
+    return cookies.substring(start, end);
+  }
+  return '';
+};
+
 function onCreate(settings: Settings) {
   const client = axios.create({
     baseURL: settings.api.url,
@@ -20,8 +29,8 @@ function onCreate(settings: Settings) {
   // Add a response interceptor
   client.interceptors.response.use((response) => {
     // sessionId = getSessionIdValue(response.headers['set-cookie'][0]);
-    console.log('response intercept');
-    cookies = response.headers['set-cookie'];
+    cookies = getSessionIdCookie(response.headers['set-cookie'][0]);
+    console.log('response intercept', cookies);
     return response;
   }, (error) => {
     return Promise.reject(error);
@@ -46,7 +55,7 @@ const tokenExtension: ApiClientExtension = {
   hooks: (req, res) => ({
     beforeCreate: ({configuration}) => {
       // res.cookie(PLENTY_ID, sessionId);
-      cookies = req.headers.cookies ?? '';
+      cookies = req.headers.cookie ?? '';
       console.log('beforeCreate');
       return {
         ...configuration,
