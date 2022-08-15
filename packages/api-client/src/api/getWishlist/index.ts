@@ -21,7 +21,7 @@ export async function addWishlistItem(context: Context, productId: number): Prom
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function removeWishlistItem(context: Context, productId: number): Promise<boolean> {
   const url: URL = new URL(`/rest/io/itemWishList/${productId}`, context.config.api.url);
-  const { data } = await context.client.get(url.href);
+  const { data } = await context.client.delete(url.href);
 
   return Boolean(data.data);
 }
