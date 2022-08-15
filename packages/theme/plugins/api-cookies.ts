@@ -2,7 +2,7 @@ import type {Plugin} from '@nuxt/types';
 import {isArray} from 'util';
 
 /**
- * Plugin that passes threw set cookie headers received during ssr process to the client.
+ * Plugin that passes the set cookie headers received during ssr process to the client.
  * @param app
  */
 const plugin: Plugin = ({ app }) => {
@@ -21,9 +21,11 @@ const plugin: Plugin = ({ app }) => {
 
     app.$vsf.$plentymarkets.client.interceptors.request.use((request) => {
       let reqCookies = '';
+      // if multiple requests were sent by the middleware, it uses the config.cookies object to receive the latest cookie
       if (app.$vsf.$plentymarkets.config.cookies) {
         reqCookies = app.$vsf.$plentymarkets.config.cookies;
       } else {
+        // Use the cookies send by the browser
         Object.entries(app.$cookies.getAll()).forEach(([key, val]) => {
           reqCookies += `${key}=${val}; `;
         });

@@ -13,7 +13,6 @@ export async function getWishlist(context: Context, params: any): Promise<any> {
 export async function addWishlistItem(context: Context, productId: number): Promise<boolean> {
   const url: URL = new URL('/rest/io/itemWishList', context.config.api.url);
 
-  // {"id":null,"contactId":0,"plentyId":34831,"variationId":1005,"quantity":0,"createdAt":"2022-07-12 10:49:02"}
   const { data } = await context.client.post(url.href, { variationId: productId });
   return data;
 }

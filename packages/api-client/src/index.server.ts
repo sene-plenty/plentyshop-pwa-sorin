@@ -8,10 +8,19 @@ import {getReview} from './api/getReview';
 import {addWishlistItem, getWishlist, removeWishlistItem} from './api/getWishlist';
 import {isArray} from 'util';
 
+/**
+ * Event flow
+ * 1. cookieExtension     => beforeCreate  | before the call to the middleware is handled
+ * 2. client.interceptors => request       | on axios client rest call
+ * 3. client.interceptors => response      | after axios client rest call is done
+ * 4. cookieExtension     => afterCall     | after the call to the middleware has finished
+ */
+
 let cookies: string | string[] = '';
 
 const cookieBlacklist = ['domain', 'secure', 'httponly'];
 
+// Filter list of cookie names that should be removed
 const filterCookies = (cookies: string): string => {
   cookieBlacklist.forEach((blacklistedCookie) => {
     if (cookies.includes(blacklistedCookie)) {
@@ -30,6 +39,7 @@ function onCreate(settings: Settings) {
   });
 
   // Add a response interceptor
+  // Triggered after middleware gets a response from connected apis
   client.interceptors.response.use((response) => {
     cookies = filterCookies(response.headers['set-cookie'][0]);
     return response;
@@ -37,6 +47,7 @@ function onCreate(settings: Settings) {
     return Promise.reject(error);
   });
 
+  // Triggered before middleware executes a request
   client.interceptors.request.use((request) => {
     request.headers.cookie = isArray(cookies) ? cookies[0] : cookies;
     return request;
@@ -50,8 +61,8 @@ function onCreate(settings: Settings) {
   };
 }
 
-const tokenExtension: ApiClientExtension = {
-  name: 'tokenExtension',
+const cookieExtension: ApiClientExtension = {
+  name: 'cookieExtension',
   hooks: (req, res) => ({
     beforeCreate: ({configuration}) => {
       cookies = req.headers.cookie ?? '';
@@ -76,7 +87,7 @@ const {createApiClient} = apiClientFactory<Settings, Endpoints>({
     addWishlistItem,
     removeWishlistItem
   },
-  extensions: [tokenExtension]
+  extensions: [cookieExtension]
 });
 
 export {

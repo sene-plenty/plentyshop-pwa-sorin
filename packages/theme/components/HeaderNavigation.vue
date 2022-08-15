@@ -51,7 +51,6 @@ export default {
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
     // eslint-disable-next-line prefer-const
     const { categories, search, loading } = useCategory('categories');
-    console.log('cats: ', categories.value);
     const categoryTree = computed(() => loading && categories.value.map((cat) => categoryGetters.getTree(cat)));
 
     onSSR(async () => {
