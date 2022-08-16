@@ -6,7 +6,8 @@ module.exports = {
         api: {
           url: 'https://mevofvd5omld.c01-14.plentymarkets.com'
         }
-      }
+      },
+      extensions: extensions => [...extensions]
     }
   }
 };

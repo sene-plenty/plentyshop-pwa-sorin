@@ -2,7 +2,6 @@ import { ProductsSearchParams } from '@vue-storefront/core';
 import { Product, Context, ReviewAvarage } from 'src/types';
 
 export async function getProduct(context: Context, params: ProductsSearchParams): Promise<Product[]> {
-
   let url: URL;
   if (params.id) {
     url = new URL('/rest/io/variations', context.config.api.url);

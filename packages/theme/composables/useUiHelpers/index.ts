@@ -8,8 +8,7 @@ const getContext = () => {
 
 const nonFilters = ['page', 'sort', 'term', 'itemsPerPage'];
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useUiHelpers = () => {
+const useUiHelpers = (): any => {
 
   const context = getContext();
   const getFacetsFromURL = () => {

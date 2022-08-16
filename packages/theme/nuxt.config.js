@@ -36,7 +36,9 @@ export default {
   loading: { color: '#fff' },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '~/plugins/api-cookies'
+  ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -141,15 +143,22 @@ export default {
           lastCommit: process.env.LAST_COMMIT || ''
         })
       })
-    ]
+    ],
+    extend(config, ctx) {
+      if (ctx.isDev) {
+        config.devtool = 'eval-source-map'
+      }
+    }
   },
 
   router: {
     middleware: ['checkout']
   },
+
   publicRuntimeConfig: {
     theme
   },
+
   pwa: {
     meta: {
       theme_color: '#5ECE7B'
