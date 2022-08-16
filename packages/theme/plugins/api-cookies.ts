@@ -1,5 +1,4 @@
 import type {Plugin} from '@nuxt/types';
-import {isArray} from 'util';
 
 /**
  * Plugin that passes the set cookie headers received during ssr process to the client.
@@ -10,7 +9,7 @@ const plugin: Plugin = ({ app }) => {
   if (isSSR) {
     app.$vsf.$plentymarkets.client.interceptors.response.use((response) => {
       if (response.headers) {
-        const setCookie = isArray(response.headers['set-cookie']) ? response.headers['set-cookie'][0] : response.headers['set-cookie'];
+        const setCookie = Array.isArray(response.headers['set-cookie']) ? response.headers['set-cookie'][0] : response.headers['set-cookie'];
         if (setCookie) {
           app.context.res.setHeader('set-cookie', setCookie);
           app.$vsf.$plentymarkets.config.cookies = setCookie;

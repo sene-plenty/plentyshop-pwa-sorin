@@ -254,6 +254,14 @@ export type ReviewSearchParams = {
   itemId: number
 }
 
+export type ItemSearchParams = {
+  term: string
+}
+
+export type ItemSearchResult = {
+  products: Product[]
+}
+
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
@@ -268,8 +276,12 @@ export interface PlentymarketsApiMethods {
   ): Promise<CategoryPage>,
 
   getReview(
-    prams: ReviewSearchParams
-  ): Promise<Review>,
+    params: ReviewSearchParams
+  ): Promise<Review>
+
+  getSearch(
+    params: ItemSearchParams
+  ): Promise<ItemSearchResult>
 
   getWishlist(): Promise<Wishlist>,
 
