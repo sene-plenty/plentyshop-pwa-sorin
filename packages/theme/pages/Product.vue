@@ -48,53 +48,17 @@
             {{ $t('Size guide') }}
           </SfButton>
 
-          <SfSelect
-            class="sf-select--underlined product__select-size"
-            v-e2e="'size-select'"
-            v-for="(option, key) in options"
-            @input="optionValueKey => selectOption(key, optionValueKey)"
-            :key="key"
-            :label="option.label"
-            :value="selectedAttributes[key]"
-            :required="true"
-          >
-            <SfSelectOption
-              v-for="(optionValue, valueKey) in option.value"
-              :key="valueKey"
-              :value="valueKey"
-            >
-            {{optionValue}}
-            </SfSelectOption>
-          </SfSelect>
-
-          <SfSelect
-            class="sf-select--underlined product__select-size"
-            v-e2e="'content-select'"
-            :label="$t('content')"
-            :required="true"
-            v-model="selectedUnit"
-            @input="optionValueKey => selectOption()"
-          >
-            <SfSelectOption
-              v-for="(unitName, unitCombinationId) in units"
-              :key="unitCombinationId"
-              :value="unitCombinationId"
-            >
-              {{ unitName }}
-            </SfSelectOption>
-          </SfSelect>
+          <AttributeSelection @selection-changed="attributeSelectionChanged($event)"></AttributeSelection>
 
           <SfAddToCart
             v-e2e="'product_add-to-cart'"
             :stock="stock"
             v-model="qty"
-            :disabled="loading || !variationIdToSelect"
+            :disabled="loading"
             :canAddToCart="stock > 0"
             class="product__add-to-cart"
             @click="addItem({ product, quantity: parseInt(qty) })"
           />
-
-          <p v-if="!variationIdToSelect">{{ $t('productPleaseSelectVariation') }}</p>
         </div>
 
         <LazyHydrate when-idle>
@@ -177,14 +141,14 @@ import {
   SfColor
 } from '@storefront-ui/vue';
 
+import AttributeSelection from '~/components/AttributeSelection.vue';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed, useRoute, useRouter, reactive } from '@nuxtjs/composition-api';
+import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
 import { useProduct, useCart, productGetters, useReview, reviewGetters, useCategory } from '@vue-storefront/plentymarkets';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
-import Vue from 'vue';
 
 export default {
   name: 'Product',
@@ -199,14 +163,8 @@ export default {
     const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
     const { categories: breadcrumbCategories } = useCategory('categories');
 
-    const selectedAttributes = reactive({});
-
     const id = computed(() => route.value.params.id);
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
-    const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
-    const units = computed(() => productGetters.getUnits(product.value));
-    const selectedUnit = ref(null);
-    const variationIdToSelect = computed(() => productGetters.getVariationIdForAttributes(product.value, selectedAttributes, selectedUnit.value));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
@@ -219,50 +177,23 @@ export default {
       alt: productGetters.getName(product.value)
     })));
 
-    const selectOption = (attributeId, attributeValueId) => {
-      if (attributeId && attributeValueId) {
-        Vue.set(selectedAttributes, attributeId, attributeValueId);
-      }
-
-      if (variationIdToSelect.value) {
+    const attributeSelectionChanged = (value) => {
+      if (value) {
         router.push({
           // TODO: add slug
           params: {
-            id: variationIdToSelect.value
+            id: value
           }
         });
-      }
-    };
-
-    const preselectAttributes = () => {
-      if (product.value?.variationAttributeMap) {
-        // set attributes
-        for (const attribute of product.value.attributes) {
-          Vue.set(selectedAttributes, attribute.attributeId, attribute.valueId.toString());
-        }
-
-        // set unit
-        const variation = product.value.variationAttributeMap.variations.find(variation =>
-          variation.variationId === product.value.variation.id);
-
-        if (variation) {
-          selectedUnit.value = variation.unitCombinationId.toString();
-        }
       }
     };
 
     onSSR(async () => {
       await search({ id: id.value });
 
-      preselectAttributes();
-
       await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
       await searchReviews({ productId: productGetters.getItemId(product.value) });
     });
-
-    if (product.value) {
-      preselectAttributes();
-    }
 
     return {
       product,
@@ -272,18 +203,13 @@ export default {
       totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
       relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
       relatedLoading,
-      options,
       qty,
       addItem,
       loading,
       productGetters,
       productGallery,
-      selectedAttributes,
       breadcrumbs,
-      units,
-      selectedUnit,
-      selectOption,
-      variationIdToSelect
+      attributeSelectionChanged
     };
   },
   components: {
@@ -306,7 +232,8 @@ export default {
     SfButton,
     InstagramFeed,
     RelatedProducts,
-    LazyHydrate
+    LazyHydrate,
+    AttributeSelection
   },
   data() {
     return {

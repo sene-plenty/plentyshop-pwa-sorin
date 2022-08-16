@@ -91,14 +91,18 @@ function getAttributes(products: Product[] | Product, filterByAttributeName?: st
   return attributes;
 }
 
-function getUnits(product: Product): Record<number, string> {
+function getUnits(products: Product[] | Product): Record<number, string> {
+  const isSingleProduct = !Array.isArray(products);
+  const productList = isSingleProduct ? [products] : products;
   const units = {};
 
-  if (product.variationAttributeMap?.variations) {
-    for (const variation of product.variationAttributeMap.variations) {
-      units[variation.unitCombinationId] = variation.unitName;
+  productList.forEach(product => {
+    if (product.variationAttributeMap?.variations) {
+      for (const variation of product.variationAttributeMap.variations) {
+        units[variation.unitCombinationId] = variation.unitName;
+      }
     }
-  }
+  });
 
   return units;
 }

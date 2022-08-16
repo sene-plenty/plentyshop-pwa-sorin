@@ -27,7 +27,6 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   const { data } = await context.client.get(url.href);
 
   if (params.id) {
-    // info: requires stable7 deploy (29.07.2022)
     const product: Product[] = data.item.documents.map(document => document.data);
     product[0].feedback = await getFeedbackAvarage(context, [product[0].item.id.toString()]);
 
