@@ -277,11 +277,11 @@ export interface PlentymarketsApiMethods {
 
   getReview(
     params: ReviewSearchParams
-  ): Review
+  ): Promise<Review>
 
   getSearch(
     params: ItemSearchParams
-  ): ItemSearchResult
+  ): Promise<ItemSearchResult>
 
   getWishlist(): Promise<Wishlist>,
 
