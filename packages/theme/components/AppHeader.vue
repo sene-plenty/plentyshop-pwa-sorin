@@ -36,9 +36,10 @@
           >
             <SfIcon
               class="sf-header__icon"
-              icon="heart"
+              :icon="wishlistIcon"
               size="1.25rem"
             />
+            <SfBadge v-if="wishlistTotalItems" class="sf-badge--number cart-badge">{{wishlistTotalItems}}</SfBadge>
           </SfButton>
           <SfButton
             class="sf-button--pure sf-header__action"
@@ -105,7 +106,7 @@
 <script>
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { useCart, useUser, cartGetters, useSearch } from '@vue-storefront/plentymarkets';
+import { useCart, useUser, cartGetters, useSearch, useWishlist } from '@vue-storefront/plentymarkets';
 import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
@@ -138,6 +139,7 @@ export default {
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, isMobileMenuOpen } = useUiState();
     const { setTermForUrl, getFacetsFromURL } = useUiHelpers();
     const { search: headerSearch, result } = useSearch();
+    const { wishlist } = useWishlist();
     const { isAuthenticated } = useUser();
     const { cart } = useCart();
     const term = ref(getFacetsFromURL().term);
@@ -150,6 +152,11 @@ export default {
       return count ? count.toString() : null;
     });
 
+    const wishlistTotalItems = computed(() => {
+      const count = wishlist.value.items;
+      return count ? count.length : null;
+    });
+
     const searchResults = computed(() => {
       if (!result.value) {
         return { products: [], categories: [] };
@@ -158,6 +165,7 @@ export default {
     });
 
     const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
+    const wishlistIcon = computed(() => wishlistTotalItems.value > 0 ? 'heart_fill' : 'heart');
 
     // TODO: https://github.com/DivanteLtd/vue-storefront/issues/4927
     const handleAccountClick = async () => {
@@ -223,7 +231,9 @@ export default {
       searchBarRef,
       isMobile,
       isMobileMenuOpen,
-      addBasePath
+      addBasePath,
+      wishlistTotalItems,
+      wishlistIcon
     };
   }
 };
