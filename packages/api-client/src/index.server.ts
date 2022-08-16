@@ -6,7 +6,6 @@ import {getCategory} from './api/getCategory';
 import {getFacet} from './api/getFacet';
 import {getReview} from './api/getReview';
 import {addWishlistItem, getWishlist, removeWishlistItem} from './api/getWishlist';
-import {isArray} from 'util';
 import { getSearch } from './api/getSearch';
 
 /**
@@ -50,7 +49,7 @@ function onCreate(settings: Settings) {
 
   // Triggered before middleware executes a request
   client.interceptors.request.use((request) => {
-    request.headers.cookie = isArray(cookies) ? cookies[0] : cookies;
+    request.headers.cookie = Array.isArray(cookies) ? cookies[0] : cookies;
     return request;
   }, (error) => {
     return Promise.reject(error);
