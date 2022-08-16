@@ -151,7 +151,33 @@ export type ReviewAvarage = {
   }
 }
 
+export type ProductAttribute = {
+  attributeId: number,
+      position: number,
+      name: string,
+      type: string,
+      values: {
+        attributeValueId: number,
+        position: number,
+        imageUrl: string,
+        name: string
+      }[]
+}
+
+export type ProductVariation = {
+  variationId: number,
+  isSalable: boolean,
+  unitCombinationId: number,
+  unitId: number,
+  unitName: string,
+  attributes: { attributeId: number, attributeValueId: number }[]
+}
+
 export type Product = {
+  attributes: {
+    attributeId: number,
+    valueId: number
+  }[],
   texts: {
     name1: string,
     name2: string,
@@ -205,7 +231,11 @@ prices: {
   rrp: any,
   default: any
 },
-feedback: ReviewAvarage
+feedback: ReviewAvarage,
+variationAttributeMap?: {
+  attributes: ProductAttribute[],
+  variations: ProductVariation[]
+}
 };
 
 export type Facet = {

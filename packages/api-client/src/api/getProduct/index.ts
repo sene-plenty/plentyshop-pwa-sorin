@@ -4,7 +4,7 @@ import { Product, Context, ReviewAvarage } from 'src/types';
 export async function getProduct(context: Context, params: ProductsSearchParams): Promise<Product[]> {
   let url: URL;
   if (params.id) {
-    url = new URL('/rest/io/variations', context.config.api.url);
+    url = new URL(`/rest/storefront/items/${ params.id }?withVariationAttributeMap=true`, context.config.api.url);
     url.searchParams.set('variationIds[]', params.id);
     url.searchParams.set('resultFieldTemplate', 'SingleItem');
   } else if (params.term) {
@@ -26,8 +26,17 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
   const { data } = await context.client.get(url.href);
 
   if (params.id) {
-    const product: Product[] = data.data.documents.map(document => document.data);
+    const product: Product[] = data.item.documents.map(document => document.data);
     product[0].feedback = await getFeedbackAvarage(context, [product[0].item.id.toString()]);
+
+    // set the variation attribute map into the variations data
+    if (data.attributes || data.variations) {
+      product[0].variationAttributeMap = {
+        attributes: data.attributes,
+        variations: data.variations
+      };
+    }
+
     return product;
   } else {
     // TODO: load feedback for products

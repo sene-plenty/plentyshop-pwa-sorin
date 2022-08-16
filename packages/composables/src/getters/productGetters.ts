@@ -6,7 +6,7 @@ import {
   ProductGetters,
   AgnosticBreadcrumb
 } from '@vue-storefront/core';
-import type { Category, Product, ProductFilter } from '@vue-storefront/plentymarkets-api';
+import type { Category, Product, ProductFilter, ProductVariation } from '@vue-storefront/plentymarkets-api';
 import { productImageFilter } from '../helpers/productImageFilter';
 
 function getName(product: Product): string {
@@ -37,6 +37,7 @@ function getBreadcrumbs(product: Product, categories?: Category[]): AgnosticBrea
   }
 
   const breadcrumbs = categoryGetters.getMappedBreadcrumbs(categories, product.defaultCategories[0].id);
+
   return [
     {
       text: 'Home',
@@ -63,7 +64,72 @@ function getFiltered(products: Product[], filters: ProductFilter): Product[] {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAttributes(products: Product[] | Product, filterByAttributeName?: string[]): Record<string, AgnosticAttribute | string> {
-  return {};
+  const isSingleProduct = !Array.isArray(products);
+  const productList = isSingleProduct ? [products] : products;
+  const attributes = {};
+
+  productList.forEach(product => {
+    product.variationAttributeMap?.attributes.forEach(attribute => {
+      attribute.values.forEach(attributeValue => {
+        if (!attributes[attribute.attributeId]) {
+          attributes[attribute.attributeId] = {
+            name: attribute.name,
+            value: { [attributeValue.attributeValueId]: attributeValue.name },
+            label: attribute.name
+          } as AgnosticAttribute;
+        } else {
+          attributes[attribute.attributeId].value[attributeValue.attributeValueId] = attributeValue.name;
+        }
+      });
+    });
+  });
+
+  return attributes;
+}
+
+function getUnits(products: Product[] | Product): Record<number, string> {
+  const isSingleProduct = !Array.isArray(products);
+  const productList = isSingleProduct ? [products] : products;
+  const units = {};
+
+  productList.forEach(product => {
+    if (product.variationAttributeMap?.variations) {
+      for (const variation of product.variationAttributeMap.variations) {
+        units[variation.unitCombinationId] = variation.unitName;
+      }
+    }
+  });
+
+  return units;
+}
+
+function getVariationIdForAttributes(product: Product, selectedAttributes: Record<number, string>, unitCombinationId: string | null): number {
+  const variations = product.variationAttributeMap.variations;
+
+  const result = variations.find(variation => {
+    if (unitCombinationId && parseInt(unitCombinationId) !== variation.unitCombinationId) {
+      return false;
+    }
+
+    for (const selectedAttributeId in selectedAttributes) {
+      const selectedAttributeValueId = parseInt(selectedAttributes[selectedAttributeId]);
+
+      const variationAttribute = variation.attributes.find(variationAttribute =>
+        variationAttribute.attributeId === parseInt(selectedAttributeId));
+
+      if (variationAttribute && variationAttribute.attributeValueId !== selectedAttributeValueId) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  return result?.variationId;
+}
+
+function getVariariationById(product: Product, variationId: number): ProductVariation {
+  return product.variationAttributeMap.variations.find(variation => variation.variationId === variationId);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -127,5 +193,8 @@ export const productGetters: ProductGetters<Product, ProductFilter> = {
   getTotalReviews,
   getAverageRating,
   getBreadcrumbs: getBreadcrumbs,
-  getItemId
+  getItemId,
+  getVariariationById,
+  getVariationIdForAttributes,
+  getUnits
 };

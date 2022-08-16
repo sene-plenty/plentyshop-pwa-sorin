@@ -158,5 +158,7 @@ export default {
   'name-a-z': 'Name A-Z',
   'name-z-a': 'Name Z-A',
   'price-up': 'Preis ⬆',
-  'price-down': 'Preis ⬇'
+  'price-down': 'Preis ⬇',
+  'content': 'Inhalt',
+  'productPleaseSelectVariation': 'Bitte wählen Sie eine gültige Variante.'
 };
