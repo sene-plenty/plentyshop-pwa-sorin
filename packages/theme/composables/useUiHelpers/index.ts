@@ -81,6 +81,17 @@ const useUiHelpers = (): any => {
     });
   };
 
+  const changeAttributeSelection = (productId: string) => {
+    context.$router.push({
+      query: {
+        ...getFiltersDataFromUrl(context, false)
+      },
+      params: {
+        id: productId
+      }
+    });
+  };
+
   // eslint-disable-next-line
   const setTermForUrl = (term: string) => {
     context.$router.push({
@@ -118,7 +129,8 @@ const useUiHelpers = (): any => {
     setTermForUrl,
     isFacetColor,
     isFacetCheckbox,
-    getSearchTermFromUrl
+    getSearchTermFromUrl,
+    changeAttributeSelection
   };
 };
 

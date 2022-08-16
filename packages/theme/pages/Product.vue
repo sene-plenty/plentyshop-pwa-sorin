@@ -144,11 +144,12 @@ import {
 import AttributeSelection from '~/components/AttributeSelection.vue';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
+import { ref, computed, useRoute } from '@nuxtjs/composition-api';
 import { useProduct, useCart, productGetters, useReview, reviewGetters, useCategory } from '@vue-storefront/plentymarkets';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
+import { useUiHelpers } from '~/composables';
 
 export default {
   name: 'Product',
@@ -156,7 +157,7 @@ export default {
   setup() {
     const qty = ref(1);
     const route = useRoute();
-    const router = useRouter();
+    const th = useUiHelpers();
     const { products, search } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
@@ -181,12 +182,7 @@ export default {
     const attributeSelectionChanged = (value) => {
       if (value) {
         isAttributeSelectionValid.value = true;
-        router.push({
-          // TODO: add slug
-          params: {
-            id: value
-          }
-        });
+        th.changeAttributeSelection(value);
       } else {
         isAttributeSelectionValid.value = false;
       }
