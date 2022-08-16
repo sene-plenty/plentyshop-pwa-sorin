@@ -7,6 +7,7 @@ import {
   AgnosticBreadcrumb
 } from '@vue-storefront/core';
 import type { Category, Product, ProductFilter, ProductVariation } from '@vue-storefront/plentymarkets-api';
+import { productImageFilter } from '../helpers/productImageFilter';
 
 function getName(product: Product): string {
   return product?.texts?.name1 ?? '';
@@ -27,27 +28,22 @@ function getPrice(product: Product): AgnosticPrice {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGallery(product: Product): AgnosticMediaGalleryItem[] {
-  return _itemImageFilter(product);
+  return productImageFilter(product);
 }
 
 function getBreadcrumbs(product: Product, categories?: Category[]): AgnosticBreadcrumb [] {
-  if (categories.length <= 0) {
+  if (categories.length <= 0 || !product) {
     return [];
   }
-  const categoryPath = categoryGetters.findCategoryPathById(categories, product.defaultCategories[0]?.id);
+
+  const breadcrumbs = categoryGetters.getMappedBreadcrumbs(categories, product.defaultCategories[0].id);
+
   return [
     {
       text: 'Home',
       link: '/'
     },
-
-    ...categoryPath.map((category) => {
-      const categoryDetails = categoryGetters.getCategoryDetails(category.details);
-      return {
-        text: categoryDetails.name,
-        link: categoryDetails.nameUrl
-      };
-    }),
+    ...breadcrumbs,
     {
       text: product.texts.name1,
       link: ''
@@ -57,7 +53,7 @@ function getBreadcrumbs(product: Product, categories?: Category[]): AgnosticBrea
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCoverImage(product: Product): string {
-  return product ? _itemImageFilter(product)[0].small : '';
+  return product ? productImageFilter(product)[0].small : '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -178,33 +174,6 @@ function getTotalReviews(product: Product): number {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAverageRating(product: Product): number {
   return Number(product?.feedback?.counts?.averageValue);
-}
-
-export function _itemImageFilter(product: Product): { small: string, normal: string, big: string }[] {
-  if (!product) {
-    return [
-      {
-        small: '',
-        normal: '',
-        big: ''
-      }
-    ];
-  }
-
-  const images = product.images;
-  const imagesAccessor = images.variation?.length ? 'variation' : 'all';
-  const result = [];
-
-  images[imagesAccessor].forEach(image => {
-    result.push({
-      small: image.urlPreview || image.urlMiddle,
-      normal: image.urlMiddle,
-      big: image.url || image.urlMiddle,
-      position: image.position
-    });
-  });
-
-  return result;
 }
 
 export const productGetters: ProductGetters<Product, ProductFilter> = {

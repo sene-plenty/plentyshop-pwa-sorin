@@ -1,6 +1,5 @@
 <template>
     <div>
-      <div>{{ selectedVariationId }}</div>
         <SfSelect
             class="sf-select--underlined product__select-size"
             v-e2e="'size-select'"
