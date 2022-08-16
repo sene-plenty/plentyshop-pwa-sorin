@@ -254,6 +254,14 @@ export type ReviewSearchParams = {
   itemId: number
 }
 
+export type ItemSearchParams = {
+  term: string
+}
+
+export type ItemSearchResult = {
+  products: Product[]
+}
+
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
@@ -267,8 +275,12 @@ export interface PlentymarketsApiMethods {
   ): CategoryPage,
 
   getReview(
-    prams: ReviewSearchParams
+    params: ReviewSearchParams
   ): Review
+
+  getSearch(
+    params: ItemSearchParams
+  ): ItemSearchResult
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;

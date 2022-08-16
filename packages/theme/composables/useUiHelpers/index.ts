@@ -20,7 +20,8 @@ const useUiHelpers = () => {
       page: parseInt(query.page as string, 10) || 1,
       sort: query.sort,
       facets: query.facets,
-      itemsPerPage: parseInt(query.itemsPerPage as string) || 20
+      itemsPerPage: parseInt(query.itemsPerPage as string) || 20,
+      term: query.term
     } as any;
   };
 
@@ -83,7 +84,12 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const setTermForUrl = (term: string) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSearchTerm.');
+    context.$router.push({
+      query: {
+        ...getFiltersDataFromUrl(context, false),
+        term: term || undefined
+      }
+    });
   };
 
   // eslint-disable-next-line
