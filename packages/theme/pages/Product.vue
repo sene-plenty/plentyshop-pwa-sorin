@@ -54,7 +54,7 @@
             v-e2e="'product_add-to-cart'"
             :stock="stock"
             v-model="qty"
-            :disabled="loading"
+            :disabled="loading || !isAttributeSelectionValid"
             :canAddToCart="stock > 0"
             class="product__add-to-cart"
             @click="addItem({ product, quantity: parseInt(qty) })"
@@ -177,14 +177,18 @@ export default {
       alt: productGetters.getName(product.value)
     })));
 
+    const isAttributeSelectionValid = ref(true);
     const attributeSelectionChanged = (value) => {
       if (value) {
+        isAttributeSelectionValid.value = true;
         router.push({
           // TODO: add slug
           params: {
             id: value
           }
         });
+      } else {
+        isAttributeSelectionValid.value = false;
       }
     };
 
@@ -209,7 +213,8 @@ export default {
       productGetters,
       productGallery,
       breadcrumbs,
-      attributeSelectionChanged
+      attributeSelectionChanged,
+      isAttributeSelectionValid
     };
   },
   components: {
