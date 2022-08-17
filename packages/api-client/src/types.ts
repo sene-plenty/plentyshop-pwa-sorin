@@ -1,5 +1,5 @@
-import { IntegrationContext, ApiClientMethods, ProductsSearchParams, AgnosticCategoryTree } from '@vue-storefront/core';
-import { AxiosInstance } from 'axios';
+import {IntegrationContext, ApiClientMethods, ProductsSearchParams, AgnosticCategoryTree} from '@vue-storefront/core';
+import {AxiosInstance} from 'axios';
 
 export type TODO = unknown;
 
@@ -9,136 +9,7 @@ export type Settings = {
   }
 };
 
-export type Endpoints = TODO;
-
-export type BillingAddress = TODO;
-
-export type Cart = TODO;
-
-export type CartItem = TODO;
-
-export type CategoryDetails = {
-  name: string,
-  lang: string,
-  nameUrl: string,
-  metaTitle: string,
-  imagePath: string,
-  image2Path: string,
-};
-
-export type Category = {
-  id: number,
-  type: string,
-  // TODO: maybe implement correct type
-  itemCount: any,
-  childCount: number,
-  children: Category[],
-  details: CategoryDetails[]
-};
-
-export type Coupon = TODO;
-
-export type FacetSearchCriteria = TODO;
-
-export type Order = TODO;
-
-export type OrderItem = TODO;
-
-export type PasswordResetResult = TODO;
-
-export type ProductFilter = TODO;
-
-export type Filter = {
-      id: number,
-      name: string,
-      cssClass?: string,
-      position?: number,
-      count?: number,
-      selected?: boolean
-}
-
-export type FilterGroup = {
-  count: number,
-  id: number,
-  name: string,
-  type: string,
-  cssClass?: string,
-  maxResultCount?: string,
-  minHitCount?: string,
-  position?: number,
-  sort?: string,
-  values?: Filter[]
-}
-
-export declare type ReviewItem = {
-  id: number,
-  title: string,
-  isVisible: true,
-   createdAt: string,
-   updatedAt: string,
-    authorName: string,
-    feedbackComment: {
-      commentId: string,
-      commentRelationType: string,
-      commentRelationTargetId: string,
-      comment: {
-        id: number,
-        message: string,
-        isVisible: string,
-        createdAt: string,
-        updatedAt: string
-      }
-    },
-    feedbackRating: {
-      ratingId: string,
-      ratingRelationType: string,
-      ratingRelationTargetId: string,
-      rating: {
-      id: string,
-      ratingValue: string,
-      isVisible: string,
-      createdAt: string,
-      updatedAt: string
-      }
-    },
-    targetRelation: {
-      feedbackId: string,
-      feedbackRelationType: string,
-      feedbackRelationTargetId: string,
-      variationAttributes: [],
-      targetRelationLabel: string,
-      targetRelationName: [],
-      feedbackRelationParentTargetId: number
-    },
-    sourceRelation: [
-      feedbackId: string,
-      feedbackRelationType: string,
-      feedbackRelationSourceId: string,
-      sourceRelationLabel: string,
-      sourceRelationTypeLabel: string,
-      feedback: {
-          id: number,
-          title: string,
-          isVisible: boolean,
-          createdAt: string,
-          updatedAt: string,
-          authorName: string
-      }
-    ],
-    replies: []
-};
-
-export type Review = {
-  feedbacks: ReviewItem[],
-  itemAttributes: [],
-  pagination: {
-    page: number,
-    lastPage: number,
-    isLastPage: true
-  }
-};
-
-export type ReviewAvarage = {
+export type ReviewAverage = {
   counts: {
     ratingsCountOf1: string,
     ratingsCountOf2: string,
@@ -149,7 +20,7 @@ export type ReviewAvarage = {
     averageValue: string,
     highestCount: string
   }
-}
+};
 
 export type Product = {
   texts: {
@@ -193,19 +64,201 @@ export type Product = {
     parentCategoryId: number,
     level: 2
   }[]
-name: string,
-variation: {
+  name: string,
+  variation: {
+    id: number
+  },
+  item: {
+    id: number
+  },
+  sku: string,
+  prices: {
+    rrp: any,
+    default: any
+  },
+  feedback: ReviewAverage
+};
+
+export type Endpoints = TODO;
+
+export type BillingAddress = TODO;
+
+export type TotalVat = {
+  vatAmount: number
+  vatValue: number
+};
+
+export type CartItem = {
   id: number
-},
-item: {
+  quantity: number
+  price: number
+  itemId: number
+  variation: Product
+  variationId: number
+  basketItemOrderParams: any[]
+  inputLength: number
+  inputWidth: number
+  setComponents: any[]
+  itemType: number
+};
+
+export type Cart = {
   id: number
-},
-sku: string,
-prices: {
-  rrp: any,
-  default: any
-},
-feedback: ReviewAvarage
+  sessionId: string
+  orderId: number
+  customerId: number
+  customerShippingAddressId: number
+  currency: string
+  referrerId: number
+  shippingCountryId: number
+  methodOfPaymentId: number
+  shippingProviderId: number
+  shippingProfileId: number
+  itemSum: number
+  itemSumNet: number
+  basketAmount: number
+  basketAmountNet: number
+  shippingAmount: number
+  shippingAmountNet: number
+  paymentAmount: number
+  couponCode: string
+  couponDiscount: number
+  shippingDeleteByCoupon: boolean
+  basketRebate: number
+  maxFsk: number
+  orderTimestamp: string
+  createdAt: string
+  updatedAt: string
+  basketRebateType: string
+  customerInvoiceAddressId: number
+  itemQuantity: number
+  totalVats: TotalVat[]
+  subAmount: number
+  isExportDelivery: boolean
+  shopCountryId: number
+  itemWishListIds: number[],
+  items: CartItem[]
+};
+
+export type CategoryDetails = {
+  name: string,
+  lang: string,
+  nameUrl: string,
+  metaTitle: string,
+  imagePath: string,
+  image2Path: string,
+};
+
+export type Category = {
+  id: number,
+  type: string,
+  // TODO: maybe implement correct type
+  itemCount: any,
+  childCount: number,
+  children: Category[],
+  details: CategoryDetails[]
+};
+
+export type Coupon = TODO;
+
+export type FacetSearchCriteria = TODO;
+
+export type Order = TODO;
+
+export type OrderItem = TODO;
+
+export type PasswordResetResult = TODO;
+
+export type ProductFilter = TODO;
+
+export type Filter = {
+  id: number,
+  name: string,
+  cssClass?: string,
+  position?: number,
+  count?: number,
+  selected?: boolean
+}
+
+export type FilterGroup = {
+  count: number,
+  id: number,
+  name: string,
+  type: string,
+  cssClass?: string,
+  maxResultCount?: string,
+  minHitCount?: string,
+  position?: number,
+  sort?: string,
+  values?: Filter[]
+}
+
+export declare type ReviewItem = {
+  id: number,
+  title: string,
+  isVisible: true,
+  createdAt: string,
+  updatedAt: string,
+  authorName: string,
+  feedbackComment: {
+    commentId: string,
+    commentRelationType: string,
+    commentRelationTargetId: string,
+    comment: {
+      id: number,
+      message: string,
+      isVisible: string,
+      createdAt: string,
+      updatedAt: string
+    }
+  },
+  feedbackRating: {
+    ratingId: string,
+    ratingRelationType: string,
+    ratingRelationTargetId: string,
+    rating: {
+      id: string,
+      ratingValue: string,
+      isVisible: string,
+      createdAt: string,
+      updatedAt: string
+    }
+  },
+  targetRelation: {
+    feedbackId: string,
+    feedbackRelationType: string,
+    feedbackRelationTargetId: string,
+    variationAttributes: [],
+    targetRelationLabel: string,
+    targetRelationName: [],
+    feedbackRelationParentTargetId: number
+  },
+  sourceRelation: [
+    feedbackId: string,
+    feedbackRelationType: string,
+    feedbackRelationSourceId: string,
+    sourceRelationLabel: string,
+    sourceRelationTypeLabel: string,
+    feedback: {
+      id: number,
+      title: string,
+      isVisible: boolean,
+      createdAt: string,
+      updatedAt: string,
+      authorName: string
+    }
+  ],
+  replies: []
+};
+
+export type Review = {
+  feedbacks: ReviewItem[],
+  itemAttributes: [],
+  pagination: {
+    page: number,
+    lastPage: number,
+    isLastPage: true
+  }
 };
 
 export type Facet = {
@@ -291,7 +344,12 @@ export interface PlentymarketsApiMethods {
 
   removeWishlistItem(
     productId: number
-  ): Promise<boolean>
+  ): Promise<boolean>,
+
+  // TODO
+  getCart(): Promise<Cart>,
+
+  addCartItem(params: { productId: number, quantity?: number }): Promise<any>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;

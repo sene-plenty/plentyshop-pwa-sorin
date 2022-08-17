@@ -7,6 +7,7 @@ import {getFacet} from './api/getFacet';
 import {getReview} from './api/getReview';
 import {addWishlistItem, getWishlist, removeWishlistItem} from './api/getWishlist';
 import { getSearch } from './api/getSearch';
+import {getCart, removeItem as removeCartItem, addItem as addCartItem, updateItemQty as updateCartItemQty} from './api/getCart';
 
 /**
  * Event flow
@@ -86,7 +87,11 @@ const {createApiClient} = apiClientFactory<Settings, Endpoints>({
     getWishlist,
     addWishlistItem,
     removeWishlistItem,
-    getSearch
+    getSearch,
+    getCart,
+    addCartItem,
+    removeCartItem,
+    updateCartItemQty
   },
   extensions: [cookieExtension]
 });

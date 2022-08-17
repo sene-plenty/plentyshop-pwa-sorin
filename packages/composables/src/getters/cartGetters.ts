@@ -10,9 +10,7 @@ import type { Cart, CartItem } from '@vue-storefront/plentymarkets-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
-  return [
-    {}
-  ];
+  return cart.items;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
