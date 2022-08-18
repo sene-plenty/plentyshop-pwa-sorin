@@ -104,7 +104,7 @@ function getUnits(products: Product[] | Product): Record<number, string> {
 }
 
 function getVariationIdForAttributes(product: Product, selectedAttributes: Record<number, string>, unitCombinationId: string | null): number {
-  const variations = product.variationAttributeMap.variations;
+  const variations = product?.variationAttributeMap?.variations || [];
 
   const result = variations.find(variation => {
     if (unitCombinationId && parseInt(unitCombinationId) !== variation.unitCombinationId) {
@@ -117,7 +117,7 @@ function getVariationIdForAttributes(product: Product, selectedAttributes: Recor
       const variationAttribute = variation.attributes.find(variationAttribute =>
         variationAttribute.attributeId === parseInt(selectedAttributeId));
 
-      if (variationAttribute && variationAttribute.attributeValueId !== selectedAttributeValueId) {
+      if ((variationAttribute && variationAttribute.attributeValueId !== selectedAttributeValueId) || (!variationAttribute && selectedAttributeValueId !== -1)) {
         return false;
       }
     }
