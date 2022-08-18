@@ -346,10 +346,13 @@ export interface PlentymarketsApiMethods {
     productId: number
   ): Promise<boolean>,
 
-  // TODO
   getCart(): Promise<Cart>,
 
-  addCartItem(params: { productId: number, quantity?: number }): Promise<any>
+  addCartItem(params: { productId: number, quantity?: number }): Promise<Cart>,
+
+  removeCartItem(params: { currentCart: Cart, product: Product, customQuery: any }): Promise<Cart>,
+
+  updateCartItemQty(params: { currentCart: Cart, product: Product, quantity: number, customQuery: any }): Promise<Cart>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;
