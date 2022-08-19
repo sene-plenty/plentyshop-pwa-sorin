@@ -3,7 +3,11 @@ import {Cart, Context} from '../../types';
 export async function getCart(context: Context): Promise<Cart> {
   const url: URL = new URL('/rest/io/session/', context.config.api.url);
   const { data } = await context.client.get(url.href);
-  const cart = { ...data.data.basket, items: data.data.basketItems };
+  const mappedBasketItems = data.data.basketItems.map(basketItem => {
+    basketItem.variation = basketItem.variation.data;
+    return basketItem;
+  });
+  const cart = { ...data.data.basket, items: mappedBasketItems };
   return cart;
 }
 
@@ -21,6 +25,6 @@ export async function removeItem(context: Context, cartItemId: number): Promise<
 
 export async function updateItemQty(context: Context, params: { productId: number, cartItemId: number, quantity: number }): Promise<Cart> {
   const url: URL = new URL(`/rest/io/basket/items/${params.cartItemId}`, context.config.api.url);
-  const { data } = await context.client.put(url.href);
+  const { data } = await context.client.put(url.href, { variationId: params.productId, quantity: params.quantity ?? 1, id: params.cartItemId});
   return { ...data.events.AfterBasketChanged.basket, items: data.events.AfterBasketChanged.basketItems };
 }
