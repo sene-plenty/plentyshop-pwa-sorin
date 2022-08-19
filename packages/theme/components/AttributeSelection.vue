@@ -4,14 +4,14 @@
           class="sf-select--underlined product__select-size"
           v-e2e="'size-select'"
           v-for="(option, key) in options"
-          @input="optionValueKey => selectOption(key, optionValueKey || '-1')"
+          @input="optionValueKey => selectOption(key, optionValueKey || NO_SELECTION_ID)"
           :key="key"
           :label="option.label"
           :value="selectedAttributes[key]"
           :required="true"
           :disabled="loading"
           >
-            <SfSelectOption v-if="hasEmptyOption || selectedAttributes[key] === '-1'" :value="'-1'">
+            <SfSelectOption v-if="hasEmptyOption || selectedAttributes[key] === NO_SELECTION_ID" :value="NO_SELECTION_ID">
               {{ $t('no selection') }}
             </SfSelectOption>
             <SfSelectOption
@@ -46,6 +46,8 @@
 </template>
 
 <script>
+const NO_SELECTION_ID = '-1';
+
 import Vue from 'vue';
 import { SfSelect } from '@storefront-ui/vue';
 import { productGetters, useProduct } from '@vue-storefront/plentymarkets';
@@ -73,7 +75,7 @@ export default {
         // set attribute-less variation
         if (!product.value.attributes.length && Object.keys(options.value).length) {
           for (const key in options.value) {
-            Vue.set(selectedAttributes, key, '-1');
+            Vue.set(selectedAttributes, key, NO_SELECTION_ID);
           }
         // set attributes
         } else {
@@ -120,7 +122,8 @@ export default {
       selectOption,
       selectedVariationId,
       loading,
-      hasEmptyOption
+      hasEmptyOption,
+      NO_SELECTION_ID
     };
   },
   components: {
