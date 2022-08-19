@@ -25,6 +25,7 @@
         </SfSelect>
 
         <SfSelect
+          v-if="units.length > 1"
           class="sf-select--underlined product__select-size"
           v-e2e="'content-select'"
           :label="$t('content')"
