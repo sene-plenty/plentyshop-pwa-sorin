@@ -388,7 +388,6 @@ export interface PlentymarketsApiMethods {
   ): Promise<boolean>
 
   getSession(initialRestCall: boolean): Promise<SessionResult>
-
   loginUser(email: string, password): Promise<any>
   registerUser(params: RegisterParams): Promise<any>
   logoutUser(): Promise<any>
