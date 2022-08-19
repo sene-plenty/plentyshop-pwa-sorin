@@ -251,7 +251,55 @@ export type CategoryPage = {
   pagination: any
 }
 
-export type User = TODO;
+export type User = {
+  accounts?: []
+  anonymizeAt?: string
+  birthdayAt?: string
+  blocked?: number
+  bookAccount?: string
+  classId?: number
+  contactPerson?: string
+  createdAt?: string
+  dhlPostIdent?: string
+  discountDays?: number
+  discountPercent?: number
+  ebayName?: string
+  email?: string
+  externalId?: string
+  firstName?: string
+  formOfAddress?: string
+  fullName?: string
+  gender?: string
+  id?: number
+  inLeadStatusSince?: number
+  isLead?: boolean
+  klarnaPersonalId?: string
+  lang?: string
+  lastLoginAt?: string
+  lastName?: string
+  lastOrderAt?: string
+  leadStatusKey?: string
+  marketplacePartner?: string
+  newsletterAllowanceAt?: number
+  number?: number
+  options?: []
+  paypalEmail?: string
+  paypalPayerId?: string
+  plentyId?: number
+  privateFax?: string
+  privateMobile?: string
+  privatePhone?: string
+  rating?: number
+  referrerId?: number
+  salesRepresentativeContactId?: number
+  singleAccess?: string
+  timeForPaymentAllowedDays?: number
+  title?: string
+  typeId?: number
+  updatedAt?: string
+  userId?: number
+  valuta?: number
+}
 
 export type UserBillingAddress = TODO;
 
@@ -292,6 +340,22 @@ export type ItemSearchResult = {
   products: Product[]
 }
 
+export type SessionSearchPramas = {
+  initialRestCall: string
+}
+
+export type SessionResult = {
+  basket: any,
+  user: User
+}
+
+export type RegisterParams = {
+  email: string,
+  password: string,
+  firstName: string,
+  lastName: string
+}
+
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
@@ -322,6 +386,11 @@ export interface PlentymarketsApiMethods {
   removeWishlistItem(
     productId: number
   ): Promise<boolean>
+
+  getSession(initialRestCall: boolean): Promise<SessionResult>
+  loginUser(email: string, password): Promise<any>
+  registerUser(params: RegisterParams): Promise<any>
+  logoutUser(): Promise<any>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;
