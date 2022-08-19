@@ -160,5 +160,6 @@ export default {
   'price-up': 'Price ⬆',
   'price-down': 'Price ⬇',
   'content': 'Content',
-  'productPleaseSelectVariation': 'Please select a valid variation.'
+  'please select variation': 'Please select a valid variation.',
+  'no selection': 'No selection'
 };

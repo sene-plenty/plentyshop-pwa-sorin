@@ -9,6 +9,8 @@ import {
 import type { Category, Product, ProductFilter, ProductVariation } from '@vue-storefront/plentymarkets-api';
 import { productImageFilter } from '../helpers/productImageFilter';
 
+const NO_SELECTION_ID = -1;
+
 function getName(product: Product): string {
   return product?.texts?.name1 ?? '';
 }
@@ -104,7 +106,7 @@ function getUnits(products: Product[] | Product): Record<number, string> {
 }
 
 function getVariationIdForAttributes(product: Product, selectedAttributes: Record<number, string>, unitCombinationId: string | null): number {
-  const variations = product.variationAttributeMap.variations;
+  const variations = product?.variationAttributeMap?.variations || [];
 
   const result = variations.find(variation => {
     if (unitCombinationId && parseInt(unitCombinationId) !== variation.unitCombinationId) {
@@ -117,7 +119,7 @@ function getVariationIdForAttributes(product: Product, selectedAttributes: Recor
       const variationAttribute = variation.attributes.find(variationAttribute =>
         variationAttribute.attributeId === parseInt(selectedAttributeId));
 
-      if (variationAttribute && variationAttribute.attributeValueId !== selectedAttributeValueId) {
+      if ((variationAttribute && variationAttribute.attributeValueId !== selectedAttributeValueId) || (!variationAttribute && selectedAttributeValueId !== NO_SELECTION_ID)) {
         return false;
       }
     }

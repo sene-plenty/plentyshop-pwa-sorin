@@ -1,48 +1,53 @@
 <template>
     <div>
         <SfSelect
-            class="sf-select--underlined product__select-size"
-            v-e2e="'size-select'"
-            v-for="(option, key) in options"
-            @input="optionValueKey => selectOption(key, optionValueKey)"
-            :key="key"
-            :label="option.label"
-            :value="selectedAttributes[key]"
-            :required="true"
-            :disabled="loading"
-            >
+          class="sf-select--underlined product__select-size"
+          v-e2e="'size-select'"
+          v-for="(option, key) in options"
+          @input="optionValueKey => selectOption(key, optionValueKey || NO_SELECTION_ID)"
+          :key="key"
+          :label="option.label"
+          :value="selectedAttributes[key]"
+          :required="true"
+          :disabled="loading"
+          >
+            <SfSelectOption v-if="hasEmptyOption || selectedAttributes[key] === NO_SELECTION_ID" :value="NO_SELECTION_ID">
+              {{ $t('no selection') }}
+            </SfSelectOption>
             <SfSelectOption
-                v-for="(optionValue, valueKey) in option.value"
-                :key="valueKey"
-                :value="valueKey"
-                :disabled="loading"
+              v-for="(optionValue, valueKey) in option.value"
+              :key="valueKey"
+              :value="valueKey"
+              :disabled="loading"
             >
-                {{optionValue}}
+                {{ optionValue }}
             </SfSelectOption>
         </SfSelect>
 
         <SfSelect
-        class="sf-select--underlined product__select-size"
-        v-e2e="'content-select'"
-        :label="$t('content')"
-        :required="true"
-        v-model="selectedUnit"
-        @input="optionValueKey => selectOption()"
+          class="sf-select--underlined product__select-size"
+          v-e2e="'content-select'"
+          :label="$t('content')"
+          :required="true"
+          v-model="selectedUnit"
+          @input="optionValueKey => selectOption()"
         >
             <SfSelectOption
-                v-for="(unitName, unitCombinationId) in units"
-                :key="unitCombinationId"
-                :value="unitCombinationId"
+              v-for="(unitName, unitCombinationId) in units"
+              :key="unitCombinationId"
+              :value="unitCombinationId"
             >
-                {{ unitName }}
+              {{ unitName }}
             </SfSelectOption>
         </SfSelect>
 
-        <p v-if="!selectedVariationId">{{ $t('productPleaseSelectVariation') }}</p>
+        <p v-if="!selectedVariationId">{{ $t('please select variation') }}</p>
     </div>
 </template>
 
 <script>
+const NO_SELECTION_ID = '-1';
+
 import Vue from 'vue';
 import { SfSelect } from '@storefront-ui/vue';
 import { productGetters, useProduct } from '@vue-storefront/plentymarkets';
@@ -56,6 +61,9 @@ export default {
 
     const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
     const units = computed(() => productGetters.getUnits(products.value));
+    const hasEmptyOption = computed(() => {
+      return product.value.variationAttributeMap.variations.some(variation => !variation.attributes.length);
+    });
 
     const selectedAttributes = reactive({});
     const selectedUnit = ref(null);
@@ -64,9 +72,16 @@ export default {
 
     const preselectAttributes = () => {
       if (product.value?.variationAttributeMap) {
+        // set attribute-less variation
+        if (!product.value.attributes.length && Object.keys(options.value).length) {
+          for (const key in options.value) {
+            Vue.set(selectedAttributes, key, NO_SELECTION_ID);
+          }
         // set attributes
-        for (const attribute of product.value.attributes) {
-          Vue.set(selectedAttributes, attribute.attributeId, attribute.valueId.toString());
+        } else {
+          for (const attribute of product.value.attributes) {
+            Vue.set(selectedAttributes, attribute.attributeId, attribute.valueId.toString());
+          }
         }
 
         // set unit
@@ -80,7 +95,7 @@ export default {
     };
 
     const selectOption = (attributeId, attributeValueId) => {
-      if (attributeId && attributeValueId) {
+      if (attributeId) {
         Vue.set(selectedAttributes, attributeId, attributeValueId);
       }
     };
@@ -106,7 +121,9 @@ export default {
       selectedUnit,
       selectOption,
       selectedVariationId,
-      loading
+      loading,
+      hasEmptyOption,
+      NO_SELECTION_ID
     };
   },
   components: {
