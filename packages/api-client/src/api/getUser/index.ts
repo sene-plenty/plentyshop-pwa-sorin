@@ -36,7 +36,8 @@ export async function registerUser(context: Context, params: RegisterParams): Pr
   return data;
 }
 
-export async function updateUser(context: Context): Promise<SessionResult> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function updateUser(context: Context): Promise<any> {
   // TODO: implement updateUser()
   return {};
 }
