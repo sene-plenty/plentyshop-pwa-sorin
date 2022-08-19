@@ -37,9 +37,8 @@ export async function registerUser(context: Context, params: RegisterParams): Pr
 }
 
 export async function updateUser(context: Context): Promise<SessionResult> {
-  const url: URL = new URL('/rest/io/session/', context.config.api.url);
-  const { data } = await context.client.get(url.href);
-  return data.data;
+  // TODO: implement updateUser()
+  return {};
 }
 
 /* billingAddress: {
