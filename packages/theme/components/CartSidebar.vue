@@ -83,7 +83,6 @@
             >
               <template #value>
                 <SfPrice
-                  :regular="$n(totals.subtotal, 'currency')"
                   :special="(totals.special !== totals.subtotal) ? $n(totals.special, 'currency') : 0"
                 />
               </template>

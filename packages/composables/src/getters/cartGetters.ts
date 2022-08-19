@@ -54,15 +54,15 @@ function getItemId(item: CartItem): number {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotals(cart: Cart): AgnosticTotals {
   return {
-    total: 12,
-    subtotal: 12,
-    special: 10
+    total: cart?.basketAmount ?? 0,
+    subtotal: 0,
+    special: cart?.basketAmount ?? 0
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingPrice(cart: Cart): number {
-  return 0;
+  return cart?.shippingAmount ?? 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

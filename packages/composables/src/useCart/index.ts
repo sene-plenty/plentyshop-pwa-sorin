@@ -34,6 +34,7 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
     const cart = await context.$plentymarkets.api.getCart();
+    console.log('cart: ', cart);
     return cart;
   },
 
