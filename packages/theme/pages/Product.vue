@@ -47,38 +47,14 @@
           <SfButton class="sf-button--text desktop-only product__guide">
             {{ $t('Size guide') }}
           </SfButton>
-          <SfSelect
-            v-e2e="'size-select'"
-            v-if="options.size"
-            :value="configuration.size"
-            @input="size => updateFilter({ size })"
-            label="Size"
-            class="sf-select--underlined product__select-size"
-            :required="true"
-          >
-            <SfSelectOption
-              v-for="size in options.size"
-              :key="size.value"
-              :value="size.value"
-            >
-              {{size.label}}
-            </SfSelectOption>
-          </SfSelect>
-          <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
-            <p class="product__color-label">{{ $t('Color') }}:</p>
-            <SfColor
-              v-for="(color, i) in options.color"
-              :key="i"
-              :color="color.value"
-              class="product__color"
-              @click="updateFilter({ color: color.value })"
-            />
-          </div>
+
+          <AttributeSelection @selection-changed="attributeSelectionChanged($event)"></AttributeSelection>
+
           <SfAddToCart
             v-e2e="'product_add-to-cart'"
             :stock="stock"
             v-model="qty"
-            :disabled="loading"
+            :disabled="loading || !isAttributeSelectionValid"
             :canAddToCart="stock > 0"
             class="product__add-to-cart"
             @click="addItem({ product, quantity: parseInt(qty) })"
@@ -165,13 +141,15 @@ import {
   SfColor
 } from '@storefront-ui/vue';
 
+import AttributeSelection from '~/components/AttributeSelection.vue';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed, useRoute, useRouter } from '@nuxtjs/composition-api';
+import { ref, computed, useRoute } from '@nuxtjs/composition-api';
 import { useProduct, useCart, productGetters, useReview, reviewGetters, useCategory } from '@vue-storefront/plentymarkets';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import { addBasePath } from '@vue-storefront/core';
+import { useUiHelpers } from '~/composables';
 
 export default {
   name: 'Product',
@@ -179,7 +157,7 @@ export default {
   setup() {
     const qty = ref(1);
     const route = useRoute();
-    const router = useRouter();
+    const th = useUiHelpers();
     const { products, search } = useProduct('products');
     const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
@@ -188,8 +166,6 @@ export default {
 
     const id = computed(() => route.value.params.id);
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: route.value.query })[0]);
-    const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
-    const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
     const categories = computed(() => productGetters.getCategoryIds(product.value));
     const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
@@ -202,25 +178,24 @@ export default {
       alt: productGetters.getName(product.value)
     })));
 
+    const isAttributeSelectionValid = ref(true);
+    const attributeSelectionChanged = (value) => {
+      if (value) {
+        isAttributeSelectionValid.value = true;
+        th.changeAttributeSelection(value);
+      } else {
+        isAttributeSelectionValid.value = false;
+      }
+    };
+
     onSSR(async () => {
       await search({ id: id.value });
+
       await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
       await searchReviews({ productId: productGetters.getItemId(product.value) });
     });
 
-    const updateFilter = (filter) => {
-      router.push({
-        path: route.value.path,
-        query: {
-          ...configuration.value,
-          ...filter
-        }
-      });
-    };
-
     return {
-      updateFilter,
-      configuration,
       product,
       reviews,
       reviewGetters,
@@ -228,13 +203,14 @@ export default {
       totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
       relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
       relatedLoading,
-      options,
       qty,
       addItem,
       loading,
       productGetters,
       productGallery,
-      breadcrumbs
+      breadcrumbs,
+      attributeSelectionChanged,
+      isAttributeSelectionValid
     };
   },
   components: {
@@ -257,7 +233,8 @@ export default {
     SfButton,
     InstagramFeed,
     RelatedProducts,
-    LazyHydrate
+    LazyHydrate,
+    AttributeSelection
   },
   data() {
     return {
