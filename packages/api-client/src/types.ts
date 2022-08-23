@@ -102,7 +102,11 @@ export type Product = {
     rrp: any,
     default: any
   },
-  feedback: ReviewAverage
+  feedback: ReviewAverage,
+  variationAttributeMap?: {
+    attributes: ProductAttribute[],
+    variations: ProductVariation[]
+  }
 };
 
 export type Endpoints = TODO;
