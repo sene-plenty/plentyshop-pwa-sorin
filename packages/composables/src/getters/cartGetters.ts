@@ -11,7 +11,7 @@ import { productGetters } from './productGetters';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
-  return cart?.items;
+  return cart?.items ?? [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
