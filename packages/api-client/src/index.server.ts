@@ -1,12 +1,18 @@
-import {ApiClientExtension, apiClientFactory} from '@vue-storefront/core';
+import { ApiClientExtension, apiClientFactory } from '@vue-storefront/core';
 import axios from 'axios';
-import type {Endpoints, Settings} from './types';
-import {getProduct} from './api/getProduct';
-import {getCategory} from './api/getCategory';
-import {getFacet} from './api/getFacet';
-import {getReview} from './api/getReview';
-import {addWishlistItem, getWishlist, removeWishlistItem} from './api/getWishlist';
+import type { Endpoints, Settings } from './types';
+import { getProduct } from './api/getProduct';
+import { getCategory } from './api/getCategory';
+import { getFacet } from './api/getFacet';
+import { getReview } from './api/getReview';
+import { addWishlistItem, getWishlist, removeWishlistItem } from './api/getWishlist';
 import { getSearch } from './api/getSearch';
+import {
+  addItem as addCartItem,
+  getCart,
+  removeItem as removeCartItem,
+  updateItemQty as updateCartItemQty
+} from './api/getCart';
 import { getSession } from './api/getSession';
 import { loginUser, logoutUser, registerUser } from './api/getUser';
 
@@ -89,6 +95,10 @@ const {createApiClient} = apiClientFactory<Settings, Endpoints>({
     addWishlistItem,
     removeWishlistItem,
     getSearch,
+    getCart,
+    addCartItem,
+    removeCartItem,
+    updateCartItemQty,
     getSession,
     loginUser,
     registerUser,

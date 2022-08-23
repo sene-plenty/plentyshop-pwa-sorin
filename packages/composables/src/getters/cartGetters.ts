@@ -7,39 +7,36 @@ import {
   AgnosticAttribute
 } from '@vue-storefront/core';
 import type { Cart, CartItem } from '@vue-storefront/plentymarkets-api';
+import { productGetters } from './productGetters';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(cart: Cart): CartItem[] {
-  return [
-    {}
-  ];
+  return cart?.items ?? [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemName(item: CartItem): string {
-  return 'Name';
+  return productGetters.getName(item?.variation);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemImage(item: CartItem): string {
-  return 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg';
+  return productGetters.getCoverImage(item?.variation);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemPrice(item: CartItem): AgnosticPrice {
-  return {
-    regular: 12,
-    special: 10
-  };
+  return productGetters.getPrice(item?.variation);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemQty(item: CartItem): number {
-  return 1;
+  return item?.quantity ?? 1;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemAttributes(item: CartItem, filterByAttributeName?: Array<string>): Record<string, AgnosticAttribute | string> {
+  // TODO
   return {
     color: 'red'
   };
@@ -50,23 +47,27 @@ function getItemSku(item: CartItem): string {
   return '';
 }
 
+function getItemId(item: CartItem): number {
+  return item?.id ?? 0;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotals(cart: Cart): AgnosticTotals {
   return {
-    total: 12,
-    subtotal: 12,
-    special: 10
+    total: cart?.basketAmount ?? 0,
+    subtotal: 0,
+    special: cart?.basketAmount ?? 0
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingPrice(cart: Cart): number {
-  return 0;
+  return cart?.shippingAmount ?? 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalItems(cart: Cart): number {
-  return 1;
+  return cart?.items.length ?? 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -97,5 +98,6 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getFormattedPrice,
   getTotalItems,
   getCoupons,
-  getDiscounts
+  getDiscounts,
+  getItemId
 };

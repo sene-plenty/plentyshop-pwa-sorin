@@ -253,9 +253,9 @@ export default {
     };
 
     const addToCart = ({ product, quantity }) => {
-      const { id, sku } = product;
       addItemToCart({
-        product: { id, sku },
+        // TODO only pass needed attrs?
+        product,
         quantity
       });
     };
