@@ -26,8 +26,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   logOut: async (context: Context) => {
     await context.$plentymarkets.api.logoutUser();
     context.useWishlist.setWishlist({ items: [] });
-    // TODO: Clear cart
-    // context.useCart.setCart(cart);
+    context.useCart.setCart({ items: [] });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -51,9 +50,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       const wishlist = await context.$plentymarkets.api.getWishlist();
       context.useWishlist.setWishlist(wishlist);
 
-      // TODO: Set card
-      /* const cart = await context.$spree.api.getCart();
-      context.useCart.setCart(cart); */
+      const cart = await context.$plentymarkets.api.getCart();
+      context.useCart.setCart(cart);
 
       return {};
     } catch (e) {
