@@ -175,11 +175,11 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            v-e2e="'continue-to-payment'"
+            v-e2e="'continue-to-shipping'"
             class="form__action-button"
             type="submit"
           >
-            {{ $t('Continue to payment') }}
+            {{ $t('Continue to shipping') }}
           </SfButton>
         </div>
       </div>
@@ -252,7 +252,7 @@ export default {
 
     const handleFormSubmit = async () => {
       await save({ billingDetails: form.value });
-      router.push(context.root.localePath({ name: 'payment' }));
+      router.push(context.root.localePath({ name: 'shipping' }));
     };
 
     onSSR(async () => {

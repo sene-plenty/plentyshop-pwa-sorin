@@ -17,7 +17,7 @@ const params: UseBillingParams<BillingAddress, AddParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save: async (context: Context, { params, billingDetails, customQuery }) => {
-    context.$plentymarkets.api.saveAddress(AddressType.Billing, billingDetails);
+    await context.$plentymarkets.api.saveAddress(AddressType.Billing, billingDetails);
     return {};
   }
 };

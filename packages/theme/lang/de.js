@@ -161,5 +161,6 @@ export default {
   'price-down': 'Preis ⬇',
   'content': 'Inhalt',
   'please select variation': 'Bitte wählen Sie eine gültige Variante.',
-  'no selection': 'Keine Auswahl'
+  'no selection': 'Keine Auswahl',
+  'My billing and shipping address are the same': 'Meine Rechnungs- und Lieferadresse sind gleich'
 };

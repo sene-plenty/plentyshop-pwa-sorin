@@ -36,6 +36,7 @@ import CartPreview from '~/components/Checkout/CartPreview';
 import { computed, useRoute, useRouter } from '@nuxtjs/composition-api';
 
 const STEPS = {
+  login: 'Login',
   billing: 'Billing',
   shipping: 'Shipping',
   payment: 'Payment'

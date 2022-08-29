@@ -7,6 +7,14 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
+      <SfCheckbox
+        v-e2e="'copy-address'"
+        :selected="false"
+        :label="$t('My billing and shipping address are the same')"
+        name="copyShippingAddress"
+        class="form__element"
+        @change="handleCheckSameAddress($event)"
+      />
       <div class="form">
         <ValidationProvider
           name="firstName"
@@ -197,6 +205,7 @@ import { onSSR } from '@vue-storefront/core';
 import { useShipping } from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { SfCheckbox } from '@storefront-ui/vue';
 
 const COUNTRIES = [
   { key: 'US', label: 'United States' },
@@ -225,6 +234,7 @@ export default {
     SfInput,
     SfButton,
     SfSelect,
+    SfCheckbox,
     ValidationProvider,
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
