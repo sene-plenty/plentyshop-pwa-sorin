@@ -409,6 +409,11 @@ export type RegisterParams = {
   lastName: string
 }
 
+export enum AddressType {
+  Billing = 1,
+  Shipping = 2
+}
+
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
@@ -461,6 +466,8 @@ export interface PlentymarketsApiMethods {
   registerUser(params: RegisterParams): Promise<any>
 
   logoutUser(): Promise<any>
+
+  saveAddress(typeId: AddressType, addressData: TODO): Promise<any>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;
