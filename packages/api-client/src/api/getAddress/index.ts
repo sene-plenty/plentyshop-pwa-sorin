@@ -14,7 +14,7 @@ export async function saveAddress(context: Context, typeId: AddressType = Addres
 
   const { data } = await context.client.post(url.href, payload);
 
-  console.log('Result', data);
+  return data.data;
 }
 
 function mapAddressData(addressData): object {

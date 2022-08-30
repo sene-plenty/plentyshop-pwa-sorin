@@ -9,13 +9,14 @@
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
       <SfCheckbox
         v-e2e="'copy-address'"
-        :selected="false"
+        :selected="sameAsShipping"
         :label="$t('My billing and shipping address are the same')"
         name="copyShippingAddress"
         class="form__element"
         @change="handleCheckSameAddress($event)"
       />
-      <div class="form">
+      {{ billing }}
+      <div class="form" v-if="!sameAsShipping">
         <ValidationProvider
           name="firstName"
           rules="required|min:2"
@@ -202,7 +203,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, useRouter } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useShipping } from '@vue-storefront/plentymarkets';
+import { useShipping, useBilling } from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { SfCheckbox } from '@storefront-ui/vue';
@@ -243,6 +244,9 @@ export default {
     const router = useRouter();
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
+    const { billing } = useBilling();
+
+    const sameAsShipping = ref(false);
 
     const form = ref({
       firstName: '',
@@ -256,8 +260,17 @@ export default {
       phone: null
     });
 
+    const handleCheckSameAddress = async value => {
+      sameAsShipping.value = value;
+    };
+
     const handleFormSubmit = async () => {
-      await save({ shippingDetails: form.value });
+      if (sameAsShipping.value) {
+        // TODO: do something
+      } else {
+        await save({ shippingDetails: form.value });
+      }
+
       isFormSubmitted.value = true;
     };
 
@@ -266,11 +279,14 @@ export default {
     });
 
     return {
+      billing,
       router,
       loading,
       isFormSubmitted,
+      sameAsShipping,
       form,
       countries: COUNTRIES,
+      handleCheckSameAddress,
       handleFormSubmit
     };
   }
