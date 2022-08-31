@@ -7,7 +7,7 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <p class="customer__text">
-      Sie können sich bei Ihrem Konto anmelden oder ein neues registrieren.
+      {{ $t('Login Register Text') }}
     </p>
     <SfButton
             type="button"
@@ -63,6 +63,6 @@ export default {
 }
 
 .customer-text {
-  margin: var(--spacer-xl) 0 var(--spacer-xl) 0;
+  margin: var(--spacer-lg) 0 var(--spacer-lg) 0;
 }
 </style>

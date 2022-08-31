@@ -164,5 +164,6 @@ export default {
   'no selection': 'No selection',
   'My billing and shipping address are the same': 'My billing and shipping address are the same',
   'Continue as guest': 'Continue as guest',
-  'Login Register': 'Login / Register'
+  'Login Register': 'Login / Register',
+  'Login Register Text': 'You can login to your account or register a new one.'
 };
