@@ -21,7 +21,7 @@ function mapAddressData(addressData): object {
   return {
     gender: 'male',
     countryId: mapCountryId(addressData.country),
-    email: 'christoph.johannsen@plentymarkets.com',
+    email: addressData.email,
     name1: null,
     name2: addressData.firstName,
     name3: addressData.lastName,

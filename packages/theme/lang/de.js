@@ -162,5 +162,7 @@ export default {
   'content': 'Inhalt',
   'please select variation': 'Bitte wählen Sie eine gültige Variante.',
   'no selection': 'Keine Auswahl',
-  'My billing and shipping address are the same': 'Meine Rechnungs- und Lieferadresse sind gleich'
+  'My billing and shipping address are the same': 'Meine Rechnungs- und Lieferadresse sind gleich',
+  'Continue as guest': 'Weiter als Gast',
+  'Login Register': 'Anmelden / Registrieren'
 };
