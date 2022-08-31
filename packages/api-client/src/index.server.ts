@@ -15,7 +15,7 @@ import {
   updateItemQty as updateCartItemQty
 } from './api/getCart';
 import { getSession } from './api/getSession';
-import { loginUser, logoutUser, registerUser } from './api/getUser';
+import { loginAsGuest, loginUser, logoutUser, registerUser } from './api/getUser';
 
 /**
  * Event flow
@@ -104,6 +104,7 @@ const {createApiClient} = apiClientFactory<Settings, Endpoints>({
     loginUser,
     registerUser,
     logoutUser,
+    loginAsGuest,
     loadAddresses,
     saveAddress
   },

@@ -467,6 +467,8 @@ export interface PlentymarketsApiMethods {
 
   logoutUser(): Promise<any>
 
+  loginAsGuest(email: string): Promise<any>
+
   loadAddresses(typeId: AddressType): Promise<any>
 
   saveAddress(typeId: AddressType, addressData: TODO): Promise<any>

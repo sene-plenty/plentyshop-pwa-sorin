@@ -164,6 +164,18 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
+        <ValidationProvider slim rules="required|email" v-slot="{ errors }">
+          <SfInput
+            v-e2e="'login-modal-email'"
+            v-model="form.email"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+            name="email"
+            required
+            label="Your email"
+            class="form__element form__element--half form__element--half-even"
+          />
+        </ValidationProvider>
       </div>
       <div class="form">
         <div class="form__action">
@@ -247,7 +259,8 @@ export default {
       state: '',
       country: '',
       postalCode: '',
-      phone: null
+      phone: null,
+      email: ''
     });
 
     const handleFormSubmit = async () => {

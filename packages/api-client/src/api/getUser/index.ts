@@ -10,6 +10,16 @@ export async function loginUser(context: Context, email: string, password: strin
 
   return data;
 }
+
+export async function loginAsGuest(context: Context, email: string): Promise<SessionResult> {
+  const url: URL = new URL('/rest/io/guest/', context.config.api.url);
+  const { data } = await context.client.post(url.href, {
+    email
+  });
+
+  return data;
+}
+
 export async function logoutUser(context: Context): Promise<boolean> {
   const url: URL = new URL('/rest/io/customer/logout/', context.config.api.url);
   const { data } = await context.client.post(url.href);

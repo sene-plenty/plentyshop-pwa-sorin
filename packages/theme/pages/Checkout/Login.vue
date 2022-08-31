@@ -1,292 +1,68 @@
 <template>
-  <h1>Implement Login here</h1>
-  <!-- <ValidationObserver v-slot="{ handleSubmit, reset, validate }">
+  <div>
     <SfHeading
-      v-e2e="'user-account-heading'"
+      v-e2e="'login-heading'"
       :level="3"
-      :title="$t('User Account')"
+      :title="$t('Login')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <form
-      novalidate
-      @submit.prevent="validate().then(handleSubmit(handleFormSubmit(reset)))"
-    >
-      <div class="form">
-        <ValidationProvider
-          v-slot="{ errors }"
-          name="firstname"
-          :rules="loginUserAccount ? '' : 'required|min:2'"
-          slim
-        >
-          <SfInput
-            v-model="form.firstname"
-            v-e2e="'user-account-firstName'"
-            :label="$t('First Name')"
-            name="firstName"
-            class="form__element form__element--half"
-            :required="!loginUserAccount"
-            :disabled="loginUserAccount"
-            :valid="!errors[0]"
-            :error-message="$t(errors[0])"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          v-slot="{ errors }"
-          name="lastname"
-          :rules="loginUserAccount ? '' : 'required|min:2'"
-          slim
-        >
-          <SfInput
-            v-model="form.lastname"
-            v-e2e="'user-account-lastName'"
-            :label="$t('Last Name')"
-            name="lastName"
-            class="form__element form__element--half form__element--half-even"
-            :required="!loginUserAccount"
-            :disabled="loginUserAccount"
-            :valid="!errors[0]"
-            :error-message="$t(errors[0])"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          v-slot="{ errors }"
-          name="email"
-          rules="email|required"
-          slim
-        >
-          <SfInput
-            v-model="form.email"
-            v-e2e="'user-account-email'"
-            :label="$t('E-mail')"
-            name="email"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :error-message="$t(errors[0])"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          v-if="createUserAccount || loginUserAccount"
-          v-slot="{ errors }"
-          rules="required|min:8|password"
-          slim
-        >
-          <SfInput
-            v-model="form.password"
-            v-e2e="'user-account-password'"
-            name="password"
-            label="Password"
-            type="password"
-            class="form__element form__element--half form__element--half-even"
-            required
-            has-show-password
-            :valid="!errors[0]"
-            :error-message="$t(errors[0])"
-          />
-        </ValidationProvider>
-        <SfCheckbox
-          v-if="createUserAccount"
-          v-model="form.is_subscribed"
-          v-e2e="'sign-up-newsletter'"
-          label="Sign Up for Newsletter"
-          name="signupNewsletter"
-          class="form__element"
-        />
-      </div>
-      <SfCheckbox
-        v-if="!isAuthenticated"
-        v-model="createUserAccount"
-        v-e2e="'create-account'"
-        label="Create an account on the store"
-        name="createUserAccount"
-        class="form__element"
-        :disabled="loginUserAccount"
-      />
-      <SfCheckbox
-        v-if="!isAuthenticated"
-        v-model="loginUserAccount"
-        v-e2e="'login-account'"
-        label="Login on the store"
-        name="loginUserAccount"
-        class="form__element"
-        :disabled="createUserAccount"
-      />
-      <recaptcha v-if="isRecaptchaEnabled" />
-      <div class="form">
-        <div class="form__action">
-          <SfButton
-            v-e2e="'continue-to-shipping'"
-            class="form__action-button"
-            type="submit"
-            :disabled="!canMoveForward"
+    <p class="customer__text">
+      {{ $t('Login Register Text') }}
+    </p>
+    <SfButton
+            type="button"
+            class="sf-button"
+            @click="toggleLoginModal()"
           >
-            {{ $t('Continue to shipping') }}
-          </SfButton>
-        </div>
-      </div>
-    </form>
-  </ValidationObserver> -->
+            {{ $t('Login Register') }}
+    </SfButton>
+    <hr class="sf-divider customer-text">
+    <SfButton
+            type="button"
+            class="sf-button"
+            @click="router.push('/checkout/billing')"
+          >
+            {{ $t('Continue as guest') }}
+    </SfButton>
+  </div>
 </template>
+<script>
+import { reactive, useRouter } from '@nuxtjs/composition-api';
+import { SfHeading, SfButton } from '@storefront-ui/vue';
+import { useUiState } from '~/composables';
 
-<!-- <script lang="ts">
-import {
-  SfHeading,
-  SfInput,
-  SfButton,
-  SfCheckbox,
-} from '@storefront-ui/vue';
-import {
-  ref,
-  computed,
-  defineComponent,
-  useRouter,
-  useContext,
-  useFetch,
-  onMounted,
-} from '@nuxtjs/composition-api';
-import {
-  required, min, email,
-} from 'vee-validate/dist/rules';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-// import { useGuestUser } from '~/composables';
-// import useCart from '~/modules/checkout/composables/useCart';
-// import { useUser } from '~/modules/customer/composables/useUser';
-// import { getItem, mergeItem } from '~/helpers/asyncLocalStorage';
-// import { customerPasswordRegExp, invalidPasswordMsg } from '~/modules/customer/helpers/passwordValidation';
-
-extend('required', {
-  ...required,
-  message: 'This field is required',
-});
-extend('min', {
-  ...min,
-  message: 'The field should have at least {length} characters',
-});
-extend('email', {
-  ...email,
-  message: 'Invalid email',
-});
-
-// extend('password', {
-//   message: invalidPasswordMsg,
-//   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-//   validate: (value) => customerPasswordRegExp.test(value),
-// });
-
-export default defineComponent({
-  name: 'UserAccount',
+export default {
+  name: 'Login',
   components: {
     SfHeading,
-    SfInput,
-    SfButton,
-    SfCheckbox,
-    ValidationProvider,
-    ValidationObserver,
+    SfButton
   },
   setup() {
-  },
-});
-</script> -->
 
-<!-- <style lang="scss" scoped>
-.form {
+    const { isLoginModalOpen, toggleLoginModal } = useUiState();
+    const router = useRouter();
 
-  &__select {
-    display: flex;
-    align-items: center;
-    --select-option-font-size: var(--font-size--lg);
+    const error = reactive({
+      login: null,
+      register: null
+    });
 
-    ::v-deep .sf-select__dropdown {
-      font-size: var(--font-size--lg);
-      margin: 0;
-      color: var(--c-text);
-      font-family: var(--font-family--secondary);
-      font-weight: var(--font-weight--normal);
-    }
-
-    ::v-deep .sf-select__label {
-      left: initial;
-    }
+    return {
+      router,
+      error,
+      isLoginModalOpen,
+      toggleLoginModal
+    };
   }
+};
+</script>
 
-  @include for-desktop {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  &__element {
-    margin: 0 0 var(--spacer-xl) 0;
-    @include for-desktop {
-      flex: 0 0 100%;
-    }
-
-    &--half {
-      @include for-desktop {
-        flex: 1 1 50%;
-      }
-
-      &-even {
-        @include for-desktop {
-          padding: 0 0 0 var(--spacer-xl);
-        }
-      }
-    }
-  }
-
-  &__action {
-    --button-width: 100%;
-    @include for-desktop {
-      --button-width: auto;
-      flex: 0 0 100%;
-      display: flex;
-    }
-  }
-
-  &__action-button {
-    &--secondary {
-      @include for-desktop {
-        order: -1;
-        text-align: left;
-      }
-    }
-
-    &--add-address {
-      width: 100%;
-      margin: 0;
-      @include for-desktop {
-        margin: 0 0 var(--spacer-lg) 0;
-        width: auto;
-      }
-    }
-  }
-
-  &__back-button {
-    margin: var(--spacer-xl) 0 var(--spacer-sm);
-
-    &:hover {
-      color: var(--c-white);
-    }
-
-    @include for-desktop {
-      margin: 0 var(--spacer-xl) 0 0;
-    }
-  }
-}
-
-.shipping {
-  &__label {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  &__description {
-    --radio-description-margin: 0;
-    --radio-description-font-size: var(--font-xs);
-  }
-}
-
+<style lang="scss" scoped>
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
 }
-</style> -->
+
+.customer-text {
+  margin: var(--spacer-lg) 0 var(--spacer-lg) 0;
+}
+</style>
