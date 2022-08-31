@@ -276,7 +276,6 @@ export default {
 
     const closeModal = () => {
       resetErrorValues();
-      // setCurrentScreen(SCREEN_REGISTER);
       toggleLoginModal();
     };
 

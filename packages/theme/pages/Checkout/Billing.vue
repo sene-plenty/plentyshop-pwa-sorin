@@ -164,7 +164,7 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider slim rules="required|email" v-slot="{ errors }">
+        <ValidationProvider v-if="!isAuthenticated" slim rules="required|email" v-slot="{ errors }">
           <SfInput
             v-e2e="'login-modal-email'"
             v-model="form.email"
@@ -210,7 +210,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, useRouter } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useBilling } from '@vue-storefront/plentymarkets';
+import { useBilling, useUser } from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 
@@ -249,6 +249,7 @@ export default {
   setup(props, context) {
     const router = useRouter();
     const { load, save } = useBilling();
+    const { isAuthenticated } = useUser();
 
     const form = ref({
       firstName: '',
@@ -276,7 +277,8 @@ export default {
       router,
       form,
       countries: COUNTRIES,
-      handleFormSubmit
+      handleFormSubmit,
+      isAuthenticated
     };
   }
 };
