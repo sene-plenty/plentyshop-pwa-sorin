@@ -11,9 +11,11 @@ import type {
 const params: UseBillingParams<BillingAddress, AddParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
-    console.log('Mocked: useBilling.load');
+    const data = await context.$plentymarkets.api.loadAddresses(AddressType.Billing);
 
-    return { hallo: 'welt' };
+    console.log('LOAD', data);
+
+    return data;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

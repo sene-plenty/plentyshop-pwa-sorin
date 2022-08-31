@@ -2,8 +2,19 @@ import { AddressType } from './../../types';
 import { Context } from 'src/types';
 import { TODO } from '../../types';
 
+export async function loadAddresses(context: Context, typeId: AddressType): Promise<any> {
+  const url: URL = new URL('/rest/io/customer/address', context.config.api.url);
+
+  url.searchParams.set('typeId', typeId.toString());
+
+  const { data } = await context.client.get(url.href);
+
+  console.log('LOAD ADDRESS RESULT', data);
+
+  return data;
+}
+
 export async function saveAddress(context: Context, typeId: AddressType = AddressType.Billing, addressData: TODO): Promise<any> {
-  // console.log('saveAddress', typeId, addressData);
   const url: URL = new URL('/rest/io/customer/address/', context.config.api.url);
 
   url.searchParams.set('typeId', typeId.toString());

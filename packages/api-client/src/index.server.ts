@@ -7,7 +7,7 @@ import { getFacet } from './api/getFacet';
 import { getReview } from './api/getReview';
 import { addWishlistItem, getWishlist, removeWishlistItem } from './api/getWishlist';
 import { getSearch } from './api/getSearch';
-import { saveAddress } from './api/getAddress';
+import { loadAddresses, saveAddress } from './api/getAddress';
 import {
   addItem as addCartItem,
   getCart,
@@ -104,6 +104,7 @@ const {createApiClient} = apiClientFactory<Settings, Endpoints>({
     loginUser,
     registerUser,
     logoutUser,
+    loadAddresses,
     saveAddress
   },
   extensions: [cookieExtension]
