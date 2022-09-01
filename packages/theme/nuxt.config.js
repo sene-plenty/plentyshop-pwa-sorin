@@ -152,6 +152,15 @@ export default {
   },
 
   router: {
+    extendRoutes(routes, resolve) {
+      routes.find(route => route.path === '/Checkout').children.push(
+        {
+          path: 'login',
+          name: 'login',
+          component: resolve(__dirname, '_theme/pages/Checkout/Login.vue'),
+        },
+      )
+    },
     middleware: ['checkout']
   },
 

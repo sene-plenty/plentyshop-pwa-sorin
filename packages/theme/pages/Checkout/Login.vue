@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import { reactive, useRouter, watch } from '@nuxtjs/composition-api';
+import { useRouter, watch } from '@nuxtjs/composition-api';
 import { SfHeading, SfButton } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import { useUser } from '@vue-storefront/plentymarkets';
@@ -44,11 +44,6 @@ export default {
     const router = useRouter();
     const { isAuthenticated } = useUser();
 
-    const error = reactive({
-      login: null,
-      register: null
-    });
-
     watch(isAuthenticated, () => {
       if (isAuthenticated) {
         router.push('/checkout/billing');
@@ -57,7 +52,6 @@ export default {
 
     return {
       router,
-      error,
       isLoginModalOpen,
       toggleLoginModal
     };
