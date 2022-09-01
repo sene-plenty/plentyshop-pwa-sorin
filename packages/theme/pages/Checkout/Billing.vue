@@ -268,9 +268,18 @@ export default {
       router.push(context.root.localePath({ name: 'shipping' }));
     };
 
+    const setExistingAddress = () => {
+      if (billing.value) {
+        form.value = billing.value;
+      }
+    };
+
     onSSR(async () => {
       await load();
+      setExistingAddress();
     });
+
+    setExistingAddress();
 
     return {
       router,

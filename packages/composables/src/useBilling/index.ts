@@ -13,13 +13,12 @@ const params: UseBillingParams<BillingAddress, AddParams> = {
   load: async (context: Context, { customQuery }) => {
     const data = await context.$plentymarkets.api.loadAddresses(AddressType.Billing);
 
-    return data;
+    return data[0] ?? null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save: async (context: Context, { params, billingDetails, customQuery }) => {
-    const data = await context.$plentymarkets.api.saveAddress(AddressType.Billing, billingDetails);
-    return data;
+    return await context.$plentymarkets.api.saveAddress(AddressType.Billing, billingDetails);
   }
 };
 
