@@ -414,6 +414,56 @@ export enum AddressType {
   Shipping = 2
 }
 
+export enum AddressOptionType {
+  VATNumber = 1,
+  ExternalAddressID = 2,
+  EntryCertificate = 3,
+  Telephone = 4,
+  Email = 5,
+  PostNumber = 6,
+  PersonalId = 7,
+  BBFC = 8,
+  Birthday = 9,
+  SessionID = 10,
+  Title = 11,
+  ContactPerson = 12,
+  ExternalCustomerID = 13
+}
+
+export type AddressOption = {
+  id: number;
+  addressId: number;
+  typeId: AddressOptionType;
+  value: string;
+  position: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type AddressData = {
+    id: number;
+    gender: string;
+    name1?: string;
+    name2?: string;
+    name3?: string;
+    name4?: string;
+    address1: string;
+    address2: string;
+    address3?: string;
+    address4?: string;
+    postalCode: string;
+    town: string;
+    countryId: number;
+    stateId?: number;
+    readOnly: boolean;
+    checkedAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    title: string;
+    contactPerson: string;
+    options: AddressOption[];
+}
+
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
@@ -469,7 +519,7 @@ export interface PlentymarketsApiMethods {
 
   loginAsGuest(email: string): Promise<any>
 
-  loadAddresses(typeId: AddressType): Promise<any>
+  loadAddresses(typeId: AddressType): Promise<AddressData[]>
 
   saveAddress(typeId: AddressType, addressData: TODO): Promise<any>
 }

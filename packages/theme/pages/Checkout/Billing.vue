@@ -248,7 +248,7 @@ export default {
   },
   setup(props, context) {
     const router = useRouter();
-    const { load, save } = useBilling();
+    const { load, save, billing } = useBilling();
 
     const form = ref({
       firstName: '',
@@ -276,7 +276,8 @@ export default {
       router,
       form,
       countries: COUNTRIES,
-      handleFormSubmit
+      handleFormSubmit,
+      billing
     };
   }
 };

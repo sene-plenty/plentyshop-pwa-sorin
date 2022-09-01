@@ -1,20 +1,16 @@
-import { AddressType } from './../../types';
-import { Context } from 'src/types';
-import { TODO } from '../../types';
+import { AddressData, AddressType, Context } from 'src/types';
 
-export async function loadAddresses(context: Context, typeId: AddressType): Promise<any> {
+export async function loadAddresses(context: Context, typeId: AddressType): Promise<AddressData[]> {
   const url: URL = new URL('/rest/io/customer/address', context.config.api.url);
 
   url.searchParams.set('typeId', typeId.toString());
 
   const { data } = await context.client.get(url.href);
 
-  console.log('LOAD ADDRESS RESULT', data);
-
-  return data;
+  return data.data;
 }
 
-export async function saveAddress(context: Context, typeId: AddressType = AddressType.Billing, addressData: TODO): Promise<any> {
+export async function saveAddress(context: Context, typeId: AddressType = AddressType.Billing, addressData: AddressData): Promise<any> {
   const url: URL = new URL('/rest/io/customer/address/', context.config.api.url);
 
   url.searchParams.set('typeId', typeId.toString());
