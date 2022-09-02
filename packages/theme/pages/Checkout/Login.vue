@@ -10,6 +10,7 @@
       {{ $t('Login Register Text') }}
     </p>
     <SfButton
+            :disabled="isAuthenticated"
             type="button"
             class="sf-button"
             @click="toggleLoginModal()"
@@ -18,6 +19,7 @@
     </SfButton>
     <hr class="sf-divider customer-text">
     <SfButton
+            :disabled="isAuthenticated"
             type="button"
             class="sf-button"
             @click="router.push('/checkout/billing')"
@@ -27,9 +29,10 @@
   </div>
 </template>
 <script>
-import { reactive, useRouter } from '@nuxtjs/composition-api';
+import { useRouter, watch } from '@nuxtjs/composition-api';
 import { SfHeading, SfButton } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
+import { useUser } from '@vue-storefront/plentymarkets';
 
 export default {
   name: 'Login',
@@ -41,15 +44,17 @@ export default {
 
     const { isLoginModalOpen, toggleLoginModal } = useUiState();
     const router = useRouter();
+    const { isAuthenticated } = useUser();
 
-    const error = reactive({
-      login: null,
-      register: null
+    watch(isAuthenticated, () => {
+      if (isAuthenticated) {
+        router.push('/checkout/billing');
+      }
     });
 
     return {
       router,
-      error,
+      isAuthenticated,
       isLoginModalOpen,
       toggleLoginModal
     };
