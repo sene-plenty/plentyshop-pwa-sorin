@@ -522,6 +522,8 @@ export interface PlentymarketsApiMethods {
   loadAddresses(typeId: AddressType): Promise<AddressData[]>
 
   saveAddress(typeId: AddressType, addressData: TODO): Promise<any>
+
+  getActiveShippingCountries(): Promise<any>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;

@@ -210,7 +210,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, useRouter } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useBilling, useUser } from '@vue-storefront/plentymarkets';
+import { useBilling, useUser, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 
@@ -250,6 +250,7 @@ export default {
     const router = useRouter();
     const { load, save, billing } = useBilling();
     const { isAuthenticated } = useUser();
+    const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
 
     const form = ref({
       firstName: '',
@@ -278,6 +279,7 @@ export default {
     onSSR(async () => {
       await load();
       setExistingAddress();
+      await loadActiveShippingCountries();
     });
 
     setExistingAddress();
@@ -288,7 +290,8 @@ export default {
       countries: COUNTRIES,
       handleFormSubmit,
       billing,
-      isAuthenticated
+      isAuthenticated,
+      activeShippingCountries
     };
   }
 };

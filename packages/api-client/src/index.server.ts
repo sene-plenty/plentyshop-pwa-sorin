@@ -16,6 +16,7 @@ import {
 } from './api/getCart';
 import { getSession } from './api/getSession';
 import { loginAsGuest, loginUser, logoutUser, registerUser } from './api/getUser';
+import { getActiveShippingCountries } from './api/getActiveShippingCountries';
 
 /**
  * Event flow
@@ -106,7 +107,8 @@ const {createApiClient} = apiClientFactory<Settings, Endpoints>({
     logoutUser,
     loginAsGuest,
     loadAddresses,
-    saveAddress
+    saveAddress,
+    getActiveShippingCountries
   },
   extensions: [cookieExtension]
 });
