@@ -107,7 +107,7 @@
         </ValidationProvider>
         <ValidationProvider
           name="country"
-          rules="required|min:2"
+          rules="required"
           v-slot="{ errors }"
           slim
         >
@@ -124,7 +124,7 @@
             <SfSelectOption
               v-for="countryOption in countries"
               :key="countryOption.id"
-              :value="countryOption.id"
+              :value="countryOption.id.toString()"
             >
               {{ countryOption.name }}
             </SfSelectOption>
@@ -275,6 +275,8 @@ export default {
       await loadActiveShippingCountries();
       setExistingAddress();
     });
+
+    setExistingAddress();
 
     return {
       router,

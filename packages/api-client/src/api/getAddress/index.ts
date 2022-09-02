@@ -27,7 +27,7 @@ function mapAddressForServer(addressData): object {
   return {
     id: addressData.id,
     gender: 'male',
-    countryId: mapCountryId(addressData.country),
+    countryId: addressData.country,
     email: addressData.email,
     name1: null,
     name2: addressData.firstName,
@@ -69,8 +69,4 @@ function mapAddressForClient(addressData: AddressData) {
   });
 
   return address;
-}
-
-function mapCountryId(countryCode: string): number {
-  return countryCode === 'de' ? 1 : 2;
 }
