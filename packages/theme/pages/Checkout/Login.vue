@@ -10,6 +10,7 @@
       {{ $t('Login Register Text') }}
     </p>
     <SfButton
+            :disabled="isAuthenticated"
             type="button"
             class="sf-button"
             @click="toggleLoginModal()"
@@ -18,6 +19,7 @@
     </SfButton>
     <hr class="sf-divider customer-text">
     <SfButton
+            :disabled="isAuthenticated"
             type="button"
             class="sf-button"
             @click="router.push('/checkout/billing')"
@@ -52,6 +54,7 @@ export default {
 
     return {
       router,
+      isAuthenticated,
       isLoginModalOpen,
       toggleLoginModal
     };

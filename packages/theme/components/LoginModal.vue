@@ -126,28 +126,6 @@
             </ValidationProvider>
             <ValidationProvider rules="required" v-slot="{ errors }">
               <SfInput
-                v-e2e="'login-modal-firstName'"
-                v-model="form.firstName"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                name="first-name"
-                label="First Name"
-                class="form__element"
-              />
-            </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
-              <SfInput
-                v-e2e="'login-modal-lastName'"
-                v-model="form.lastName"
-                :valid="!errors[0]"
-                :errorMessage="errors[0]"
-                name="last-name"
-                label="Last Name"
-                class="form__element"
-              />
-            </ValidationProvider>
-            <ValidationProvider rules="required" v-slot="{ errors }">
-              <SfInput
                 v-e2e="'login-modal-password'"
                 v-model="form.password"
                 :valid="!errors[0]"
