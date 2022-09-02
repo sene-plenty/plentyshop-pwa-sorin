@@ -464,6 +464,37 @@ export type AddressData = {
     options: AddressOption[];
 }
 
+export type ShippingCountryName = {
+  country_id: string,
+  id: number,
+  language: string,
+  name: string
+}
+
+export type ShippingCountryState = {
+  countryId: string,
+  id: number,
+  isoCode: string,
+  isoCode3166: string,
+  name: string
+}
+
+export type ActiveShippingCountry = {
+  active: boolean,
+  currLangName: string,
+  id: number,
+  isCountryStateMandatory: boolean,
+  isoCode2: string,
+  isoCode3: string,
+  lang: string,
+  name: string,
+  names: ShippingCountryName[]
+  shippingDestinationId: number,
+  states: ShippingCountryState[]
+  storehouseId: number
+  vatCodes:string[]
+}
+
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams

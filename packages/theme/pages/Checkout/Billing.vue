@@ -123,10 +123,10 @@
           >
             <SfSelectOption
               v-for="countryOption in countries"
-              :key="countryOption.key"
-              :value="countryOption.key"
+              :key="countryOption.id"
+              :value="countryOption.id"
             >
-              {{ countryOption.label }}
+              {{ countryOption.name }}
             </SfSelectOption>
           </SfSelect>
         </ValidationProvider>
@@ -208,18 +208,11 @@ import {
   SfRadio,
   SfCheckbox
 } from '@storefront-ui/vue';
-import { ref, useRouter } from '@nuxtjs/composition-api';
+import { ref, useRouter, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useBilling, useUser, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-
-const COUNTRIES = [
-  { key: 'US', label: 'United States' },
-  { key: 'UK', label: 'United Kingdom' },
-  { key: 'IT', label: 'Italy' },
-  { key: 'PL', label: 'Poland' }
-];
 
 extend('required', {
   ...required,
@@ -251,6 +244,7 @@ export default {
     const { load, save, billing } = useBilling();
     const { isAuthenticated } = useUser();
     const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
+    const countries = computed(() => activeShippingCountries.value);
 
     const form = ref({
       firstName: '',
@@ -276,22 +270,25 @@ export default {
       }
     };
 
+    /*  onMounted(async () => {
+      await load();
+      await loadActiveShippingCountries();
+      setExistingAddress();
+    }); */
+
     onSSR(async () => {
       await load();
-      setExistingAddress();
       await loadActiveShippingCountries();
+      setExistingAddress();
     });
-
-    setExistingAddress();
 
     return {
       router,
       form,
-      countries: COUNTRIES,
       handleFormSubmit,
       billing,
       isAuthenticated,
-      activeShippingCountries
+      countries
     };
   }
 };
