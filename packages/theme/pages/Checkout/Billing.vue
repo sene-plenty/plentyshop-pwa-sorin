@@ -270,12 +270,6 @@ export default {
       }
     };
 
-    /*  onMounted(async () => {
-      await load();
-      await loadActiveShippingCountries();
-      setExistingAddress();
-    }); */
-
     onSSR(async () => {
       await load();
       await loadActiveShippingCountries();

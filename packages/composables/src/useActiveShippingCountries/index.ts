@@ -1,14 +1,14 @@
-import { computed, ref } from '@nuxtjs/composition-api';
-import { useVSFContext } from '@vue-storefront/core';
+import { computed } from '@nuxtjs/composition-api';
+import { sharedRef, useVSFContext } from '@vue-storefront/core';
 
 export const useActiveShippingCountries = (): any => {
   const context = useVSFContext();
 
-  const result = ref(null);
+  const result = sharedRef(null, 'active-shipping-countries-result');
 
-  const loading = ref(false);
+  const loading = sharedRef(false, 'active-shipping-countries-loading');
 
-  const error = ref({ search: null });
+  const error = sharedRef({ search: null }, 'active-shipping-countries-error');
 
   const load = async () => {
     try {
