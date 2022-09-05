@@ -31,7 +31,7 @@
       type="button"
       @click="$emit('submit')"
     >
-      {{ $t('Continue to billing') }}
+      {{ $t('Continue to payment') }}
     </SfButton>
   </div>
 </template>

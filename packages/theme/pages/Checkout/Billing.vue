@@ -161,7 +161,7 @@
         </ValidationProvider>
         <ValidationProvider
           name="phone"
-          rules="required|digits:9"
+          rules="required"
           v-slot="{ errors }"
           slim
         >
@@ -257,6 +257,7 @@ export default {
     const { isAuthenticated } = useUser();
     const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
     const countries = computed(() => activeShippingCountries.value);
+    const states = ref([]);
 
     const form = ref({
       firstName: '',
@@ -270,8 +271,6 @@ export default {
       phone: null,
       email: ''
     });
-
-    const states = ref([]);
 
     watch(() => form.value.country, async (newValue) => {
       const country = countries.value.find((country) => Number(country.id) === Number(newValue));
