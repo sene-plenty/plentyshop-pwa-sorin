@@ -15,7 +15,6 @@
         class="form__element"
         @change="handleCheckSameAddress($event)"
       />
-      {{ billing }}
       <div class="form" v-if="!sameAsShipping">
        <ValidationProvider
           name="firstName"
@@ -297,6 +296,8 @@ export default {
     const handleFormSubmit = async () => {
       if (sameAsShipping.value) {
         await loadBilling();
+
+        // TODO: check if we need to send anything at all (-99?)
         await save({ shippingDetails: billing.value });
       } else {
         await save({ shippingDetails: form.value });
