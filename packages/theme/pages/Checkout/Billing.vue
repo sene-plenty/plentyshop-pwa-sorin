@@ -93,17 +93,29 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider
+         <ValidationProvider
           name="state"
+          v-slot="{ errors }"
           slim
         >
-          <SfInput
+          <SfSelect
             v-e2e="'billing-state'"
             v-model="form.state"
             label="State/Province"
             name="state"
-            class="form__element form__element--half form__element--half-even"
-          />
+            class="form__element form__select sf-select--underlined"
+            :disabled="states.length <= 0"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+          >
+            <SfSelectOption
+              v-for="state in states"
+              :key="state.id"
+              :value="state.id.toString()"
+            >
+              {{ state.name }}
+            </SfSelectOption>
+          </SfSelect>
         </ValidationProvider>
         <ValidationProvider
           name="country"
@@ -208,7 +220,7 @@ import {
   SfRadio,
   SfCheckbox
 } from '@storefront-ui/vue';
-import { ref, useRouter, computed } from '@nuxtjs/composition-api';
+import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useBilling, useUser, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
@@ -259,6 +271,16 @@ export default {
       email: ''
     });
 
+    const states = ref([]);
+
+    watch(() => form.value.country, async (newValue) => {
+      const country = countries.value.find((country) => Number(country.id) === Number(newValue));
+      if (country?.states <= 0) {
+        form.value.state = null;
+      }
+      states.value = country?.states || [];
+    });
+
     const handleFormSubmit = async () => {
       await save({ billingDetails: form.value });
       router.push(context.root.localePath({ name: 'shipping' }));
@@ -284,7 +306,8 @@ export default {
       handleFormSubmit,
       billing,
       isAuthenticated,
-      countries
+      countries,
+      states
     };
   }
 };

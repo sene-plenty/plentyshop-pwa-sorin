@@ -38,7 +38,8 @@ function mapAddressForServer(addressData): object {
     address2: addressData.apartment,
     postalCode: addressData.postalCode,
     town: addressData.city,
-    telephone: addressData.phone
+    telephone: addressData.phone,
+    stateId: addressData.state
   };
 }
 
