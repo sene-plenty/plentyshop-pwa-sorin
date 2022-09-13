@@ -294,7 +294,7 @@ export type Review = {
 export type Facet = {
   products: Product[],
   tree: AgnosticCategoryTree,
-  facets: FilterGroup [],
+  facets: FilterGroup[],
   pagination: any
 };
 
@@ -368,9 +368,33 @@ export type UserShippingAddressSearchCriteria = TODO;
 
 export type ShippingAddress = TODO;
 
-export type ShippingMethod = TODO;
+export interface ShippingPrivacyInformation {
+  showDataPrivacyAgreementHint: boolean
+  id: number
+  parcelServiceId: number
+  parcelServiceName: string
+  parcelServiceAddress: string
+}
 
-export type ShippingProvider = TODO;
+export type ShippingMethod = {
+  parcelServicePresetId: number
+  parcelServicePresetName: string
+  parcelServiceType: number
+  parcelServiceId: number
+  parcelServiceName: string
+  shippingAmount: number
+  shippingPrivacyInformation: ShippingPrivacyInformation[]
+  isPostOffice: boolean
+  isParcelBox: boolean
+  icon: any
+  excludedPaymentMethodIds: number[]
+  allowedPaymentMethodNames: string[]
+};
+
+export interface ShippingProvider {
+  list: ShippingMethod[],
+  selected: number
+}
 
 export type Store = TODO;
 
@@ -456,11 +480,15 @@ export interface PlentymarketsApiMethods {
 
   getSession(initialRestCall: boolean): Promise<SessionResult>
 
-  loginUser(email: string, password): Promise<any>
+  loginUser(email: string, password: string): Promise<any>
 
   registerUser(params: RegisterParams): Promise<any>
 
   logoutUser(): Promise<any>
+
+  getShippingProvider(): Promise<ShippingProvider>
+
+  selectShippingProvider(shippingId: number): Promise<string>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;

@@ -15,6 +15,7 @@ import {
 } from './api/getCart';
 import { getSession } from './api/getSession';
 import { loginUser, logoutUser, registerUser } from './api/getUser';
+import { getShippingProvider } from './api/getShippingProvider';
 
 /**
  * Event flow
@@ -72,7 +73,7 @@ function onCreate(settings: Settings) {
 const cookieExtension: ApiClientExtension = {
   name: 'cookieExtension',
   hooks: (req, res) => ({
-    beforeCreate: ({configuration}) => {
+    beforeCreate: ({ configuration }) => {
       cookies = req.headers.cookie ?? '';
       return configuration;
     },
@@ -84,7 +85,7 @@ const cookieExtension: ApiClientExtension = {
   })
 };
 
-const {createApiClient} = apiClientFactory<Settings, Endpoints>({
+const { createApiClient } = apiClientFactory<Settings, Endpoints>({
   onCreate,
   api: {
     getProduct,
@@ -102,7 +103,8 @@ const {createApiClient} = apiClientFactory<Settings, Endpoints>({
     getSession,
     loginUser,
     registerUser,
-    logoutUser
+    logoutUser,
+    getShippingProvider
   },
   extensions: [cookieExtension]
 });

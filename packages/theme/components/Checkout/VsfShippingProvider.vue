@@ -4,46 +4,33 @@
       <b>Please implement vendor-specific VsfShippingProvider component in the 'components/Checkout' directory</b>
     </p>
 
-    <SfRadio
-      v-e2e="'shipping-method'"
-      v-for="method in shippingMethods"
-      :key="method.value"
-      :label="method.label"
-      :value="method.value"
-      :description="method.description"
-      :selected ="selectedMethod"
-      name="shippingMethod"
-      class="form__radio shipping"
-      @change="selectMethod(method.value)"
-    >
+    <SfRadio v-e2e="'shipping-method'" v-for="method in shippingMethods" :key="method.value" :label="method.label"
+      :value="method.value" :description="method.description" :selected="selectedMethod" name="shippingMethod"
+      class="form__radio shipping" @change="selectMethod(method.value)">
       <div class="shipping__label">
-        {{ method.label }}
+        {{ shippingProviderGetters.getShippingMethodName(method) }}
       </div>
 
       <div class="shipping__description">
-        {{ method.description }}
+        {{ shippingProviderGetters.getShippingAmount(method) }}
       </div>
     </SfRadio>
 
-    <SfButton
-      v-e2e="'continue-to-billing'"
-      :disabled="!selectedMethod"
-      type="button"
-      @click="$emit('submit')"
-    >
-      {{ $t('Continue to billing') }}
+    <SfButton v-e2e="'continue-to-billing'" :disabled="!selectedMethod" type="button" @click="$emit('submit')">
+      {{  $t('Continue to billing')  }}
     </SfButton>
   </div>
 </template>
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
+import { ref, computed } from '@nuxtjs/composition-api';
+import { useShippingProvider, shippingProviderGetters } from '@vue-storefront/plentymarkets';
+import { onSSR } from '@vue-storefront/core';
 
-const SHIPPING_METHODS = [
-  { label: 'Express US', value: 'express', description: 'Same day delivery' },
-  { label: 'Standard US', value: 'standard', description: 'Delivery in 5-6 working days' }
-];
+// const SHIPPING_METHODS = [
+//   { label: 'Express US', value: 'express', description: 'Same day delivery' },
+//   { label: 'Standard US', value: 'standard', description: 'Delivery in 5-6 working days' }
 
 export default {
   name: 'VsfShippingProvider',
@@ -55,19 +42,26 @@ export default {
 
   setup() {
     const selectedMethod = ref(null);
+    const { load: loadShippingMethods, save: setShippingMethod, state: shippingProvider } = useShippingProvider();
+    const shippingMethods = computed(() => shippingProviderGetters.getShippingProviders(shippingProvider));
 
-    const selectMethod = method => selectedMethod.value = method;
+    const selectMethod = method => setShippingMethod(method.value);
+
+    onSSR(async () => {
+      await loadShippingMethods();
+    });
 
     return {
-      shippingMethods: SHIPPING_METHODS,
+      shippingMethods,
       selectedMethod,
-      selectMethod
+      selectMethod,
+      shippingProviderGetters
     };
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped>;
 .shipping {
   &__label {
     display: flex;

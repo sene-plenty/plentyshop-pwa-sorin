@@ -7,7 +7,7 @@
     <AppHeader />
 
     <div id="layout">
-      <nuxt :key="route.fullPath"/>
+      <nuxt :key="route.fullPath" />
 
       <BottomNavigation />
       <CartSidebar />
@@ -33,7 +33,7 @@ import LazyHydrate from 'vue-lazy-hydration';
 import Notification from '~/components/Notification';
 import { onSSR } from '@vue-storefront/core';
 import { useRoute } from '@nuxtjs/composition-api';
-import {useCart, useStore, useUser, useWishlist} from '@vue-storefront/plentymarkets';
+import { useCart, useStore, useUser, useWishlist, useShippingProvider } from '@vue-storefront/plentymarkets';
 
 export default {
   name: 'DefaultLayout',
@@ -56,6 +56,7 @@ export default {
     const { load: loadUser } = useUser();
     const { load: loadCart } = useCart();
     const { load: loadWishlist } = useWishlist();
+    const { load: loadShippingProfiles } = useShippingProvider();
 
     onSSR(async () => {
       await Promise.all([
@@ -64,6 +65,7 @@ export default {
         loadCart(),
         loadWishlist()
       ]);
+      await loadShippingProfiles();
     });
 
     return {
@@ -78,6 +80,7 @@ export default {
 
 #layout {
   box-sizing: border-box;
+
   @include for-desktop {
     max-width: 1240px;
     margin: auto;
@@ -92,10 +95,12 @@ export default {
 // Reset CSS
 html {
   width: auto;
+
   @include for-mobile {
     overflow-x: hidden;
   }
 }
+
 body {
   overflow-x: hidden;
   color: var(--c-text);
@@ -104,31 +109,37 @@ body {
   margin: 0;
   padding: 0;
 }
+
 a {
   text-decoration: none;
   color: var(--c-link);
+
   &:hover {
     color: var(--c-link-hover);
   }
 }
+
 h1 {
   font-family: var(--font-family--secondary);
   font-size: var(--h1-font-size);
   line-height: 1.6;
   margin: 0;
 }
+
 h2 {
   font-family: var(--font-family--secondary);
   font-size: var(--h2-font-size);
   line-height: 1.6;
   margin: 0;
 }
+
 h3 {
   font-family: var(--font-family--secondary);
   font-size: var(--h3-font-size);
   line-height: 1.6;
   margin: 0;
 }
+
 h4 {
   font-family: var(--font-family--secondary);
   font-size: var(--h4-font-size);
