@@ -1,7 +1,7 @@
 import { ShippingMethod, ShippingProvider } from '@vue-storefront/plentymarkets-api';
 
 function getShippingProviders(shippingProvider: ShippingProvider): ShippingMethod[] {
-  return shippingProvider.list;
+  return shippingProvider.list ?? [];
 }
 
 function getShippingMethodName(shippingMethod: ShippingMethod): string {
@@ -9,7 +9,11 @@ function getShippingMethodName(shippingMethod: ShippingMethod): string {
 }
 
 function getShippingAmount(shippingMethod: ShippingMethod): number {
-  return shippingMethod.shippingAmount;
+  return shippingMethod.shippingAmount ?? 0;
+}
+
+function getValue(shippingMethod: ShippingMethod): string {
+  return shippingMethod?.parcelServicePresetId?.toString() ?? '';
 }
 
 // export const reviewGetters: ReviewGetters<Review, ReviewItem> = {
@@ -28,5 +32,6 @@ function getShippingAmount(shippingMethod: ShippingMethod): number {
 export const shippingProviderGetters: any = {
   getShippingMethodName,
   getShippingAmount,
-  getShippingProviders
+  getShippingProviders,
+  getValue
 };
