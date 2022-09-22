@@ -93,10 +93,7 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider
-          name="state"
-          slim
-        >
+        <ValidationProvider name="state" slim>
           <SfInput
             v-e2e="'shipping-state'"
             v-model="form.state"
@@ -178,7 +175,6 @@
         </div>
       </div>
       <VsfShippingProvider
-        v-if="isFormSubmitted"
         @submit="router.push(localePath({ name: 'billing' }))"
       />
     </form>
@@ -186,15 +182,13 @@
 </template>
 
 <script>
-import {
-  SfHeading,
-  SfInput,
-  SfButton,
-  SfSelect
-} from '@storefront-ui/vue';
+import { SfHeading, SfInput, SfButton, SfSelect } from '@storefront-ui/vue';
 import { ref, useRouter } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useShipping } from '@vue-storefront/plentymarkets';
+import {
+  useShipping,
+  useShippingProvider
+} from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 
@@ -227,12 +221,14 @@ export default {
     SfSelect,
     ValidationProvider,
     ValidationObserver,
-    VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
+    VsfShippingProvider: () =>
+      import('~/components/Checkout/VsfShippingProvider')
   },
   setup () {
     const router = useRouter();
     const isFormSubmitted = ref(false);
-    const { load, save, loading } = useShipping();
+    const { load: loadShipping, save, loading } = useShipping();
+    const { load: loadShippingProvider } = useShippingProvider();
 
     const form = ref({
       firstName: '',
@@ -252,7 +248,8 @@ export default {
     };
 
     onSSR(async () => {
-      await load();
+      await loadShipping();
+      await loadShippingProvider();
     });
 
     return {
@@ -270,10 +267,12 @@ export default {
 <style lang="scss" scoped>
 .form {
   --button-width: 100%;
+
   &__select {
     display: flex;
     align-items: center;
     --select-option-font-size: var(--font-size--lg);
+
     ::v-deep .sf-select__dropdown {
       font-size: var(--font-size--lg);
       margin: 0;
@@ -282,21 +281,26 @@ export default {
       font-weight: var(--font-weight--normal);
     }
   }
+
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     --button-width: auto;
   }
+
   &__element {
     margin: 0 0 var(--spacer-xl) 0;
+
     @include for-desktop {
       flex: 0 0 100%;
     }
+
     &--half {
       @include for-desktop {
         flex: 1 1 50%;
       }
+
       &-even {
         @include for-desktop {
           padding: 0 0 0 var(--spacer-xl);
@@ -304,12 +308,14 @@ export default {
       }
     }
   }
+
   &__action {
     @include for-desktop {
       flex: 0 0 100%;
       display: flex;
     }
   }
+
   &__action-button {
     &--secondary {
       @include for-desktop {
@@ -317,20 +323,25 @@ export default {
         text-align: left;
       }
     }
+
     &--add-address {
       width: 100%;
       margin: 0;
+
       @include for-desktop {
         margin: 0 0 var(--spacer-lg) 0;
         width: auto;
       }
     }
   }
+
   &__back-button {
     margin: var(--spacer-xl) 0 var(--spacer-sm);
+
     &:hover {
-      color:  var(--c-white);
+      color: var(--c-white);
     }
+
     @include for-desktop {
       margin: 0 var(--spacer-xl) 0 0;
     }
@@ -342,6 +353,7 @@ export default {
     display: flex;
     justify-content: space-between;
   }
+
   &__description {
     --radio-description-margin: 0;
     --radio-description-font-size: var(--font-xs);
