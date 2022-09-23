@@ -16,19 +16,6 @@ function getValue(shippingMethod: ShippingMethod): string {
   return shippingMethod?.parcelServicePresetId?.toString() ?? '';
 }
 
-// export const reviewGetters: ReviewGetters<Review, ReviewItem> = {
-//   getItems,
-//   getReviewId,
-//   getReviewAuthor,
-//   getReviewMessage,
-//   getReviewRating,
-//   getReviewDate,
-//   getTotalReviews,
-//   getAverageRating,
-//   getRatesCount,
-//   getReviewsPage
-// };
-
 export const shippingProviderGetters: any = {
   getShippingMethodName,
   getShippingAmount,
