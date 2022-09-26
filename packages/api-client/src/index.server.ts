@@ -7,6 +7,7 @@ import { getFacet } from './api/getFacet';
 import { getReview } from './api/getReview';
 import { addWishlistItem, getWishlist, removeWishlistItem } from './api/getWishlist';
 import { getSearch } from './api/getSearch';
+import { loadAddresses, saveAddress } from './api/getAddress';
 import {
   addItem as addCartItem,
   getCart,
@@ -14,8 +15,9 @@ import {
   updateItemQty as updateCartItemQty
 } from './api/getCart';
 import { getSession } from './api/getSession';
-import { loginUser, logoutUser, registerUser } from './api/getUser';
 import { getShippingProvider } from './api/getShippingProvider';
+import { loginAsGuest, loginUser, logoutUser, registerUser } from './api/getUser';
+import { getActiveShippingCountries } from './api/getActiveShippingCountries';
 
 /**
  * Event flow
@@ -104,7 +106,11 @@ const { createApiClient } = apiClientFactory<Settings, Endpoints>({
     loginUser,
     registerUser,
     logoutUser,
-    getShippingProvider
+    getShippingProvider,
+    loginAsGuest,
+    loadAddresses,
+    saveAddress,
+    getActiveShippingCountries
   },
   extensions: [cookieExtension]
 });

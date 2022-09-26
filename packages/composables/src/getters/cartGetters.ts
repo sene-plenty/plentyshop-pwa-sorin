@@ -68,7 +68,7 @@ function getShippingPrice(cart: Cart): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalItems(cart: Cart): number {
-  return cart?.items.length ?? 0;
+  return cart?.items?.length ?? 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -17,6 +17,7 @@ export { useUserOrder } from './useUserOrder';
 export { useUserShipping } from './useUserShipping';
 export { useWishlist } from './useWishlist';
 export { useSearch } from './useSearch';
+export { useActiveShippingCountries } from './useActiveShippingCountries';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';

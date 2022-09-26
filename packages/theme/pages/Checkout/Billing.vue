@@ -93,21 +93,33 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider
+         <ValidationProvider
           name="state"
+          v-slot="{ errors }"
           slim
         >
-          <SfInput
+          <SfSelect
             v-e2e="'billing-state'"
             v-model="form.state"
             label="State/Province"
             name="state"
-            class="form__element form__element--half form__element--half-even"
-          />
+            class="form__element form__select sf-select--underlined"
+            :disabled="states.length <= 0"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+          >
+            <SfSelectOption
+              v-for="state in states"
+              :key="state.id"
+              :value="state.id.toString()"
+            >
+              {{ state.name }}
+            </SfSelectOption>
+          </SfSelect>
         </ValidationProvider>
         <ValidationProvider
           name="country"
-          rules="required|min:2"
+          rules="required"
           v-slot="{ errors }"
           slim
         >
@@ -123,10 +135,10 @@
           >
             <SfSelectOption
               v-for="countryOption in countries"
-              :key="countryOption.key"
-              :value="countryOption.key"
+              :key="countryOption.id"
+              :value="countryOption.id.toString()"
             >
-              {{ countryOption.label }}
+              {{ countryOption.name }}
             </SfSelectOption>
           </SfSelect>
         </ValidationProvider>
@@ -149,7 +161,7 @@
         </ValidationProvider>
         <ValidationProvider
           name="phone"
-          rules="required|digits:9"
+          rules="required"
           v-slot="{ errors }"
           slim
         >
@@ -164,6 +176,18 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
+        <ValidationProvider v-if="!isAuthenticated" slim rules="required|email" v-slot="{ errors }">
+          <SfInput
+            v-e2e="'login-modal-email'"
+            v-model="form.email"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+            name="email"
+            required
+            label="Your email"
+            class="form__element form__element--half form__element--half-even"
+          />
+        </ValidationProvider>
       </div>
       <div class="form">
         <div class="form__action">
@@ -175,11 +199,11 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            v-e2e="'continue-to-payment'"
+            v-e2e="'continue-to-shipping'"
             class="form__action-button"
             type="submit"
           >
-            {{ $t('Continue to payment') }}
+            {{ $t('Continue to shipping') }}
           </SfButton>
         </div>
       </div>
@@ -196,18 +220,11 @@ import {
   SfRadio,
   SfCheckbox
 } from '@storefront-ui/vue';
-import { ref, useRouter } from '@nuxtjs/composition-api';
+import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useBilling } from '@vue-storefront/plentymarkets';
+import { useBilling, useUser, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-
-const COUNTRIES = [
-  { key: 'US', label: 'United States' },
-  { key: 'UK', label: 'United Kingdom' },
-  { key: 'IT', label: 'Italy' },
-  { key: 'PL', label: 'Poland' }
-];
 
 extend('required', {
   ...required,
@@ -236,7 +253,11 @@ export default {
   },
   setup(props, context) {
     const router = useRouter();
-    const { load, save } = useBilling();
+    const { load, save, billing } = useBilling();
+    const { isAuthenticated } = useUser();
+    const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
+    const countries = computed(() => activeShippingCountries.value);
+    const states = ref([]);
 
     const form = ref({
       firstName: '',
@@ -247,23 +268,45 @@ export default {
       state: '',
       country: '',
       postalCode: '',
-      phone: null
+      phone: null,
+      email: ''
+    });
+
+    watch(() => form.value.country, async (newValue) => {
+      const country = countries.value.find((country) => Number(country.id) === Number(newValue));
+      if (country?.states <= 0) {
+        form.value.state = null;
+      }
+      states.value = country?.states || [];
     });
 
     const handleFormSubmit = async () => {
       await save({ billingDetails: form.value });
-      router.push(context.root.localePath({ name: 'payment' }));
+      router.push(context.root.localePath({ name: 'shipping' }));
+    };
+
+    const setExistingAddress = () => {
+      if (billing.value) {
+        form.value = billing.value;
+      }
     };
 
     onSSR(async () => {
       await load();
+      await loadActiveShippingCountries();
+      setExistingAddress();
     });
+
+    setExistingAddress();
 
     return {
       router,
       form,
-      countries: COUNTRIES,
-      handleFormSubmit
+      handleFormSubmit,
+      billing,
+      isAuthenticated,
+      countries,
+      states
     };
   }
 };

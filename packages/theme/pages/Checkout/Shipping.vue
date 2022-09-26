@@ -7,15 +7,23 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
-      <div class="form">
-        <ValidationProvider
+      <SfCheckbox
+        v-e2e="'copy-address'"
+        :selected="sameAsShipping"
+        :label="$t('My billing and shipping address are the same')"
+        name="copyShippingAddress"
+        class="form__element"
+        @change="handleCheckSameAddress($event)"
+      />
+      <div class="form" v-if="!sameAsShipping">
+       <ValidationProvider
           name="firstName"
           rules="required|min:2"
           v-slot="{ errors }"
           slim
         >
           <SfInput
-            v-e2e="'shipping-firstName'"
+            v-e2e="'billing-firstName'"
             v-model="form.firstName"
             label="First name"
             name="firstName"
@@ -32,7 +40,7 @@
           slim
         >
           <SfInput
-            v-e2e="'shipping-lastName'"
+            v-e2e="'billing-lastName'"
             v-model="form.lastName"
             label="Last name"
             name="lastName"
@@ -49,7 +57,7 @@
           slim
         >
           <SfInput
-            v-e2e="'shipping-streetName'"
+            v-e2e="'billing-streetName'"
             v-model="form.streetName"
             label="Street name"
             name="streetName"
@@ -66,7 +74,7 @@
           slim
         >
           <SfInput
-            v-e2e="'shipping-apartment'"
+            v-e2e="'billing-apartment'"
             v-model="form.apartment"
             label="House/Apartment number"
             name="apartment"
@@ -83,7 +91,7 @@
           slim
         >
           <SfInput
-            v-e2e="'shipping-city'"
+            v-e2e="'billing-city'"
             v-model="form.city"
             label="City"
             name="city"
@@ -93,23 +101,38 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
-        <ValidationProvider name="state" slim>
-          <SfInput
-            v-e2e="'shipping-state'"
-            v-model="form.state"
-            label="State/Province"
-            name="state"
-            class="form__element form__element--half form__element--half-even"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="country"
-          rules="required|min:2"
+         <ValidationProvider
+          name="state"
           v-slot="{ errors }"
           slim
         >
           <SfSelect
-            v-e2e="'shipping-country'"
+            v-e2e="'billing-state'"
+            v-model="form.state"
+            label="State/Province"
+            name="state"
+            class="form__element form__select sf-select--underlined"
+            :disabled="states.length <= 0"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+          >
+            <SfSelectOption
+              v-for="state in states"
+              :key="state.id"
+              :value="state.id.toString()"
+            >
+              {{ state.name }}
+            </SfSelectOption>
+          </SfSelect>
+        </ValidationProvider>
+        <ValidationProvider
+          name="country"
+          rules="required"
+          v-slot="{ errors }"
+          slim
+        >
+          <SfSelect
+            v-e2e="'billing-country'"
             v-model="form.country"
             label="Country"
             name="country"
@@ -120,10 +143,10 @@
           >
             <SfSelectOption
               v-for="countryOption in countries"
-              :key="countryOption.key"
-              :value="countryOption.key"
+              :key="countryOption.id"
+              :value="countryOption.id.toString()"
             >
-              {{ countryOption.label }}
+              {{ countryOption.name }}
             </SfSelectOption>
           </SfSelect>
         </ValidationProvider>
@@ -134,7 +157,7 @@
           slim
         >
           <SfInput
-            v-e2e="'shipping-zipcode'"
+            v-e2e="'billing-zipcode'"
             v-model="form.postalCode"
             label="Zip-code"
             name="zipCode"
@@ -146,12 +169,12 @@
         </ValidationProvider>
         <ValidationProvider
           name="phone"
-          rules="required|digits:9"
+          rules="required"
           v-slot="{ errors }"
           slim
         >
           <SfInput
-            v-e2e="'shipping-phone'"
+            v-e2e="'billing-phone'"
             v-model="form.phone"
             label="Phone number"
             name="phone"
@@ -161,8 +184,20 @@
             :errorMessage="errors[0]"
           />
         </ValidationProvider>
+        <ValidationProvider v-if="!isAuthenticated" slim rules="required|email" v-slot="{ errors }">
+          <SfInput
+            v-e2e="'login-modal-email'"
+            v-model="form.email"
+            :valid="!errors[0]"
+            :errorMessage="errors[0]"
+            name="email"
+            required
+            label="Your email"
+            class="form__element form__element--half form__element--half-even"
+          />
+        </ValidationProvider>
       </div>
-     <!--  <div class="form">
+      <div class="form">
         <div class="form__action">
           <SfButton
             v-if="!isFormSubmitted"
@@ -173,31 +208,28 @@
             {{ $t('Select shipping method') }}
           </SfButton>
         </div>
-      </div> -->
+      </div>
       <VsfShippingProvider
-        @submit="router.push(localePath({ name: 'billing' }))"
+        v-if="isFormSubmitted"
+        @submit="router.push(localePath({ name: 'payment' }))"
       />
     </form>
   </ValidationObserver>
 </template>
 
 <script>
-import { SfHeading, SfInput, SfButton, SfSelect } from '@storefront-ui/vue';
-import { ref, useRouter } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import {
-  useShipping,
-  useShippingProvider
-} from '@vue-storefront/plentymarkets';
+  SfHeading,
+  SfInput,
+  SfButton,
+  SfSelect
+} from '@storefront-ui/vue';
+import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
+import { useShipping, useShippingProvider, useBilling, useUser, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-
-const COUNTRIES = [
-  { key: 'US', label: 'United States' },
-  { key: 'UK', label: 'United Kingdom' },
-  { key: 'IT', label: 'Italy' },
-  { key: 'PL', label: 'Poland' }
-];
+import { SfCheckbox } from '@storefront-ui/vue';
 
 extend('required', {
   ...required,
@@ -219,6 +251,7 @@ export default {
     SfInput,
     SfButton,
     SfSelect,
+    SfCheckbox,
     ValidationProvider,
     ValidationObserver,
     VsfShippingProvider: () =>
@@ -227,8 +260,15 @@ export default {
   setup () {
     const router = useRouter();
     const isFormSubmitted = ref(false);
-    const { load: loadShipping, save, loading } = useShipping();
+    const { load: loadShipping, save, loading, shipping } = useShipping();
     const { load: loadShippingProvider } = useShippingProvider();
+    const { load: loadBilling, billing } = useBilling();
+    const { isAuthenticated } = useUser();
+    const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
+    const countries = computed(() => activeShippingCountries.value);
+    const states = ref([]);
+
+    const sameAsShipping = ref(false);
 
     const form = ref({
       firstName: '',
@@ -239,26 +279,63 @@ export default {
       state: '',
       country: '',
       postalCode: '',
-      phone: null
+      phone: null,
+      email: ''
     });
 
+    watch(() => form.value.country, async (newValue) => {
+      const country = countries.value.find((country) => Number(country.id) === Number(newValue));
+      if (country?.states <= 0) {
+        form.value.state = null;
+      }
+      states.value = country?.states || [];
+    });
+
+    const handleCheckSameAddress = async value => {
+      sameAsShipping.value = value;
+    };
+
     const handleFormSubmit = async () => {
-      await save({ shippingDetails: form.value });
+      if (sameAsShipping.value) {
+        await loadBilling();
+
+        // TODO: check if we need to send anything at all (-99?)
+        await save({ shippingDetails: billing.value });
+      } else {
+        await save({ shippingDetails: form.value });
+      }
+
       isFormSubmitted.value = true;
+    };
+
+    const setExistingAddress = () => {
+      if (shipping.value) {
+        form.value = shipping.value;
+      }
     };
 
     onSSR(async () => {
       await loadShipping();
       await loadShippingProvider();
+      await loadBilling();
+      await loadActiveShippingCountries();
+      setExistingAddress();
     });
 
+    setExistingAddress();
+
     return {
+      billing,
       router,
       loading,
       isFormSubmitted,
+      sameAsShipping,
       form,
-      countries: COUNTRIES,
-      handleFormSubmit
+      states,
+      countries,
+      handleCheckSameAddress,
+      handleFormSubmit,
+      isAuthenticated
     };
   }
 };
