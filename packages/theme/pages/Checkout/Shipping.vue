@@ -162,7 +162,7 @@
           />
         </ValidationProvider>
       </div>
-      <div class="form">
+     <!--  <div class="form">
         <div class="form__action">
           <SfButton
             v-if="!isFormSubmitted"
@@ -173,7 +173,7 @@
             {{ $t('Select shipping method') }}
           </SfButton>
         </div>
-      </div>
+      </div> -->
       <VsfShippingProvider
         @submit="router.push(localePath({ name: 'billing' }))"
       />

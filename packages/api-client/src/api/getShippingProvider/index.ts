@@ -9,7 +9,7 @@ export async function getShippingProvider(context: Context): Promise<ShippingPro
 
 export async function selectShippingProvider(context: Context, shippingId: number): Promise<string> {
   const url: URL = new URL('/rest/io/checkout/shippingId/', context.config.api.url);
-  const { data } = await context.client.post(url.href, { shippingId });
+  const { data } = await context.client.post(url.href, { shippingId: shippingId });
 
   return data.data;
 }

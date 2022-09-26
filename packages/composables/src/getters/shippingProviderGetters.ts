@@ -8,12 +8,12 @@ function getShippingMethodName(shippingMethod: ShippingMethod): string {
   return `${shippingMethod.parcelServiceName} - ${shippingMethod.parcelServicePresetName}`;
 }
 
-function getShippingAmount(shippingMethod: ShippingMethod): number {
-  return shippingMethod.shippingAmount ?? 0;
+function getShippingAmount(shippingMethod: ShippingMethod): string {
+  return shippingMethod?.shippingAmount?.toString() ?? '0';
 }
 
-function getValue(shippingMethod: ShippingMethod): string {
-  return shippingMethod?.parcelServicePresetId?.toString() ?? '';
+function getValue(shippingMethod: ShippingMethod): any {
+  return shippingMethod;
 }
 
 export const shippingProviderGetters: any = {
