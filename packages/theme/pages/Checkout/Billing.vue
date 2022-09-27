@@ -6,6 +6,23 @@
       :title="$t('Billing')"
       class="sf-heading--left sf-heading--no-underline title"
     />
+    <SfSelect
+      v-e2e="'addresses'"
+      v-model="selectedAddress"
+      label="Addresses"
+      name="Addresses"
+      class="form__element form__select sf-select--underlined"
+    >
+      <SfSelectOption
+        v-for="address in addresses"
+        :key="address.id"
+        :value="address.id"
+      >
+        {{ address.firstName }}{{ address.lastName }}
+        {{ address.streetName }}{{ address.apartment }}
+        {{ address.postalCode }}{{ address.city }} {{ address.state }}{{ address.country }}
+      </SfSelectOption>
+    </SfSelect>
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
       <div class="form">
         <ValidationProvider
@@ -258,6 +275,8 @@ export default {
     const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
     const countries = computed(() => activeShippingCountries.value);
     const states = ref([]);
+    const addresses = ref([]);
+    const selectedAddress = ref(null);
 
     const form = ref({
       firstName: '',
@@ -280,6 +299,11 @@ export default {
       states.value = country?.states || [];
     });
 
+    watch(() => selectedAddress.value, async (addressId) => {
+      const selectedAddress = addresses.value.find((address) => Number(address.id) === Number(addressId));
+      form.value = selectedAddress;
+    });
+
     const handleFormSubmit = async () => {
       await save({ billingDetails: form.value });
       router.push(context.root.localePath({ name: 'shipping' }));
@@ -287,7 +311,8 @@ export default {
 
     const setExistingAddress = () => {
       if (billing.value) {
-        form.value = billing.value;
+        addresses.value = billing.value;
+        selectedAddress.value = billing.value[0].id.toString();
       }
     };
 
@@ -306,7 +331,9 @@ export default {
       billing,
       isAuthenticated,
       countries,
-      states
+      states,
+      selectedAddress,
+      addresses
     };
   }
 };

@@ -12,7 +12,7 @@ const params: UseShippingParams<ShippingAddress, AddParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
     const data = await context.$plentymarkets.api.loadAddresses(AddressType.Shipping);
-    return data[0] ?? null;
+    return data ?? null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

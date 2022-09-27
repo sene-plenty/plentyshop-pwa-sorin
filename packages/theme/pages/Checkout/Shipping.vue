@@ -16,7 +16,24 @@
         @change="handleCheckSameAddress($event)"
       />
       <div class="form" v-if="!sameAsShipping">
-       <ValidationProvider
+        <SfSelect
+          v-e2e="'addresses'"
+          v-model="selectedAddress"
+          label="Addresses"
+          name="Addresses"
+          class="form__element form__select sf-select--underlined"
+        >
+          <SfSelectOption
+            v-for="address in addresses"
+            :key="address.id"
+            :value="address.id"
+          >
+            {{ address.firstName }}{{ address.lastName }}
+            {{ address.streetName }}{{ address.apartment }}
+            {{ address.postalCode }}{{ address.city }} {{ address.state }}{{ address.country }}
+          </SfSelectOption>
+        </SfSelect>
+        <ValidationProvider
           name="firstName"
           rules="required|min:2"
           v-slot="{ errors }"
@@ -267,6 +284,8 @@ export default {
     const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
     const countries = computed(() => activeShippingCountries.value);
     const states = ref([]);
+    const addresses = ref([]);
+    const selectedAddress = ref(null);
 
     const sameAsShipping = ref(false);
 
@@ -291,6 +310,11 @@ export default {
       states.value = country?.states || [];
     });
 
+    watch(() => selectedAddress.value, async (addressId) => {
+      const selectedAddress = addresses.value.find((address) => Number(address.id) === Number(addressId));
+      form.value = selectedAddress;
+    });
+
     const handleCheckSameAddress = async value => {
       sameAsShipping.value = value;
     };
@@ -310,7 +334,8 @@ export default {
 
     const setExistingAddress = () => {
       if (shipping.value) {
-        form.value = shipping.value;
+        addresses.value = shipping.value;
+        selectedAddress.value = shipping.value[0].id.toString();
       }
     };
 
@@ -335,7 +360,9 @@ export default {
       countries,
       handleCheckSameAddress,
       handleFormSubmit,
-      isAuthenticated
+      isAuthenticated,
+      addresses,
+      selectedAddress
     };
   }
 };
