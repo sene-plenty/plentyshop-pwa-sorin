@@ -63,6 +63,9 @@
           class="sf-property--full-width sf-property--large summary__property-total"
         />
 
+        <SfDivider class="spacer"/>
+        <VsfShippingProvider/>
+        <SfDivider />
         <VsfPaymentProvider @status="isPaymentReady = true"/>
 
         <SfCheckbox v-e2e="'terms'" v-model="terms" name="terms" class="summary__terms">
@@ -110,7 +113,7 @@ import {
 } from '@storefront-ui/vue';
 import { onSSR } from '@vue-storefront/core';
 import { ref, computed, useRouter } from '@nuxtjs/composition-api';
-import { useMakeOrder, useCart, cartGetters, orderGetters } from '@vue-storefront/plentymarkets';
+import { useMakeOrder, useCart, cartGetters, orderGetters, useShippingProvider } from '@vue-storefront/plentymarkets';
 import { addBasePath } from '@vue-storefront/core';
 
 export default {
@@ -127,18 +130,21 @@ export default {
     SfProperty,
     SfAccordion,
     SfLink,
-    VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider')
+    VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider'),
+    VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
   setup(props, context) {
     const router = useRouter();
     const { cart, load, setCart } = useCart();
     const { order, make, loading } = useMakeOrder();
+    const { load: loadShippingProvider } = useShippingProvider();
 
     const isPaymentReady = ref(false);
     const terms = ref(false);
 
     onSSR(async () => {
       await load();
+      await loadShippingProvider();
     });
 
     const processOrder = async () => {
@@ -165,6 +171,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.spacer {
+  margin: var(--spacer-xl) 0;
+}
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
 }

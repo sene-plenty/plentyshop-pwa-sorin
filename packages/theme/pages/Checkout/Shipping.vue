@@ -226,10 +226,6 @@
           </SfButton>
         </div>
       </div>
-      <VsfShippingProvider
-        v-if="isFormSubmitted"
-        @submit="router.push(localePath({ name: 'payment' }))"
-      />
     </form>
   </ValidationObserver>
 </template>
@@ -243,7 +239,7 @@ import {
   SfSelect
 } from '@storefront-ui/vue';
 import { ref, useRouter, computed, watch } from '@nuxtjs/composition-api';
-import { useShipping, useShippingProvider, useBilling, useUser, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
+import { useShipping, useBilling, useUser, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { SfCheckbox } from '@storefront-ui/vue';
@@ -278,7 +274,6 @@ export default {
     const router = useRouter();
     const isFormSubmitted = ref(false);
     const { load: loadShipping, save, loading, shipping } = useShipping();
-    const { load: loadShippingProvider } = useShippingProvider();
     const { load: loadBilling, billing } = useBilling();
     const { isAuthenticated } = useUser();
     const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
@@ -341,7 +336,6 @@ export default {
 
     onSSR(async () => {
       await loadShipping();
-      await loadShippingProvider();
       await loadBilling();
       await loadActiveShippingCountries();
       setExistingAddress();

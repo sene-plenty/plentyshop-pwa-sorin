@@ -13,24 +13,16 @@
       :description="shippingProviderGetters.getShippingAmount(method)"
     >
     </SfRadio>
-
-    <SfButton
-      v-e2e="'continue-to-billing'"
-      :disabled="!selectedMethod"
-      type="button"
-      @click="$emit('submit')"
-    >
-      {{ $t('Continue to payment') }}
-    </SfButton>
   </div>
 </template>
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref, computed } from '@nuxtjs/composition-api';
+import { ref } from '@nuxtjs/composition-api';
 import {
   useShippingProvider,
-  shippingProviderGetters
+  shippingProviderGetters,
+  useCart
 } from '@vue-storefront/plentymarkets';
 
 export default {
@@ -45,17 +37,17 @@ export default {
     const selectedMethod = ref(null);
     const {
       save,
-      load,
       state: shippingProvider
     } = useShippingProvider();
-    const shippingMethods = computed(() => {
-      return shippingProviderGetters.getShippingProviders(shippingProvider.value);
-    });
+    const { cart } = useCart();
+    const shippingMethods = ref(shippingProviderGetters.getShippingProviders(shippingProvider.value));
+
+    if (cart.value.shippingProfileId) {
+      selectedMethod.value = cart.value.shippingProfileId.toString();
+    }
 
     const selectMethod = async (method) => {
       await save({ shippingMethod: shippingProviderGetters.getValue(method)});
-      // TODO: return list of shipping providers on selection
-      await load();
       selectedMethod.value = method.parcelServicePresetId.toString();
     };
 
