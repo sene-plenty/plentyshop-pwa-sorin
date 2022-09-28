@@ -165,5 +165,7 @@ export default {
   'My billing and shipping address are the same': 'Meine Rechnungs- und Lieferadresse sind gleich',
   'Continue as guest': 'Weiter als Gast',
   'Login Register': 'Anmelden / Registrieren',
-  'Login Register Text': 'Sie können sich bei Ihrem Konto anmelden oder ein neues registrieren.'
+  'Login Register Text': 'Sie können sich bei Ihrem Konto anmelden oder ein neues registrieren.',
+  'Payment Method' : "Zahlungsart",
+  'Shipping Method' : "Versandart"
 };

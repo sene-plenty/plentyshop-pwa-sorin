@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h4>{{ $t("Payment Method")}}</h4>
     <SfRadio
       v-e2e="'payment-method'"
       v-for="method in paymentMethods"
@@ -33,7 +34,7 @@ export default {
     SfRadio
   },
 
-  setup() {
+  setup(props, { emit }) {
     const selectedMethod = ref(null);
     const paymentMethods = ref(null);
     const { result: paymentProviders, save: setPaymentProvider } = usePaymentProvider();
@@ -43,11 +44,13 @@ export default {
 
     if (cart.value.methodOfPaymentId) {
       selectedMethod.value = cart.value.methodOfPaymentId.toString();
+      emit('status');
     }
 
     const selectMethod = async (paymentId) => {
       await setPaymentProvider(paymentId);
       selectedMethod.value = paymentId;
+      emit('status');
     };
 
     return {

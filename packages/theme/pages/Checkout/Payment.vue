@@ -63,10 +63,9 @@
           class="sf-property--full-width sf-property--large summary__property-total"
         />
 
-        <SfDivider class="spacer"/>
-        <VsfShippingProvider/>
-        <SfDivider />
-        <VsfPaymentProvider @status="isPaymentReady = true"/>
+        <SfDivider/>
+        <VsfShippingProvider class="spacer"/>
+        <VsfPaymentProvider class="spacer" @status="isPaymentReady = true"/>
 
         <SfCheckbox v-e2e="'terms'" v-model="terms" name="terms" class="summary__terms">
           <template #label>
