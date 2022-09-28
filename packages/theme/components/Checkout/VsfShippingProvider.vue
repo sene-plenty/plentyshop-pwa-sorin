@@ -45,7 +45,6 @@ export default {
     if (cart.value.shippingProfileId) {
       selectedMethod.value = cart.value.shippingProfileId.toString();
     }
-
     const selectMethod = async (method) => {
       await save({ shippingMethod: shippingProviderGetters.getValue(method)});
       selectedMethod.value = method.parcelServicePresetId.toString();

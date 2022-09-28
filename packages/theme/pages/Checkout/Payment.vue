@@ -113,7 +113,7 @@ import {
 } from '@storefront-ui/vue';
 import { onSSR } from '@vue-storefront/core';
 import { ref, computed, useRouter } from '@nuxtjs/composition-api';
-import { useMakeOrder, useCart, cartGetters, orderGetters, useShippingProvider } from '@vue-storefront/plentymarkets';
+import { useMakeOrder, useCart, cartGetters, orderGetters, useShippingProvider, usePaymentProvider } from '@vue-storefront/plentymarkets';
 import { addBasePath } from '@vue-storefront/core';
 
 export default {
@@ -138,6 +138,7 @@ export default {
     const { cart, load, setCart } = useCart();
     const { order, make, loading } = useMakeOrder();
     const { load: loadShippingProvider } = useShippingProvider();
+    const { load: loadPaymentProviders } = usePaymentProvider();
 
     const isPaymentReady = ref(false);
     const terms = ref(false);
@@ -145,6 +146,7 @@ export default {
     onSSR(async () => {
       await load();
       await loadShippingProvider();
+      await loadPaymentProviders();
     });
 
     const processOrder = async () => {

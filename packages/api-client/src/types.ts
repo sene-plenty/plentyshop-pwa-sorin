@@ -519,6 +519,17 @@ export type ActiveShippingCountry = {
   vatCodes:string[]
 }
 
+export type PaymentMethod = {
+  id: number,
+  name: string,
+  fee: number,
+  icon: string,
+  description: string,
+  sourceUrl: string,
+  isSelectable: boolean,
+  key: string
+}
+
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
@@ -583,6 +594,10 @@ export interface PlentymarketsApiMethods {
   saveAddress(typeId: AddressType, addressData: TODO): Promise<any>
 
   getActiveShippingCountries(): Promise<any>
+
+  getPaymentProviders(): Promise<any>
+
+  setPaymentProvider(paymentId: number): Promise<any>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;

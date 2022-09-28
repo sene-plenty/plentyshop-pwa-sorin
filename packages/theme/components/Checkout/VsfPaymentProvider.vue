@@ -1,24 +1,21 @@
 <template>
   <div>
-    <p>
-      <b>Please implement vendor-specific VsfPaymentProvider component in the 'components/Checkout' directory</b>
-    </p>
-
     <SfRadio
       v-e2e="'payment-method'"
-      v-for="method in shippingMethods"
-      :key="method.value"
-      :label="method.label"
-      :value="method.value"
-      :description="method.description"
+      v-for="method in paymentMethods"
+      :key="paymentProviderGetters.getId(method)"
+      :value="paymentProviderGetters.getId(method)"
       :selected ="selectedMethod"
-      name="shippingMethod"
+      name="paymentMethod"
       class="form__radio shipping"
-      @change="selectMethod(method.value)"
+      @change="selectMethod(paymentProviderGetters.getId(method))"
     >
-      <div class="shipping__label">
-        {{ method.label }}
-      </div>
+      <template #label class="shipping__label">
+        <div class="payment-option">
+          <img width="40px" v-bind:src="paymentProviderGetters.getIcon(method)">
+          <div>{{ paymentProviderGetters.getName(method) }}</div>
+        </div>
+      </template>
     </SfRadio>
   </div>
 </template>
@@ -26,14 +23,7 @@
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
 import { ref } from '@nuxtjs/composition-api';
-
-const SHIPPING_METHODS = [
-  { label: 'Visa Debit', value: 'visa_debit' },
-  { label: 'MasterCard', value: 'master_card' },
-  { label: 'VisaElectron', value: 'visa_electron' },
-  { label: 'Cash on delivery', value: 'cash' },
-  { label: 'Check', value: 'check' }
-];
+import { usePaymentProvider, useCart, paymentProviderGetters } from '@vue-storefront/plentymarkets';
 
 export default {
   name: 'VsfPaymentProvider',
@@ -43,24 +33,43 @@ export default {
     SfRadio
   },
 
-  setup(props, { emit }) {
+  setup() {
     const selectedMethod = ref(null);
+    const paymentMethods = ref(null);
+    const { result: paymentProviders, save: setPaymentProvider } = usePaymentProvider();
+    const { cart } = useCart();
 
-    const selectMethod = (method) => {
-      selectedMethod.value = method;
-      emit('status');
+    paymentMethods.value = paymentProviders.value.list;
+
+    if (cart.value.methodOfPaymentId) {
+      selectedMethod.value = cart.value.methodOfPaymentId.toString();
+    }
+
+    const selectMethod = async (paymentId) => {
+      await setPaymentProvider(paymentId);
+      selectedMethod.value = paymentId;
     };
 
     return {
-      shippingMethods: SHIPPING_METHODS,
+      paymentMethods,
       selectedMethod,
-      selectMethod
+      selectMethod,
+      paymentProviders,
+      paymentProviderGetters
     };
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.payment-option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    margin-right: 10px;
+  }
+}
 .shipping {
   &__label {
     display: flex;

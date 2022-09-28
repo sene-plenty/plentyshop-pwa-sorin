@@ -18,6 +18,7 @@ export { useUserShipping } from './useUserShipping';
 export { useWishlist } from './useWishlist';
 export { useSearch } from './useSearch';
 export { useActiveShippingCountries } from './useActiveShippingCountries';
+export { usePaymentProvider } from './usePaymentProvider';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';
@@ -33,6 +34,7 @@ export { userGetters } from './getters/userGetters';
 export { userShippingGetters } from './getters/userShippingGetters';
 export { wishlistGetters } from './getters/wishlistGetters';
 export { shippingProviderGetters } from './getters/shippingProviderGetters';
+export { paymentProviderGetters } from './getters/paymentProviderGetters';
 
 // Types
 export * from './types';

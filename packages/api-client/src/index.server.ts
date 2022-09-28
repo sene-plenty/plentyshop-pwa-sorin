@@ -15,9 +15,10 @@ import {
   updateItemQty as updateCartItemQty
 } from './api/getCart';
 import { getSession } from './api/getSession';
-import { getShippingProvider } from './api/getShippingProvider';
+import { getShippingProvider, selectShippingProvider } from './api/getShippingProvider';
 import { loginAsGuest, loginUser, logoutUser, registerUser } from './api/getUser';
 import { getActiveShippingCountries } from './api/getActiveShippingCountries';
+import { getPaymentProviders, setPaymentProvider } from './api/getPaymentProvider';
 
 /**
  * Event flow
@@ -110,7 +111,10 @@ const { createApiClient } = apiClientFactory<Settings, Endpoints>({
     loginAsGuest,
     loadAddresses,
     saveAddress,
-    getActiveShippingCountries
+    getActiveShippingCountries,
+    getPaymentProviders,
+    selectShippingProvider,
+    setPaymentProvider
   },
   extensions: [cookieExtension]
 });
