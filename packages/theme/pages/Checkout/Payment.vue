@@ -5,6 +5,8 @@
       title="Payment"
       class="sf-heading--left sf-heading--no-underline title"
     />
+    <VsfShippingProvider class="spacer"/>
+    <VsfPaymentProvider class="spacer" @status="isPaymentReady = true"/>
     <SfTable class="sf-table--bordered table desktop-only">
       <SfTableHeading class="table__row">
         <SfTableHeader class="table__header table__image">{{ $t('Item') }}</SfTableHeader>
@@ -62,10 +64,6 @@
           :value="$n(totals.total, 'currency')"
           class="sf-property--full-width sf-property--large summary__property-total"
         />
-
-        <SfDivider/>
-        <VsfShippingProvider class="spacer"/>
-        <VsfPaymentProvider class="spacer" @status="isPaymentReady = true"/>
 
         <SfCheckbox v-e2e="'terms'" v-model="terms" name="terms" class="summary__terms">
           <template #label>

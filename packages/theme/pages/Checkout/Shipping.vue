@@ -217,15 +217,20 @@
       <div class="form">
         <div class="form__action">
           <SfButton
-            v-if="!isFormSubmitted"
-            :disabled="loading"
+            class="sf-button color-secondary form__back-button"
+            type="button"
+            @click="router.push(localePath({ name: 'billing' }))"
+          >
+            {{ $t('Go back') }}
+          </SfButton>
+          <SfButton
             class="form__action-button"
             type="submit"
           >
-            {{ $t('Select shipping method') }}
+            {{ $t('Continue to payment') }}
           </SfButton>
         </div>
-      </div>
+    </div>
     </form>
   </ValidationObserver>
 </template>
@@ -266,11 +271,9 @@ export default {
     SfSelect,
     SfCheckbox,
     ValidationProvider,
-    ValidationObserver,
-    VsfShippingProvider: () =>
-      import('~/components/Checkout/VsfShippingProvider')
+    ValidationObserver
   },
-  setup () {
+  setup (props, context) {
     const router = useRouter();
     const isFormSubmitted = ref(false);
     const { load: loadShipping, save, loading, shipping } = useShipping();
@@ -320,8 +323,12 @@ export default {
 
         // TODO: check if we need to send anything at all (-99?)
         await save({ shippingDetails: billing.value });
+        router.push(context.root.localePath('payment'));
+
       } else {
         await save({ shippingDetails: form.value });
+        router.push(context.root.localePath('payment'));
+
       }
 
       isFormSubmitted.value = true;

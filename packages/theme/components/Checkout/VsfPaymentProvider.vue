@@ -23,7 +23,7 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
+import { ref, computed } from '@nuxtjs/composition-api';
 import { usePaymentProvider, useCart, paymentProviderGetters } from '@vue-storefront/plentymarkets';
 
 export default {
@@ -36,13 +36,12 @@ export default {
 
   setup(props, { emit }) {
     const selectedMethod = ref(null);
-    const paymentMethods = ref(null);
     const { result: paymentProviders, save: setPaymentProvider } = usePaymentProvider();
     const { cart } = useCart();
+    console.log(paymentProviders?.value?.list);
+    const paymentMethods = computed(() => paymentProviders?.value?.list);
 
-    paymentMethods.value = paymentProviders.value.list;
-
-    if (cart.value.methodOfPaymentId) {
+    if (cart?.value?.methodOfPaymentId) {
       selectedMethod.value = cart.value.methodOfPaymentId.toString();
       emit('status');
     }

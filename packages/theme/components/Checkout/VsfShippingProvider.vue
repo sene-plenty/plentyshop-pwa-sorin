@@ -19,7 +19,7 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
+import { ref, computed } from '@nuxtjs/composition-api';
 import {
   useShippingProvider,
   shippingProviderGetters,
@@ -41,9 +41,9 @@ export default {
       state: shippingProvider
     } = useShippingProvider();
     const { cart } = useCart();
-    const shippingMethods = ref(shippingProviderGetters.getShippingProviders(shippingProvider.value));
+    const shippingMethods = computed(() => shippingProviderGetters.getShippingProviders(shippingProvider.value));
 
-    if (cart.value.shippingProfileId) {
+    if (cart?.value?.shippingProfileId) {
       selectedMethod.value = cart.value.shippingProfileId.toString();
     }
     const selectMethod = async (method) => {

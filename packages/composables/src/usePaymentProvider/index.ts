@@ -14,7 +14,6 @@ export const usePaymentProvider = (id: string): any => {
     try {
       loading.value = true;
       result.value = await context.$plentymarkets.api.getPaymentProviders();
-      console.log(result.value);
       error.value.search = null;
     } catch (err) {
       error.value.search = err;
