@@ -7,9 +7,41 @@ import type { Order } from '@vue-storefront/plentymarkets-api';
 
 const factoryParams: UseMakeOrderFactoryParams<Order> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  make: async (context: Context, { customQuery }) => {
-    console.log('Mocked: useMakeOrder.make');
-    return {};
+  make: async (context: Context, params: any) => {
+    await context.$plentymarkets.api.additionalInformation({
+      orderContactWish: null,
+      orderCustomerSign: null,
+      shippingPrivacyHintAccepted: false,
+      templateType: 'checkout'
+    });
+
+    const preparePaymentResponse = await context.$plentymarkets.api.preparePayment();
+
+    const paymentType = preparePaymentResponse.type || 'errorCode';
+    const paymentValue = preparePaymentResponse.value || '""';
+    switch (paymentType) {
+      case 'continue':
+        const order = await context.$plentymarkets.api.placeOrder();
+        console.log(order);
+        // await context.$plentymarkets.api.executePayment(order.data.order.id);
+        break;
+      case 'redirectUrl':
+        // redirect to given payment provider
+        window.location.assign(paymentValue);
+        break;
+      case 'externalContentUrl':
+        // show external content in iframe
+        break;
+      case 'htmlContent':
+        break;
+
+      case 'errorCode':
+        // NotificationService.error(paymentValue);
+        break;
+      default:
+        // NotificationService.error("Unknown response from payment provider: " + paymentType);
+        break;
+    }
   }
 };
 

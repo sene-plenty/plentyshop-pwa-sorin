@@ -598,6 +598,14 @@ export interface PlentymarketsApiMethods {
   getPaymentProviders(): Promise<any>
 
   setPaymentProvider(paymentId: number): Promise<any>
+
+  additionalInformation(params: any): Promise<any>
+
+  preparePayment(): Promise<any>
+
+  placeOrder(): Promise<any>
+
+  executePayment(paymentId: number): Promise<any>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;
