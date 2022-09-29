@@ -22,6 +22,7 @@
           label="Addresses"
           name="Addresses"
           class="form__element form__select sf-select--underlined"
+          v-if="addresses.length > 0"
         >
           <SfSelectOption
             v-for="address in addresses"
@@ -310,7 +311,9 @@ export default {
 
     watch(() => selectedAddress.value, async (addressId) => {
       const selectedAddress = addresses.value.find((address) => Number(address.id) === Number(addressId));
-      form.value = selectedAddress;
+      if (selectedAddress && isAuthenticated) {
+        form.value = selectedAddress;
+      }
     });
 
     const handleCheckSameAddress = async value => {
@@ -337,7 +340,7 @@ export default {
     const setExistingAddress = () => {
       if (shipping.value) {
         addresses.value = shipping.value;
-        selectedAddress.value = shipping.value[0].id.toString();
+        selectedAddress.value = shipping.value[0]?.id?.toString();
       }
     };
 

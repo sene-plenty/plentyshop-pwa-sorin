@@ -12,6 +12,7 @@
       label="Addresses"
       name="Addresses"
       class="form__element form__select sf-select--underlined"
+      v-if="addresses.length > 0"
     >
       <SfSelectOption
         v-for="address in addresses"
@@ -301,7 +302,9 @@ export default {
 
     watch(() => selectedAddress.value, async (addressId) => {
       const selectedAddress = addresses.value.find((address) => Number(address.id) === Number(addressId));
-      form.value = selectedAddress;
+      if (selectedAddress && isAuthenticated) {
+        form.value = selectedAddress;
+      }
     });
 
     const handleFormSubmit = async () => {
@@ -312,7 +315,7 @@ export default {
     const setExistingAddress = () => {
       if (billing.value) {
         addresses.value = billing.value;
-        selectedAddress.value = billing.value[0].id.toString();
+        selectedAddress.value = billing.value[0]?.id?.toString();
       }
     };
 
