@@ -9,6 +9,13 @@ export async function loadAddresses(context: Context, typeId: AddressType): Prom
   return (data.data as AddressData[]).map(addressData => mapAddressForClient(addressData));
 }
 
+export async function saveBillingIsShipping(context: Context): Promise<any> {
+  const url: URL = new URL('/rest/io/customer/address/-99/', context.config.api.url);
+  url.searchParams.set('typeId', AddressType.Shipping.toString());
+  const { data } = await context.client.put(url.href, { supressNotifications: true, templateType: 'checkout'});
+  return data;
+}
+
 export async function saveAddress(context: Context, typeId: AddressType = AddressType.Billing, addressData: AddressData): Promise<any> {
   const url: URL = new URL('/rest/io/customer/address/', context.config.api.url);
 

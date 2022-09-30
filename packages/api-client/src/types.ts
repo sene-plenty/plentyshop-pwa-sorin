@@ -606,6 +606,8 @@ export interface PlentymarketsApiMethods {
   placeOrder(): Promise<any>
 
   executePayment(paymentId: number): Promise<any>
+
+  saveBillingIsShipping(): Promise<any>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;
