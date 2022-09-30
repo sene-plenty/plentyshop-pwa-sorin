@@ -24,7 +24,7 @@
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
 import { ref, computed } from '@nuxtjs/composition-api';
-import { usePaymentProvider, useCart, paymentProviderGetters } from '@vue-storefront/plentymarkets';
+import { usePaymentProvider, useCart, paymentProviderGetters, useShippingProvider } from '@vue-storefront/plentymarkets';
 
 export default {
   name: 'VsfPaymentProvider',
@@ -37,6 +37,7 @@ export default {
   setup(props, { emit }) {
     const selectedMethod = ref(null);
     const { result: paymentProviders, save: setPaymentProvider } = usePaymentProvider();
+    const { load: loadShippingProfiles } = useShippingProvider();
     const { cart } = useCart();
     console.log(paymentProviders?.value?.list);
     const paymentMethods = computed(() => paymentProviders?.value?.list);
@@ -50,6 +51,7 @@ export default {
       await setPaymentProvider(paymentId);
       selectedMethod.value = paymentId;
       emit('status');
+      await loadShippingProfiles();
     };
 
     return {

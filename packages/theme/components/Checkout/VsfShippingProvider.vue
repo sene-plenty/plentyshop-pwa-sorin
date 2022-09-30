@@ -23,6 +23,7 @@ import { ref, computed } from '@nuxtjs/composition-api';
 import {
   useShippingProvider,
   shippingProviderGetters,
+  usePaymentProvider,
   useCart
 } from '@vue-storefront/plentymarkets';
 
@@ -40,6 +41,7 @@ export default {
       save,
       state: shippingProvider
     } = useShippingProvider();
+    const { load: loadPaymentProviders } = usePaymentProvider();
     const { cart } = useCart();
     const shippingMethods = computed(() => shippingProviderGetters.getShippingProviders(shippingProvider.value));
 
@@ -49,6 +51,7 @@ export default {
     const selectMethod = async (method) => {
       await save({ shippingMethod: shippingProviderGetters.getValue(method)});
       selectedMethod.value = method.parcelServicePresetId.toString();
+      await loadPaymentProviders();
     };
 
     return {
