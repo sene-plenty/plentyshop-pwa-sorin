@@ -22,8 +22,7 @@ const factoryParams: UseMakeOrderFactoryParams<Order> = {
     switch (paymentType) {
       case 'continue':
         const order = await context.$plentymarkets.api.placeOrder();
-        console.log(order);
-        // await context.$plentymarkets.api.executePayment(order.data.order.id);
+        await context.$plentymarkets.api.executePayment(order.data.order.id, params.paymentId);
         break;
       case 'redirectUrl':
         // redirect to given payment provider

@@ -19,8 +19,11 @@ export async function placeOrder(context: Context): Promise<any> {
   return data;
 }
 
-export async function executePayment(context: Context, paymentId: number): Promise<any> {
-  const url: URL = new URL(`/execute-payment/${paymentId}/`, context.config.api.url);
-  const { data } = await context.client.get(url.href);
+export async function executePayment(context: Context, orderId: number, paymentId: number): Promise<any> {
+  const url: URL = new URL('/execute-payment/', context.config.api.url);
+  const { data } = await context.client.post(url.href, {
+    orderId: orderId,
+    paymentId: paymentId
+  });
   return data;
 }

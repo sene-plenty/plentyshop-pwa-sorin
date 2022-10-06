@@ -605,7 +605,7 @@ export interface PlentymarketsApiMethods {
 
   placeOrder(): Promise<any>
 
-  executePayment(paymentId: number): Promise<any>
+  executePayment(orderId: number, paymentId: number): Promise<any>
 
   saveBillingIsShipping(): Promise<any>
 }
