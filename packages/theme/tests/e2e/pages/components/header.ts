@@ -16,10 +16,22 @@ class Header {
     };
   }
 
+  get account() {
+    return el('header-icons').children().eq(0);
+  }
+
   openCart(): Cypress.Chainable {
-    const click = $el => $el.click();
+    const click = ($el) => $el.click();
     return this.cart.pipe(click).should(() => {
       expect(Cypress.$('[data-e2e="sidebar-cart"]')).to.exist;
+    });
+  }
+
+  openAccount(): Cypress.Chainable {
+    const click = ($el) => $el.click();
+
+    return this.account.pipe(click).should(() => {
+      expect(Cypress.$('[data-e2e="login-modal"')).to.exist;
     });
   }
 }

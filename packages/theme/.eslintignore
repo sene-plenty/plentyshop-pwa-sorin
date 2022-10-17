@@ -3,4 +3,3 @@ _theme
 node_modules
 middleware.config.js
 nuxt.config.js
-tests/e2e
