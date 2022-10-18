@@ -1,7 +1,7 @@
 import page from '../pages/factory';
 
 context('Order placement', () => {
-  beforeEach(function () {
+  beforeEach(function init () {
     cy.fixture('test-data/e2e-place-order').then((fixture) => {
       this.fixtures = {
         data: fixture
@@ -9,11 +9,17 @@ context('Order placement', () => {
     });
   });
 
-  it(['happypath', 'regression'], 'Should successfully place an order', function () {
+  it(['happypath', 'regression'], 'Should successfully place an order', function test () {
     const data = this.fixtures.data;
     page.home.visit();
-    page.home.header.categories.first().click();
+    // page.home.header.categories.first().click();
+    cy.get('[data-e2e*="app-header"]').eq(1).find('a').click();
+
     page.category.products.first().click();
+
+    // Ensure all requests are done
+    cy.wait(2000);
+
     page.product.addToCartButton.click();
     page.product.header.openCart();
     page.cart.goToCheckoutButton.click();
