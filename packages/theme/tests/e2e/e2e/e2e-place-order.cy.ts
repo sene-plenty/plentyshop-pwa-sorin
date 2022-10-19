@@ -9,7 +9,7 @@ context('Order placement', () => {
     });
   });
 
-  it(['happypath', 'regression'], 'Should successfully place an order', function test () {
+  it(['happyPath', 'regression'], 'Should successfully place an order', function test () {
     const data = this.fixtures.data;
     page.home.visit();
     // page.home.header.categories.first().click();

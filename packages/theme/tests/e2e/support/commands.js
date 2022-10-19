@@ -24,3 +24,27 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+import page from '../pages/factory';
+
+Cypress.Commands.add('login', (email, password, isRememberChecked = false) => {
+  page.home.visit();
+
+  page.home.header.openAccount();
+  cy.get('.sf-button').contains('login in to your account').click();
+  cy.get('.sf-modal__content form').as('form');
+
+  if (email) {
+    cy.get('@form').find('input#email').clear().type(email, { force: true });
+  }
+  if (password) {
+    cy.get('@form').find('input#password').clear().type(password, { force: true });
+  }
+  if (isRememberChecked) {
+    cy.get('@form').find('label.sf-checkbox__container').click();
+  }
+
+  cy.get('@form').find('button[type=submit]').click();
+
+  cy.wait(1000);
+});
