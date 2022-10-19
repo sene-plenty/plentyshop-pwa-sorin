@@ -58,10 +58,16 @@ We are currently using the default BE api and not mocking anything.
 - For an unique email address, you can use your google email, in the format: username+<unique string>@plentymarkets.com;
 - When adding new values in the env file, remember to update `./tests/e2e/cypress.config.js`
 
+For mobile testing, you can specify a resolution with the tests command. E.g.
+
+- `yarn test:e2e --config viewportWidth=1280,viewportHeight=720`
+
+More information:
+
+- [https://docs.cypress.io/api/commands/viewport#Syntax](https://docs.cypress.io/api/commands/viewport#Syntax);
+- [https://docs.cypress.io/guides/references/configuration#Configuration-File](https://docs.cypress.io/guides/references/configuration#Configuration-File).
+
 ### Todo
 
-- Remove the waits;
 - Ensure we are using english for the tests;
-- Refactor the page object approach to use it only for common parts of the app;
-- Add useful custom cypress commands: e.g. login and logout;
-- Remember to run the tests in the desktop and mobile resolutions.
+- Refactor the page object approach to use it only for common parts of the app.

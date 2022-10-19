@@ -28,10 +28,21 @@
 import page from '../pages/factory';
 
 Cypress.Commands.add('login', (email, password, isRememberChecked = false) => {
-  page.home.visit();
+  // If the modal does not exit, click the open account. This helps with using the login
+  // command multiple times inside the same test.
+  cy.get('body').then($el => {
+    if ($el.find('.sf-modal__content').length === 0) {
+      page.home.header.openAccount();
+    }
+  }).wait(100);
 
-  page.home.header.openAccount();
-  cy.get('.sf-button').contains('login in to your account').click();
+  // if the login to your account button exists, click it
+  cy.get('.sf-modal__content').then($el => {
+    if ($el.find('button.sf-button:contains("login in to your account")').length > 0) {
+      cy.get('.sf-modal__content').find('.sf-button').contains('login in to your account').click();
+    }
+  }).wait(100);
+
   cy.get('.sf-modal__content form').as('form');
 
   if (email) {
@@ -45,6 +56,4 @@ Cypress.Commands.add('login', (email, password, isRememberChecked = false) => {
   }
 
   cy.get('@form').find('button[type=submit]').click();
-
-  cy.wait(1000);
 });

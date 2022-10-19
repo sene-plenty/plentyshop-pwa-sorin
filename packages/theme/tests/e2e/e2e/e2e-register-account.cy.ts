@@ -3,18 +3,21 @@ import page from '../pages/factory';
 const CYPRESS_DEFAULT_ACCOUNT_EMAIL = Cypress.env('CYPRESS_DEFAULT_ACCOUNT_EMAIL');
 const CYPRESS_DEFAULT_ACCOUNT_PASSWORD = Cypress.env('CYPRESS_DEFAULT_ACCOUNT_PASSWORD');
 
+/**
+ * Generate a unique email address to use with a new account. Adding +<something> after your
+ * username in your plenty/google email will ensure that you receive the email in your original
+ * email account.
+ */
 const uniquePlentyMarketsEmail = (email: string): string => {
   const parts = email.split('@');
   if (parts[1] !== 'plentymarkets.com') {
     throw new Error('You must use a plentymarkets.com email address.');
   }
-  return `${parts[0]}+${new Date().getTime()}@${parts[1]}`;
+
+  return `${parts[0].split('+')[0]}+${new Date().getTime()}@${parts[1]}`;
 };
 
 context('Register account', () => {
-  // Currently we do not mock or intercept API calls, so we just wait for everything to finish.
-  const LONG_WAIT_TIME_IN_MS = 3000;
-
   // CSS path to the register form. Please make sure you use it after the login command is given
   // (so that the modal containing it will be visible and open)
   const REGISTER_FORM_SELECTOR = '.sf-modal__content form';
@@ -54,10 +57,11 @@ context('Register account', () => {
     cy.get('@form').find('input#password').clear().type(CYPRESS_DEFAULT_ACCOUNT_PASSWORD, { force: true });
     cy.get('@form').find('label.sf-checkbox__container').click();
 
+    cy.intercept('/api/plentymarkets/registerUser').as('networkRequests');
     cy.get('@submit').click();
-    cy.wait(LONG_WAIT_TIME_IN_MS);
+    cy.wait('@networkRequests').its('response.statusCode').should('eq', 200);
 
-    page.home.header.openAccount();
+    cy.visit('/my-account');
     cy.get('body').contains('My Account');
   });
 });
