@@ -19,53 +19,47 @@ const loginHelper = (cy: Cypress.cy & CyEventEmitter, email: string, password: s
     }
   }).wait(100);
 
-  cy.get('.sf-modal__content form').as('form');
-
   if (email) {
-    cy.get('@form').find('input#email').clear().type(email, { force: true });
+    page.home.header.accountModalForm.find('input#email').clear().type(email, { force: true });
   }
   if (password) {
-    cy.get('@form').find('input#password').clear().type(password, { force: true });
+    page.home.header.accountModalForm.find('input#password').clear().type(password, { force: true });
   }
   if (isRememberChecked) {
-    cy.get('@form').find('label.sf-checkbox__container').click();
+    page.home.header.accountModalForm.find('label.sf-checkbox__container').click();
   }
 
-  cy.get('@form').find('button[type=submit]').click();
+  page.home.header.accountModalForm.find('button[type=submit]').click();
 };
 
 context('Login and logout', () => {
-  // CSS path to the login form. Please make sure you use it after the login command is given
-  // (so that the modal containing it will be visible and open)
-  const LOGIN_FORM_SELECTOR = '.sf-modal__content form';
-
   beforeEach(function init () {
     page.home.visit();
   });
 
   it(['exceptionPath', 'regression'], 'Fails due to missing or wrongfully formatted email', function test() {
     loginHelper(cy, '', CYPRESS_DEFAULT_ACCOUNT_PASSWORD);
-    cy.get(LOGIN_FORM_SELECTOR).contains('This field is required');
+    page.home.header.accountModalForm.contains('This field is required');
 
     loginHelper(cy, 'badEmail@', CYPRESS_DEFAULT_ACCOUNT_PASSWORD);
-    cy.get(LOGIN_FORM_SELECTOR).contains('Invalid email');
+    page.home.header.accountModalForm.contains('Invalid email');
   });
 
   it(['exceptionPath', 'regression'], 'Fails login due to missing password', function test() {
     loginHelper(cy, CYPRESS_DEFAULT_ACCOUNT_EMAIL, '');
-    cy.get(LOGIN_FORM_SELECTOR).contains('This field is required');
+    page.home.header.accountModalForm.contains('This field is required');
   });
 
   it(['exceptionPath', 'regression'], 'Fails due to wrong email or wrong password', function test() {
     cy.intercept('/api/plentymarkets/loginUser').as('networkRequests');
     loginHelper(cy, 'wrong@email.com', CYPRESS_DEFAULT_ACCOUNT_PASSWORD);
     cy.wait('@networkRequests');
-    cy.get(LOGIN_FORM_SELECTOR).contains('Invalid username or password');
+    page.home.header.accountModalForm.contains('Invalid username or password');
 
     cy.intercept('/api/plentymarkets/loginUser').as('networkRequests');
     loginHelper(cy, CYPRESS_DEFAULT_ACCOUNT_EMAIL, 'wrongPassword');
     cy.wait('@networkRequests');
-    cy.get(LOGIN_FORM_SELECTOR).contains('Invalid username or password');
+    page.home.header.accountModalForm.contains('Invalid username or password');
   });
 
   it(['happyPath', 'regression'], 'Should login successfully, then logout', function test() {

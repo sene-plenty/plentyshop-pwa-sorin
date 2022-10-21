@@ -20,6 +20,10 @@ class Header {
     return el('header-icons').children().eq(0);
   }
 
+  get accountModalForm() {
+    return cy.get('[data-e2e="login-modal"]').find('form');
+  }
+
   openCart(): Cypress.Chainable {
     const click = ($el) => $el.click();
     return this.cart.pipe(click).should(() => {
@@ -31,7 +35,7 @@ class Header {
     const click = ($el) => $el.click();
 
     return this.account.pipe(click).should(() => {
-      expect(Cypress.$('[data-e2e="login-modal"')).to.exist;
+      expect(Cypress.$('[data-e2e="login-modal"]')).to.exist;
     });
   }
 }
