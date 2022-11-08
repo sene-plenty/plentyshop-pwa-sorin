@@ -1,20 +1,28 @@
 import page from '../pages/factory';
 
 context('Order placement', () => {
-  beforeEach(function () {
+  beforeEach(function init () {
     cy.fixture('test-data/e2e-place-order').then((fixture) => {
       this.fixtures = {
         data: fixture
       };
     });
+
+    page.home.visit();
   });
 
-  it(['happypath', 'regression'], 'Should successfully place an order', function () {
+  it(['happyPath', 'regression'], 'Should successfully place an order', function test () {
     const data = this.fixtures.data;
-    page.home.visit();
-    page.home.header.categories.first().click();
-    page.category.products.first().click();
+
+    // With the current data, the first category does not have items. Therefore, we need to replace the
+    // following selector: page.home.header.categories.first().click();
+    cy.get('[data-e2e*="app-header"]').eq(1).find('a').click().wait(1000);
+    page.category.products.first().click().wait(1000);
+
+    cy.intercept('/api/plentymarkets/*').as('networkRequests');
     page.product.addToCartButton.click();
+    cy.wait('@networkRequests');
+
     page.product.header.openCart();
     page.cart.goToCheckoutButton.click();
     page.checkout.shipping.heading.should('be.visible');
