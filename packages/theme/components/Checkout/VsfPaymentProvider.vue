@@ -39,11 +39,10 @@ export default {
     const { result: paymentProviders, save: setPaymentProvider } = usePaymentProvider();
     const { load: loadShippingProfiles } = useShippingProvider();
     const { cart } = useCart();
-    console.log(paymentProviders?.value?.list);
     const paymentMethods = computed(() => paymentProviders?.value?.list);
 
-    if (cart?.value?.methodOfPaymentId) {
-      selectedMethod.value = cart.value.methodOfPaymentId.toString();
+    if (paymentProviderGetters.getMethodOfPaymentId(cart?.value)) {
+      selectedMethod.value = paymentProviderGetters.getMethodOfPaymentId(cart?.value);
       emit('status');
     }
 

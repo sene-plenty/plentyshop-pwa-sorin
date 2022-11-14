@@ -1,6 +1,6 @@
-import { Context, PaymentMethod } from 'src/types';
+import { Context, PaymentProviders } from 'src/types';
 
-export async function getPaymentProviders(context: Context): Promise<{ list: PaymentMethod[], selected: 0}> {
+export async function getPaymentProviders(context: Context): Promise<PaymentProviders> {
   const url: URL = new URL('/rest/storefront/checkout/payment_provider/', context.config.api.url);
   const { data } = await context.client.get(url.href);
 

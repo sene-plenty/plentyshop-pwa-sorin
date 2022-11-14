@@ -4,8 +4,8 @@
     <SfRadio
       v-e2e="'shipping-method'"
       v-for="method in shippingMethods"
-      :key="method.parcelServicePresetId.toString()"
-      :value="method.parcelServicePresetId.toString()"
+      :key="shippingProviderGetters.getParcelServicePresetId(method)"
+      :value="shippingProviderGetters.getParcelServicePresetId(method)"
       :selected="selectedMethod"
       name="shippingMethod"
       class="form__radio shipping"
@@ -45,12 +45,12 @@ export default {
     const { cart } = useCart();
     const shippingMethods = computed(() => shippingProviderGetters.getShippingProviders(shippingProvider.value));
 
-    if (cart?.value?.shippingProfileId) {
-      selectedMethod.value = cart.value.shippingProfileId.toString();
+    if (shippingProviderGetters.getShippingProfileId(cart?.value)) {
+      selectedMethod.value = shippingProviderGetters.getShippingProfileId(cart?.value);
     }
     const selectMethod = async (method) => {
       await save({ shippingMethod: shippingProviderGetters.getValue(method)});
-      selectedMethod.value = method.parcelServicePresetId.toString();
+      selectedMethod.value = shippingProviderGetters.getParcelServicePresetId(method);
       await loadPaymentProviders();
     };
 

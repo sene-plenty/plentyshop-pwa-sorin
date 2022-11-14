@@ -1,26 +1,26 @@
-import { Context } from 'src/types';
+import { Context, CreateOrderResponse, PreparePaymentResult } from 'src/types';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function additionalInformation(context: Context, params: any): Promise<any> {
+export async function additionalInformation(context: Context, params: any): Promise<void> {
   const url: URL = new URL('/rest/io/order/additional_information', context.config.api.url);
   const { data } = await context.client.post(url.href, params);
   return data;
 }
 
-export async function preparePayment(context: Context): Promise<any> {
+export async function preparePayment(context: Context): Promise<PreparePaymentResult> {
   const url: URL = new URL('/rest/io/checkout/payment', context.config.api.url);
   const { data } = await context.client.post(url.href);
   return data.data;
 }
 
-export async function placeOrder(context: Context): Promise<any> {
+export async function placeOrder(context: Context): Promise<CreateOrderResponse> {
   const url: URL = new URL('/rest/io/order', context.config.api.url);
   const { data } = await context.client.post(url.href);
   return data;
 }
 
-export async function executePayment(context: Context, orderId: number, paymentId: number): Promise<any> {
-  const url: URL = new URL('/execute-payment/', context.config.api.url);
+export async function executePayment(context: Context, orderId: number, paymentId: number): Promise<void> {
+  const url: URL = new URL('/rest/checkout/execute_payment', context.config.api.url);
   const { data } = await context.client.post(url.href, {
     orderId: orderId,
     paymentId: paymentId

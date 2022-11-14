@@ -316,7 +316,7 @@ export default {
       }
     });
 
-    const handleCheckSameAddress = async value => {
+    const handleCheckSameAddress = (value) => {
       sameAsShipping.value = value;
     };
 
@@ -324,7 +324,6 @@ export default {
       if (sameAsShipping.value) {
         await loadBilling();
 
-        // TODO: check if we need to send anything at all (-99?)
         await save({ shippingDetails: null });
         router.push(context.root.localePath('payment'));
 

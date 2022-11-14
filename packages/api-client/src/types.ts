@@ -193,7 +193,9 @@ export type Coupon = TODO;
 
 export type FacetSearchCriteria = TODO;
 
-export type Order = TODO;
+export type Order = {
+  id?: number
+};
 
 export type OrderItem = TODO;
 
@@ -530,6 +532,20 @@ export type PaymentMethod = {
   key: string
 }
 
+export type PaymentProviders = { list: PaymentMethod[], selected: number}
+
+export type PreparePaymentResult = {
+    type: string,
+    value: any
+}
+
+export type CreateOrderResponse = {
+  events: any[],
+  data: {
+    order: Order
+  }
+}
+
 export interface PlentymarketsApiMethods {
   getProduct(
     params: ProductsSearchParams
@@ -577,35 +593,35 @@ export interface PlentymarketsApiMethods {
 
   getSession(initialRestCall: boolean): Promise<SessionResult>
 
-  loginUser(email: string, password: string): Promise<any>
+  loginUser(email: string, password: string): Promise<SessionResult>
 
   registerUser(params: RegisterParams): Promise<any>
 
-  logoutUser(): Promise<any>
+  logoutUser(): Promise<boolean>
 
   getShippingProvider(): Promise<ShippingProvider>
 
   selectShippingProvider(shippingId: number): Promise<string>
 
-  loginAsGuest(email: string): Promise<any>
+  loginAsGuest(email: string): Promise<SessionResult>
 
   loadAddresses(typeId: AddressType): Promise<AddressData[]>
 
   saveAddress(typeId: AddressType, addressData: TODO): Promise<any>
 
-  getActiveShippingCountries(): Promise<any>
+  getActiveShippingCountries(): Promise<ActiveShippingCountry[]>
 
-  getPaymentProviders(): Promise<any>
+  getPaymentProviders(): Promise<PaymentProviders>
 
-  setPaymentProvider(paymentId: number): Promise<any>
+  setPaymentProvider(paymentId: number): Promise<string>
 
-  additionalInformation(params: any): Promise<any>
+  additionalInformation(params: any): Promise<void>
 
-  preparePayment(): Promise<any>
+  preparePayment(): Promise<PreparePaymentResult>
 
-  placeOrder(): Promise<any>
+  placeOrder(): Promise<CreateOrderResponse>
 
-  executePayment(orderId: number, paymentId: number): Promise<any>
+  executePayment(orderId: number, paymentId: number): Promise<void>
 
   saveBillingIsShipping(): Promise<any>
 }
