@@ -301,9 +301,11 @@ export default {
     });
 
     watch(() => selectedAddress.value, async (addressId) => {
-      const selectedAddress = addresses.value.find((address) => Number(address.id) === Number(addressId));
-      if (selectedAddress && isAuthenticated) {
-        form.value = selectedAddress;
+      if (selectedAddress?.value) {
+        const selectedAddress = addresses.value.find((address) => Number(address.id) === Number(addressId));
+        if (selectedAddress && isAuthenticated) {
+          form.value = selectedAddress;
+        }
       }
     });
 
