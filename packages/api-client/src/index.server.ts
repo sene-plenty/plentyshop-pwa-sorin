@@ -7,6 +7,7 @@ import { getFacet } from './api/getFacet';
 import { getReview } from './api/getReview';
 import { addWishlistItem, getWishlist, removeWishlistItem } from './api/getWishlist';
 import { getSearch } from './api/getSearch';
+import { loadAddresses, saveAddress, saveBillingIsShipping } from './api/getAddress';
 import {
   addItem as addCartItem,
   getCart,
@@ -14,7 +15,11 @@ import {
   updateItemQty as updateCartItemQty
 } from './api/getCart';
 import { getSession } from './api/getSession';
-import { loginUser, logoutUser, registerUser } from './api/getUser';
+import { getShippingProvider, selectShippingProvider } from './api/getShippingProvider';
+import { loginAsGuest, loginUser, logoutUser, registerUser } from './api/getUser';
+import { getActiveShippingCountries } from './api/getActiveShippingCountries';
+import { getPaymentProviders, setPaymentProvider } from './api/getPaymentProvider';
+import { additionalInformation, executePayment, placeOrder, preparePayment } from './api/getOrder';
 
 /**
  * Event flow
@@ -72,7 +77,7 @@ function onCreate(settings: Settings) {
 const cookieExtension: ApiClientExtension = {
   name: 'cookieExtension',
   hooks: (req, res) => ({
-    beforeCreate: ({configuration}) => {
+    beforeCreate: ({ configuration }) => {
       cookies = req.headers.cookie ?? '';
       return configuration;
     },
@@ -84,7 +89,7 @@ const cookieExtension: ApiClientExtension = {
   })
 };
 
-const {createApiClient} = apiClientFactory<Settings, Endpoints>({
+const { createApiClient } = apiClientFactory<Settings, Endpoints>({
   onCreate,
   api: {
     getProduct,
@@ -102,7 +107,20 @@ const {createApiClient} = apiClientFactory<Settings, Endpoints>({
     getSession,
     loginUser,
     registerUser,
-    logoutUser
+    logoutUser,
+    getShippingProvider,
+    loginAsGuest,
+    loadAddresses,
+    saveAddress,
+    saveBillingIsShipping,
+    getActiveShippingCountries,
+    getPaymentProviders,
+    selectShippingProvider,
+    setPaymentProvider,
+    additionalInformation,
+    preparePayment,
+    placeOrder,
+    executePayment
   },
   extensions: [cookieExtension]
 });

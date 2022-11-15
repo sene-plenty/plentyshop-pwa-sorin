@@ -161,5 +161,11 @@ export default {
   'price-down': 'Price ⬇',
   'content': 'Content',
   'please select variation': 'Please select a valid variation.',
-  'no selection': 'No selection'
+  'no selection': 'No selection',
+  'My billing and shipping address are the same': 'My billing and shipping address are the same',
+  'Continue as guest': 'Continue as guest',
+  'Login Register': 'Login / Register',
+  'Login Register Text': 'You can login to your account or register a new one.',
+  'Payment Method' : "Payment Method",
+  'Shipping Method' : "Shipping Method"
 };

@@ -55,8 +55,9 @@ function getItemId(item: CartItem): number {
 function getTotals(cart: Cart): AgnosticTotals {
   return {
     total: cart?.basketAmount ?? 0,
-    subtotal: 0,
-    special: cart?.basketAmount ?? 0
+    subtotal: cart?.itemSum ?? 0,
+    special: cart?.basketAmount ?? 0,
+    rebate: cart?.basketRebate ?? 0
   };
 }
 
@@ -67,7 +68,7 @@ function getShippingPrice(cart: Cart): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalItems(cart: Cart): number {
-  return cart?.items.length ?? 0;
+  return cart?.items?.length ?? 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

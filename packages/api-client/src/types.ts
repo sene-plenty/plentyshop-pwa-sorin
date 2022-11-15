@@ -193,7 +193,9 @@ export type Coupon = TODO;
 
 export type FacetSearchCriteria = TODO;
 
-export type Order = TODO;
+export type Order = {
+  id?: number
+};
 
 export type OrderItem = TODO;
 
@@ -294,7 +296,7 @@ export type Review = {
 export type Facet = {
   products: Product[],
   tree: AgnosticCategoryTree,
-  facets: FilterGroup [],
+  facets: FilterGroup[],
   pagination: any
 };
 
@@ -368,9 +370,33 @@ export type UserShippingAddressSearchCriteria = TODO;
 
 export type ShippingAddress = TODO;
 
-export type ShippingMethod = TODO;
+export interface ShippingPrivacyInformation {
+  showDataPrivacyAgreementHint: boolean
+  id: number
+  parcelServiceId: number
+  parcelServiceName: string
+  parcelServiceAddress: string
+}
 
-export type ShippingProvider = TODO;
+export type ShippingMethod = {
+  parcelServicePresetId: number
+  parcelServicePresetName: string
+  parcelServiceType: number
+  parcelServiceId: number
+  parcelServiceName: string
+  shippingAmount: number
+  shippingPrivacyInformation: ShippingPrivacyInformation[]
+  isPostOffice: boolean
+  isParcelBox: boolean
+  icon: any
+  excludedPaymentMethodIds: number[]
+  allowedPaymentMethodNames: string[]
+};
+
+export interface ShippingProvider {
+  list: ShippingMethod[],
+  selected: number
+}
 
 export type Store = TODO;
 
@@ -407,6 +433,117 @@ export type RegisterParams = {
   password: string,
   firstName: string,
   lastName: string
+}
+
+export enum AddressType {
+  Billing = 1,
+  Shipping = 2
+}
+
+export enum AddressOptionType {
+  VATNumber = 1,
+  ExternalAddressID = 2,
+  EntryCertificate = 3,
+  Telephone = 4,
+  Email = 5,
+  PostNumber = 6,
+  PersonalId = 7,
+  BBFC = 8,
+  Birthday = 9,
+  SessionID = 10,
+  Title = 11,
+  ContactPerson = 12,
+  ExternalCustomerID = 13
+}
+
+export type AddressOption = {
+  id: number;
+  addressId: number;
+  typeId: AddressOptionType;
+  value: string;
+  position: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type AddressData = {
+    id: number;
+    gender: string;
+    name1?: string;
+    name2?: string;
+    name3?: string;
+    name4?: string;
+    address1: string;
+    address2: string;
+    address3?: string;
+    address4?: string;
+    postalCode: string;
+    town: string;
+    countryId: number;
+    stateId?: number;
+    readOnly: boolean;
+    checkedAt?: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    title: string;
+    contactPerson: string;
+    options: AddressOption[];
+}
+
+export type ShippingCountryName = {
+  country_id: string,
+  id: number,
+  language: string,
+  name: string
+}
+
+export type ShippingCountryState = {
+  countryId: string,
+  id: number,
+  isoCode: string,
+  isoCode3166: string,
+  name: string
+}
+
+export type ActiveShippingCountry = {
+  active: boolean,
+  currLangName: string,
+  id: number,
+  isCountryStateMandatory: boolean,
+  isoCode2: string,
+  isoCode3: string,
+  lang: string,
+  name: string,
+  names: ShippingCountryName[]
+  shippingDestinationId: number,
+  states: ShippingCountryState[]
+  storehouseId: number
+  vatCodes:string[]
+}
+
+export type PaymentMethod = {
+  id: number,
+  name: string,
+  fee: number,
+  icon: string,
+  description: string,
+  sourceUrl: string,
+  isSelectable: boolean,
+  key: string
+}
+
+export type PaymentProviders = { list: PaymentMethod[], selected: number}
+
+export type PreparePaymentResult = {
+    type: string,
+    value: any
+}
+
+export type CreateOrderResponse = {
+  events: any[],
+  data: {
+    order: Order
+  }
 }
 
 export interface PlentymarketsApiMethods {
@@ -456,11 +593,37 @@ export interface PlentymarketsApiMethods {
 
   getSession(initialRestCall: boolean): Promise<SessionResult>
 
-  loginUser(email: string, password): Promise<any>
+  loginUser(email: string, password: string): Promise<SessionResult>
 
   registerUser(params: RegisterParams): Promise<any>
 
-  logoutUser(): Promise<any>
+  logoutUser(): Promise<boolean>
+
+  getShippingProvider(): Promise<ShippingProvider>
+
+  selectShippingProvider(shippingId: number): Promise<string>
+
+  loginAsGuest(email: string): Promise<SessionResult>
+
+  loadAddresses(typeId: AddressType): Promise<AddressData[]>
+
+  saveAddress(typeId: AddressType, addressData: TODO): Promise<any>
+
+  getActiveShippingCountries(): Promise<ActiveShippingCountry[]>
+
+  getPaymentProviders(): Promise<PaymentProviders>
+
+  setPaymentProvider(paymentId: number): Promise<string>
+
+  additionalInformation(params: any): Promise<void>
+
+  preparePayment(): Promise<PreparePaymentResult>
+
+  placeOrder(): Promise<CreateOrderResponse>
+
+  executePayment(orderId: number, paymentId: number): Promise<void>
+
+  saveBillingIsShipping(): Promise<any>
 }
 
 export type Context = IntegrationContext<ClientInstance, Settings, ApiClientMethods<PlentymarketsApiMethods>>;
