@@ -58,6 +58,33 @@ Want to contribute? Ping us on `plentymarkets` channel on [our Discord](https://
 
 - If you need HMR on Api Client/Composables run `yarn dev:api-client` or `yarn dev:composables` on a separate terminal window.
 
+## Debug
+
+- Start dev server with debug flag
+`yarn dev:theme-debug`
+
+- Vs Code config
+`.vscode/launch.json`
+```
+ {
+  "configurations": [
+    {
+      "name": "Attach to VSF server",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "cwd": "${workspaceFolder}",
+      "trace": true,
+      "sourceMaps": true
+    },
+  ]
+}
+```
+
+When the dev server is ready execute the debug config.
+
+example file to debug: packages/api-client/src/index.server.ts
+
 ## Resources
 
 - [Vue Storefront Documentation](https://docs.vuestorefront.io/v2/)
