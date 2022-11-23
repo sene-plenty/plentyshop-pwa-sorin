@@ -58,7 +58,7 @@ Want to contribute? Ping us on `plentymarkets` channel on [our Discord](https://
 
 - If you need HMR on Api Client/Composables run `yarn dev:api-client` or `yarn dev:composables` on a separate terminal window.
 
-## Debug
+## Debugging
 
 - Start dev server with debug flag
 `yarn dev:theme-debug`
