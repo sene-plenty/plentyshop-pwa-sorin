@@ -41,7 +41,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-firstName'"
+            v-e2e="'shipping-firstName'"
             v-model="form.firstName"
             label="First name"
             name="firstName"
@@ -58,7 +58,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-lastName'"
+            v-e2e="'shipping-lastName'"
             v-model="form.lastName"
             label="Last name"
             name="lastName"
@@ -75,7 +75,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-streetName'"
+            v-e2e="'shipping-streetName'"
             v-model="form.streetName"
             label="Street name"
             name="streetName"
@@ -92,7 +92,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-apartment'"
+            v-e2e="'shipping-apartment'"
             v-model="form.apartment"
             label="House/Apartment number"
             name="apartment"
@@ -109,7 +109,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-city'"
+            v-e2e="'shipping-city'"
             v-model="form.city"
             label="City"
             name="city"
@@ -125,7 +125,7 @@
           slim
         >
           <SfSelect
-            v-e2e="'billing-state'"
+            v-e2e="'shipping-state'"
             v-model="form.state"
             label="State/Province"
             name="state"
@@ -150,7 +150,7 @@
           slim
         >
           <SfSelect
-            v-e2e="'billing-country'"
+            v-e2e="'shipping-country'"
             v-model="form.country"
             label="Country"
             name="country"
@@ -175,7 +175,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-zipcode'"
+            v-e2e="'shipping-zipcode'"
             v-model="form.postalCode"
             label="Zip-code"
             name="zipCode"
@@ -192,7 +192,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-phone'"
+            v-e2e="'shipping-phone'"
             v-model="form.phone"
             label="Phone number"
             name="phone"
@@ -204,7 +204,7 @@
         </ValidationProvider>
         <ValidationProvider v-if="!isAuthenticated" slim rules="required|email" v-slot="{ errors }">
           <SfInput
-            v-e2e="'login-modal-email'"
+            v-e2e="'shipping-email'"
             v-model="form.email"
             :valid="!errors[0]"
             :errorMessage="errors[0]"

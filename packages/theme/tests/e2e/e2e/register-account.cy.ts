@@ -31,10 +31,7 @@ context('Register account', () => {
     page.home.header.accountModalForm.contains('This field is required');
 
     page.home.header.accountModalForm.find('input#email').clear().type('wrong@email', { force: true });
-    page.home.header.accountModalForm.find('input#first-name').clear().type('Plenty', { force: true });
-    page.home.header.accountModalForm.find('input#last-name').clear().type('Markets', { force: true });
     page.home.header.accountModalForm.find('input#password').clear().type(CYPRESS_DEFAULT_ACCOUNT_PASSWORD, { force: true });
-    page.home.header.accountModalForm.find('label.sf-checkbox__container').click();
 
     cy.get('@submit').click();
     page.home.header.accountModalForm.contains('Invalid email');
@@ -46,10 +43,7 @@ context('Register account', () => {
     page.home.header.accountModalForm.find('button[type=submit]').as('submit');
 
     page.home.header.accountModalForm.find('input#email').clear().type(uniquePlentyMarketsEmail(CYPRESS_DEFAULT_ACCOUNT_EMAIL), { force: true });
-    page.home.header.accountModalForm.find('input#first-name').clear().type('Plenty', { force: true });
-    page.home.header.accountModalForm.find('input#last-name').clear().type('Markets', { force: true });
     page.home.header.accountModalForm.find('input#password').clear().type(CYPRESS_DEFAULT_ACCOUNT_PASSWORD, { force: true });
-    page.home.header.accountModalForm.find('label.sf-checkbox__container').click();
 
     cy.intercept('/api/plentymarkets/registerUser').as('networkRequests');
     cy.get('@submit').click();

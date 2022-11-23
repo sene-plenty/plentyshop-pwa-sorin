@@ -28,10 +28,6 @@ class Checkout {
     return el(`${this.step}-city`);
   }
 
-  get state(): Cypress.Chainable {
-    return el(`${this.step}-state`, 'input');
-  }
-
   get country(): Cypress.Chainable {
     return el(`${this.step}-country`, 'select');
   }
@@ -44,6 +40,16 @@ class Checkout {
     return el(`${this.step}-phone`);
   }
 
+  get email(): Cypress.Chainable {
+    return el(`${this.step}-email`, 'input');
+  }
+
+}
+
+class CheckoutLogin {
+  get continueAsGuest(): Cypress.Chainable {
+    return el('checkoutlogin-continue-as-guest');
+  }
 }
 
 class Shipping extends Checkout {
@@ -52,8 +58,8 @@ class Shipping extends Checkout {
     this.step = 'shipping';
   }
 
-  get continueToBillingButton(): Cypress.Chainable {
-    return cy.contains('Continue to billing');
+  get continueToPaymentButton(): Cypress.Chainable {
+    return cy.contains('Continue to payment');
   }
 
   get selectShippingButton(): Cypress.Chainable {
@@ -64,16 +70,16 @@ class Shipping extends Checkout {
     return el('shipping-method', 'label');
   }
 
-  public fillForm(customer: Customer) {
+  public fillForm(customer: Customer): void {
     this.firstName.type(customer.firstName);
     this.lastName.type(customer.lastName);
     this.streetName.type(customer.address.shipping.streetName);
     this.apartment.type(customer.address.shipping.apartment);
     this.city.type(customer.address.shipping.city);
     this.country.select(customer.address.shipping.country);
-    this.state.type(customer.address.shipping.state);
     this.zipcode.type(customer.address.shipping.zipcode);
     this.phone.type(customer.address.shipping.phone);
+    this.email.type(customer.address.shipping.email);
   }
 }
 
@@ -83,20 +89,20 @@ class Billing extends Checkout {
     this.step = 'billing';
   }
 
-  get continueToPaymentButton(): Cypress.Chainable {
-    return cy.contains('Continue to payment');
+  get continueToShipping(): Cypress.Chainable {
+    return cy.contains('Continue to shipping');
   }
 
-  public fillForm(customer: Customer) {
+  public fillForm(customer: Customer): void {
     this.firstName.type(customer.firstName);
     this.lastName.type(customer.lastName);
     this.streetName.type(customer.address.billing.streetName);
     this.apartment.type(customer.address.billing.apartment);
     this.city.type(customer.address.billing.city);
     this.country.select(customer.address.billing.country);
-    this.state.type(customer.address.billing.state);
     this.zipcode.type(customer.address.billing.zipcode);
     this.phone.type(customer.address.billing.phone);
+    this.email.type(customer.address.shipping.email);
   }
 
 }
@@ -122,6 +128,7 @@ class ThankYou {
 }
 
 export {
+  CheckoutLogin,
   Shipping,
   Billing,
   Payment,

@@ -23,6 +23,7 @@
             type="button"
             class="sf-button"
             @click="router.push('/checkout/billing')"
+            data-e2e="checkoutlogin-continue-as-guest"
           >
             {{ $t('Continue as guest') }}
     </SfButton>
