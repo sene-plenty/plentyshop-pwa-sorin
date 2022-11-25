@@ -25,19 +25,28 @@ context('Order placement', () => {
 
     page.product.header.openCart();
     page.cart.goToCheckoutButton.click();
+    cy.wait(500);
 
     page.checkout.checkoutlogin.continueAsGuest.click();
 
+    cy.intercept('/api/plentymarkets/*').as('networkRequests');
     page.checkout.billing.heading.should('be.visible');
     page.checkout.billing.fillForm(data.customer);
     page.checkout.billing.continueToShipping.click();
+    cy.wait('@networkRequests').wait(500);
 
+    cy.intercept('/api/plentymarkets/*').as('networkRequests');
     page.checkout.shipping.heading.should('be.visible');
     page.checkout.shipping.fillForm(data.customer);
     page.checkout.shipping.continueToPaymentButton.click();
+    cy.wait('@networkRequests').wait(500);
+
+    cy.intercept('/api/plentymarkets/*').as('networkRequests');
     page.checkout.payment.paymentMethods.first().click();
     page.checkout.payment.terms.click();
     page.checkout.payment.makeAnOrderButton.click();
+    cy.wait('@networkRequests').wait(1000);
+
     page.checkout.thankyou.heading.should('be.visible');
   });
 });
