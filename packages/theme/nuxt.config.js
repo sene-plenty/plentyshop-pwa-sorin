@@ -146,7 +146,7 @@ export default {
     ],
     extend(config, ctx) {
       if (ctx.isDev) {
-        config.devtool = 'eval-source-map'
+        config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
       }
     }
   },
