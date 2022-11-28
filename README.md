@@ -60,6 +60,10 @@ Want to contribute? Ping us on `plentymarkets` channel on [our Discord](https://
 
 ## Debugging
 
+TODO:
+There are still some problems with the source maps while debugging.
+Ask VSF team for help.
+
 - Start dev server with debug flag
 `yarn dev:theme-debug`
 
