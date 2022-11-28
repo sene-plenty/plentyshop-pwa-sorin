@@ -6,20 +6,20 @@
       "shipping": {
         "streetName": "1 VueStorefront Rd.",
         "apartment": "23",
-        "city": "Los Angeles",
-        "state": "California",
-        "country": "United States",
+        "city": "Paris",
+        "country": "France",
         "zipcode": "45678",
-        "phone": "123456789"
+        "phone": "123456789",
+        "email": "johndoe@mailinator.com"
       },
       "billing": {
         "streetName": "1 VueStorefront Rd.",
         "apartment": "23",
-        "city": "Los Angeles",
-        "state": "California",
-        "country": "United States",
+        "city": "Paris",
+        "country": "France",
         "zipcode": "45678",
-        "phone": "123456789"
+        "phone": "123456789",
+        "email": "johndoe@mailinator.com"
       }
     }
   }

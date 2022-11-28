@@ -67,6 +67,18 @@ More information:
 - [https://docs.cypress.io/api/commands/viewport#Syntax](https://docs.cypress.io/api/commands/viewport#Syntax);
 - [https://docs.cypress.io/guides/references/configuration#Configuration-File](https://docs.cypress.io/guides/references/configuration#Configuration-File).
 
+### Temporary necessary checkout.js fix
+
+Please remember that `./packages/theme/middleware/checkout.js` needs to have the following code commented in order for the tests to work:
+
+```javascript
+if (!cart.customerInvoiceAddressId) {
+  redirectWithLocalePath('billing');
+}
+```
+
+This is a quick hack which needs to be addressed soon, in [https://dev.azure.com/plentymarkets/plentymarkets/\_workitems/edit/35747](https://dev.azure.com/plentymarkets/plentymarkets/_workitems/edit/35747). :)
+
 ### Todo
 
 - Ensure we are using english for the tests;

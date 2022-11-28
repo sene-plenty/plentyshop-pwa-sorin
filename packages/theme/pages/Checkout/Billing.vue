@@ -196,7 +196,7 @@
         </ValidationProvider>
         <ValidationProvider v-if="!isAuthenticated" slim rules="required|email" v-slot="{ errors }">
           <SfInput
-            v-e2e="'login-modal-email'"
+            v-e2e="'billing-email'"
             v-model="form.email"
             :valid="!errors[0]"
             :errorMessage="errors[0]"
