@@ -20,7 +20,7 @@ const migrateVariationData = (oldCart: Cart, newCart: Cart) => {
     }
 
     const oldCartItemData = oldCart.items.find(oldCartItem => oldCartItem.id === newCartItem.id);
-    if (!oldCartItemData && !oldCartItemData.variation) {
+    if (!oldCartItemData?.variation) {
       return;
     }
 
