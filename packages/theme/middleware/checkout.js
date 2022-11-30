@@ -4,8 +4,8 @@ export default async ({ app, $vsf }) => {
   if (!currentPath) {
     return;
   }
-
-  const address = await $vsf.$plentymarkets.api.loadAddresses(1);
+  const BILLING_TYPE = 1;
+  const address = await $vsf.$plentymarkets.api.loadAddresses(BILLING_TYPE);
   const redirectWithLocalePath = path => app.context.redirect(app.localePath(path));
 
   switch (currentPath) {
