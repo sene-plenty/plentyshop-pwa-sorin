@@ -88,8 +88,7 @@ export default {
     const changeActivePage = async (title) => {
       if (title === 'Log out') {
         await logout();
-        router.push(context.root.localePath({ name: 'home' }));
-        return;
+        window.location.reload();
       }
 
       const slugifiedTitle = (title || '').toLowerCase().replace(' ', '-');
