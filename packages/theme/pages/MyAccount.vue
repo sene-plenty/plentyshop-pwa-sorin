@@ -17,7 +17,12 @@
         </SfContentPage>
 
         <SfContentPage title="Shipping details">
-          <ShippingDetails />
+          <SfShippingDetails
+            :account="account"
+            :countries="countries"
+            data-testid="shipping-details-tabs"
+            @update:shipping="{}"
+          />
         </SfContentPage>
 
         <SfContentPage title="Billing details">
@@ -40,14 +45,14 @@
   </div>
 </template>
 <script>
-import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
+import { SfBreadcrumbs, SfContentPages, SfShippingDetails } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useUser } from '@vue-storefront/plentymarkets';
+import { useBilling, useShipping, useUser, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
 import MyProfile from './MyAccount/MyProfile';
-import ShippingDetails from './MyAccount/ShippingDetails';
 import BillingDetails from './MyAccount/BillingDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
+import { onSSR } from '@vue-storefront/core';
 import {
   mapMobileObserver,
   unMapMobileObserver
@@ -59,8 +64,8 @@ export default {
     SfBreadcrumbs,
     SfContentPages,
     MyProfile,
-    ShippingDetails,
     BillingDetails,
+    SfShippingDetails,
     MyNewsletter,
     OrderHistory
   },
@@ -71,8 +76,24 @@ export default {
     const route = useRoute();
     const router = useRouter();
 
-    const { logout } = useUser();
+    const { user, load: loadUser, logout } = useUser();
+    const { load: loadBilling, billing } = useBilling();
+    const { load: loadShipping, shipping } = useShipping();
+    const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
+
+    const account = computed(() => {
+      return {
+        billing: billing.value,
+        shipping: shipping.value,
+        ...user.value
+      };
+    });
+
+    const countries = computed(() => {
+      return activeShippingCountries.value.map((country) => country.name);
+    });
+
     const activePage = computed(() => {
       const { pageName } = route.value.params;
 
@@ -83,6 +104,15 @@ export default {
       } else {
         return '';
       }
+    });
+
+    onSSR(async () => {
+      await loadUser();
+      await loadBilling();
+      await loadShipping();
+      await loadActiveShippingCountries();
+
+      console.log(account.value);
     });
 
     const changeActivePage = async (title) => {
@@ -102,7 +132,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { changeActivePage, activePage };
+    return { changeActivePage, activePage, account, countries };
   },
 
   data() {
