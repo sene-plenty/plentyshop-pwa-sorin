@@ -3,22 +3,22 @@ import {
   useUserShippingFactory,
   UseUserShippingFactoryParams
 } from '@vue-storefront/core';
-import type {
+import {
+  AddressData,
+  AddressType,
   UserShippingAddress as Address,
   UserShippingAddressItem as AddressItem
 } from '@vue-storefront/plentymarkets-api';
 
 const params: UseUserShippingFactoryParams<Address, AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  addAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.addAddress');
-    return {};
+  addAddress: async (context: Context, shippingDetails) => {
+    return await context.$plentymarkets.api.saveAddress(AddressType.Shipping, shippingDetails);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  deleteAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.deleteAddress');
-    return {};
+  deleteAddress: async (context: Context, shippingDetails: any) => {
+    await context.$plentymarkets.api.deleteAddress(shippingDetails.address.id, shippingDetails.customQuery.typeId);
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,9 +28,9 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.load');
-    return {};
+  load: async (context: Context, params): Promise<AddressData[]> => {
+    const data = await context.$plentymarkets.api.loadAddresses(AddressType.Shipping);
+    return data ?? null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

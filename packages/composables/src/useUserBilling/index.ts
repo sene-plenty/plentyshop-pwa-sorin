@@ -3,7 +3,9 @@ import {
   useUserBillingFactory,
   UseUserBillingFactoryParams
 } from '@vue-storefront/core';
-import type {
+import {
+  AddressData,
+  AddressType,
   UserBillingAddress as Address,
   UserBillingAddressItem as AddressItem
 } from '@vue-storefront/plentymarkets-api';
@@ -28,9 +30,9 @@ const params: UseUserBillingFactoryParams<Address, AddressItem> = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context, params) => {
-    console.log('Mocked: useUserBilling.load');
-    return {};
+  load: async (context: Context, params): Promise<AddressData[]> => {
+    const data = await context.$plentymarkets.api.loadAddresses(AddressType.Billing);
+    return data ?? null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

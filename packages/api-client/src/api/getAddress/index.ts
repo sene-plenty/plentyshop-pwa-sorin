@@ -30,6 +30,19 @@ export async function saveAddress(context: Context, typeId: AddressType = Addres
   return data.data;
 }
 
+export async function setAddressAsDefault(context: Context, addressId: number, typeId: number): Promise<any> {
+  const url: URL = new URL(`/rest/io/customer/address/${addressId}`, context.config.api.url);
+  url.searchParams.set('typeId', typeId.toString());
+  return await context.client.put(url.href);
+}
+
+export async function deleteAddress(context: Context, addressId: number, typeId: number): Promise<any> {
+  const url: URL = new URL(`/rest/io/customer/address/${addressId}`, context.config.api.url);
+  url.searchParams.set('typeId', typeId.toString());
+  const { data } = await context.client.delete(url.href);
+  return Boolean(data);
+}
+
 function mapAddressForServer(addressData): object {
   return {
     id: addressData.id,

@@ -18,15 +18,22 @@
 
         <SfContentPage title="Shipping details">
           <SfShippingDetails
-            :account="account"
+            :account="shippingAccount"
             :countries="countries"
             data-testid="shipping-details-tabs"
+            @delete-address="deleteShippingAddress($event)"
             @update:shipping="{}"
           />
         </SfContentPage>
 
         <SfContentPage title="Billing details">
-          <BillingDetails />
+          <SfShippingDetails
+            :shipping-tab-title="'Billing details'"
+            :account="billingAccount"
+            :countries="countries"
+            data-testid="shipping-details-tabs"
+            @update:shipping="{}"
+          />
         </SfContentPage>
 
         <SfContentPage title="My newsletter">
@@ -45,13 +52,14 @@
   </div>
 </template>
 <script>
-import { SfBreadcrumbs, SfContentPages, SfShippingDetails } from '@storefront-ui/vue';
+import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useBilling, useShipping, useUser, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
+import { useUser, useActiveShippingCountries, useUserBilling, useUserShipping } from '@vue-storefront/plentymarkets';
 import MyProfile from './MyAccount/MyProfile';
 import BillingDetails from './MyAccount/BillingDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
+import SfShippingDetails from '../components/MyAccount/SfShippingDetails';
 import { onSSR } from '@vue-storefront/core';
 import {
   mapMobileObserver,
@@ -77,15 +85,21 @@ export default {
     const router = useRouter();
 
     const { user, load: loadUser, logout } = useUser();
-    const { load: loadBilling, billing } = useBilling();
-    const { load: loadShipping, shipping } = useShipping();
+    const { load: loadBilling, billing } = useUserBilling();
+    const { load: loadShipping, deleteAddress: deleteShipping, shipping } = useUserShipping();
     const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
 
-    const account = computed(() => {
+    const shippingAccount = computed(() => {
       return {
-        billing: billing.value,
         shipping: shipping.value,
+        ...user.value
+      };
+    });
+
+    const billingAccount = computed(() => {
+      return {
+        shipping: billing.value,
         ...user.value
       };
     });
@@ -112,8 +126,11 @@ export default {
       await loadShipping();
       await loadActiveShippingCountries();
 
-      console.log(account.value);
     });
+
+    const deleteShippingAddress = async (address) => {
+      deleteShipping({address: address, customQuery: {typeId: 2}});
+    };
 
     const changeActivePage = async (title) => {
       if (title === 'Log out') {
@@ -132,7 +149,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { changeActivePage, activePage, account, countries };
+    return { changeActivePage, activePage, shippingAccount, billingAccount, countries, deleteShippingAddress };
   },
 
   data() {

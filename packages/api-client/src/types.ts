@@ -609,6 +609,10 @@ export interface PlentymarketsApiMethods {
 
   saveAddress(typeId: AddressType, addressData: TODO): Promise<any>
 
+  setAddressAsDefault(addressId: number, typeId: number): Promise<any>;
+
+  deleteAddress(addressId: number, typeId: number): Promise<any>;
+
   getActiveShippingCountries(): Promise<ActiveShippingCountry[]>
 
   getPaymentProviders(): Promise<PaymentProviders>
