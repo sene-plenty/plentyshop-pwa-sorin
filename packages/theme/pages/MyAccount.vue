@@ -21,8 +21,8 @@
             :account="shippingAccount"
             :countries="countries"
             data-testid="shipping-details-tabs"
-            @delete-address="deleteShippingAddress($event)"
-            @update:shipping="{}"
+            @delete-address="deleteAddress($event, 2)"
+            @update:shipping="addAddress($event, 2)"
           />
         </SfContentPage>
 
@@ -86,8 +86,8 @@ export default {
 
     const { user, load: loadUser, logout } = useUser();
     const { load: loadBilling, billing } = useUserBilling();
-    const { load: loadShipping, deleteAddress: deleteShipping, shipping } = useUserShipping();
-    const { load: loadActiveShippingCountries, result: activeShippingCountries } = useActiveShippingCountries();
+    const { load: loadShipping, addAddress: addShipping, deleteAddress: deleteShipping, shipping } = useUserShipping();
+    const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
 
     const shippingAccount = computed(() => {
@@ -102,10 +102,6 @@ export default {
         shipping: billing.value,
         ...user.value
       };
-    });
-
-    const countries = computed(() => {
-      return activeShippingCountries.value.map((country) => country.name);
     });
 
     const activePage = computed(() => {
@@ -128,8 +124,17 @@ export default {
 
     });
 
-    const deleteShippingAddress = async (address) => {
-      deleteShipping({address: address, customQuery: {typeId: 2}});
+    const addAddress = async (address, typeId) => {
+      if (typeId === 2) {
+        console.log(address);
+        addShipping({address: address});
+      }
+    };
+
+    const deleteAddress = async (address, typeId) => {
+      if (typeId === 2) {
+        deleteShipping({address: address});
+      }
     };
 
     const changeActivePage = async (title) => {
@@ -149,7 +154,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { changeActivePage, activePage, shippingAccount, billingAccount, countries, deleteShippingAddress };
+    return { changeActivePage, activePage, shippingAccount, billingAccount, countries, deleteAddress, addAddress };
   },
 
   data() {

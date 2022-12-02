@@ -56,7 +56,7 @@ function mapAddressForServer(addressData): object {
     contactPerson: '',
     address1: addressData.streetName,
     address2: addressData.apartment,
-    postalCode: addressData.postalCode,
+    postalCode: addressData.postalCode || addressData.zipCode,
     town: addressData.city,
     telephone: addressData.phone,
     stateId: addressData.state

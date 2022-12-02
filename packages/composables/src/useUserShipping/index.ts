@@ -13,12 +13,16 @@ import {
 const params: UseUserShippingFactoryParams<Address, AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, shippingDetails) => {
-    return await context.$plentymarkets.api.saveAddress(AddressType.Shipping, shippingDetails);
+    await context.$plentymarkets.api.saveAddress(AddressType.Shipping, shippingDetails.address);
+    const data = await context.$plentymarkets.api.loadAddresses(AddressType.Shipping);
+    return data ?? null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteAddress: async (context: Context, shippingDetails: any) => {
-    await context.$plentymarkets.api.deleteAddress(shippingDetails.address.id, shippingDetails.customQuery.typeId);
+    await context.$plentymarkets.api.deleteAddress(shippingDetails.address.id, AddressType.Shipping);
+    const data = await context.$plentymarkets.api.loadAddresses(AddressType.Shipping);
+    return data ?? null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

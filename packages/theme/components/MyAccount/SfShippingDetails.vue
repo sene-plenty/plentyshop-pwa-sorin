@@ -85,10 +85,10 @@
               >
                 <SfComponentSelectOption
                   v-for="countryOption in countries"
-                  :key="countryOption"
-                  :value="countryOption"
+                  :key="countryOption.id"
+                  :value="countryOption.id"
                 >
-                  {{ countryOption }}
+                  {{ countryOption.name }}
                 </SfComponentSelectOption>
               </SfComponentSelect>
               <SfInput
@@ -329,7 +329,7 @@ export default {
         account.shipping.push(shipping);
       }
       this.editAddress = false;
-      this.$emit('update:shipping', account);
+      this.$emit('update:shipping', shipping);
     },
     cancelEditing() {
       const account = this.account;
