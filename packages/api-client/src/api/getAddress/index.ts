@@ -58,7 +58,7 @@ function mapAddressForServer(addressData): object {
     address2: addressData.apartment,
     postalCode: addressData.postalCode || addressData.zipCode,
     town: addressData.city,
-    telephone: addressData.phone,
+    telephone: addressData.phone || addressData.phoneNumber,
     stateId: addressData.state
   };
 }
@@ -73,7 +73,7 @@ function mapAddressForClient(addressData: AddressData) {
     city: addressData.town,
     state: addressData.stateId?.toString(),
     country: addressData.countryId?.toString(),
-    postalCode: addressData.postalCode,
+    zipCode: addressData.postalCode,
     phone: null,
     email: 'null'
   };

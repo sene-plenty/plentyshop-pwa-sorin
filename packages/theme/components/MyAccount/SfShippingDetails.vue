@@ -86,7 +86,7 @@
                 <SfComponentSelectOption
                   v-for="countryOption in countries"
                   :key="countryOption.id"
-                  :value="countryOption.id"
+                  :value="countryOption.id.toString()"
                 >
                   {{ countryOption.name }}
                 </SfComponentSelectOption>
@@ -294,8 +294,8 @@ export default {
       const account = this.account;
       const shipping = account.shipping[index];
       if (index > -1) {
-        this.firstName = account.firstName;
-        this.lastName = account.lastName;
+        this.firstName = shipping.firstName;
+        this.lastName = shipping.lastName;
         this.streetName = shipping.streetName;
         this.apartment = shipping.apartment;
         this.city = shipping.city;
