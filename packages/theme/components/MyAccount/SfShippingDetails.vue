@@ -131,6 +131,7 @@
                 v-for="(shipping, key) in account.shipping"
                 :key="(shipping.id)"
                 class="shipping"
+                @click="setDefaultAddress(shipping)"
                 data-testid="shipping-address-list-item"
               >
                 <div class="shipping__content">
@@ -290,6 +291,9 @@ export default {
     };
   },
   methods: {
+    setDefaultAddress(shipping) {
+      this.$emit('set-default-address', shipping);
+    },
     changeAddress(index) {
       const account = this.account;
       const shipping = account.shipping[index];

@@ -21,8 +21,9 @@
             :account="shippingAccount"
             :countries="countries"
             data-testid="shipping-details-tabs"
-            @delete-address="deleteAddress($event, 2)"
-            @update:shipping="addAddress($event, 2)"
+            @set-default-address="setDefaultShipping({address: $event })"
+            @delete-address="deleteShipping({address: $event})"
+            @update:shipping="addShipping({address: $event})"
           />
         </SfContentPage>
 
@@ -32,7 +33,9 @@
             :account="billingAccount"
             :countries="countries"
             data-testid="shipping-details-tabs"
-            @update:shipping="{}"
+            @set-default-address="setDefaultBilling({address: $event })"
+            @delete-address="deleteBilling({address: $event})"
+            @update:shipping="addBilling({address: $event})"
           />
         </SfContentPage>
 
@@ -85,8 +88,8 @@ export default {
     const router = useRouter();
 
     const { user, load: loadUser, logout } = useUser();
-    const { load: loadBilling, billing } = useUserBilling();
-    const { load: loadShipping, addAddress: addShipping, deleteAddress: deleteShipping, shipping } = useUserShipping();
+    const { load: loadBilling, addAddress: addBilling, deleteAddress: deleteBilling, billing, setDefaultAddress: setDefaultBilling } = useUserBilling();
+    const { load: loadShipping, addAddress: addShipping, deleteAddress: deleteShipping, shipping, setDefaultAddress: setDefaultShipping } = useUserShipping();
     const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
 
@@ -124,19 +127,6 @@ export default {
 
     });
 
-    const addAddress = async (address, typeId) => {
-      if (typeId === 2) {
-        console.log(address);
-        addShipping({address: address});
-      }
-    };
-
-    const deleteAddress = async (address, typeId) => {
-      if (typeId === 2) {
-        deleteShipping({address: address});
-      }
-    };
-
     const changeActivePage = async (title) => {
       if (title === 'Log out') {
         await logout();
@@ -154,7 +144,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { changeActivePage, activePage, shippingAccount, billingAccount, countries, deleteAddress, addAddress };
+    return { changeActivePage, activePage, shippingAccount, billingAccount, countries, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling};
   },
 
   data() {

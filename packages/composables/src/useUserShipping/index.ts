@@ -38,9 +38,10 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  setDefaultAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.setDefaultAddress');
-    return {};
+  setDefaultAddress: async (context: Context, shippingDetails: any) => {
+    await context.$plentymarkets.api.setAddressAsDefault(shippingDetails.address.id, AddressType.Shipping);
+    const data = await context.$plentymarkets.api.loadAddresses(AddressType.Shipping);
+    return data ?? null;
   }
 };
 
