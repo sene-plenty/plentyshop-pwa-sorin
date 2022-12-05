@@ -488,6 +488,7 @@ export type AddressData = {
     title: string;
     contactPerson: string;
     options: AddressOption[];
+    primary: boolean;
 }
 
 export type ShippingCountryName = {

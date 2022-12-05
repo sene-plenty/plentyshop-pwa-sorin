@@ -132,6 +132,7 @@
                 :key="(shipping.id)"
                 class="shipping"
                 @click="setDefaultAddress(shipping)"
+                :class="{ primaryAaddress: shipping.primary === 1 }"
                 data-testid="shipping-address-list-item"
               >
                 <div class="shipping__content">
@@ -350,4 +351,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss";
+.primaryAaddress {
+  background: var(--content-pages-sidebar-background);
+}
+.shipping {
+  cursor: pointer;
+}
 </style>
