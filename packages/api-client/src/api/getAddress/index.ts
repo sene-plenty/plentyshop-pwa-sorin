@@ -75,6 +75,7 @@ function mapAddressForClient(addressData: AddressData) {
     country: addressData.countryId?.toString(),
     zipCode: addressData.postalCode,
     phoneNumber: null,
+    phone: null,
     email: 'null',
     primary: addressData.primary
   };
@@ -83,6 +84,7 @@ function mapAddressForClient(addressData: AddressData) {
     switch (option.typeId) {
       case AddressOptionType.Telephone:
         address.phoneNumber = option.value;
+        address.phone = option.value;
         break;
       case AddressOptionType.Email:
         address.email = option.value;
