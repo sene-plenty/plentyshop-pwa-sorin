@@ -600,6 +600,8 @@ export interface PlentymarketsApiMethods {
 
   logoutUser(): Promise<boolean>
 
+  changePassword(currentPassword, newPassword): Promise<boolean>
+
   getShippingProvider(): Promise<ShippingProvider>
 
   selectShippingProvider(shippingId: number): Promise<string>

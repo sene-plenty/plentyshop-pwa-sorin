@@ -13,7 +13,12 @@
     >
       <SfContentCategory title="Personal Details">
         <SfContentPage title="My profile">
-          <MyProfile />
+          <SfMyProfile
+            :account="user"
+            data-testid="my-profile-tabs"
+            @update:personal="user = { ...user, ...$event }"
+            @update:password="changePassword({ currentUser: user, current: $event.currentPassword, new: $event.newPassword })"
+          />
         </SfContentPage>
 
         <SfContentPage title="Shipping details">
@@ -58,11 +63,11 @@
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
 import { useUser, useActiveShippingCountries, useUserBilling, useUserShipping } from '@vue-storefront/plentymarkets';
-import MyProfile from './MyAccount/MyProfile';
 import BillingDetails from './MyAccount/BillingDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import SfShippingDetails from '../components/MyAccount/SfShippingDetails';
+import SfMyProfile from '../components/MyAccount/SfMyProfile.vue';
 import { onSSR } from '@vue-storefront/core';
 import {
   mapMobileObserver,
@@ -74,7 +79,7 @@ export default {
   components: {
     SfBreadcrumbs,
     SfContentPages,
-    MyProfile,
+    SfMyProfile,
     BillingDetails,
     SfShippingDetails,
     MyNewsletter,
@@ -87,7 +92,7 @@ export default {
     const route = useRoute();
     const router = useRouter();
 
-    const { user, load: loadUser, logout } = useUser();
+    const { user, load: loadUser, logout, changePassword } = useUser();
     const { load: loadBilling, addAddress: addBilling, deleteAddress: deleteBilling, billing, setDefaultAddress: setDefaultBilling } = useUserBilling();
     const { load: loadShipping, addAddress: addShipping, deleteAddress: deleteShipping, shipping, setDefaultAddress: setDefaultShipping } = useUserShipping();
     const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
@@ -144,7 +149,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { changeActivePage, activePage, shippingAccount, billingAccount, countries, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling};
+    return { changeActivePage, activePage, shippingAccount, billingAccount, countries, user, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling, changePassword};
   },
 
   data() {
