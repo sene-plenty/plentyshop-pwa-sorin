@@ -307,13 +307,17 @@ export default {
     ValidationObserver
   },
   props: {
-    shippingTabTitle: {
-      type: String,
-      default: 'Shipping details'
-    },
     addresses: {
       type: Array,
       default: () => []
+    },
+    countries: {
+      type: Array,
+      default: () => []
+    },
+    shippingTabTitle: {
+      type: String,
+      default: 'Shipping details'
     },
     transition: {
       type: String,
@@ -326,10 +330,6 @@ export default {
     shipingTabDescription: {
       type: String,
       default: ''
-    },
-    countries: {
-      type: Array,
-      default: () => []
     }
   },
 

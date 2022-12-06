@@ -179,5 +179,7 @@ export default {
   'Country': 'Country',
   'Change the address': 'Change the address',
   'Update the address':  'Update the address',
-  'Add new address': 'Add new address'
+  'Add new address': 'Add new address',
+  'My profile': 'My profile',
+  'Personal Details': 'Personal Details'
 };

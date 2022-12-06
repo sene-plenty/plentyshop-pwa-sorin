@@ -11,8 +11,8 @@
       class="my-account"
       @click:change="changeActivePage"
     >
-      <SfContentCategory title="Personal Details">
-        <SfContentPage title="My profile">
+      <SfContentCategory :title="$t('Personal Details')">
+        <SfContentPage :title="$t('My profile')">
           <SfMyProfile
             :account="user"
             data-testid="my-profile-tabs"
