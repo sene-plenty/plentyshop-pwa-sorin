@@ -358,9 +358,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss";
-.shipping {
-  cursor: pointer;
-}
 .primary-icon {
   margin-right: var(--spacer-sm);
 }
