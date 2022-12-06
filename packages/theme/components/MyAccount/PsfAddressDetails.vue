@@ -8,7 +8,7 @@
         class="tab-orphan"
         data-testid="shipping-details-tabs"
       >
-        <SfTab :title="changeAddressTabTitle">
+        <SfTab :title="$t('Change the address')">
           <slot name="change-address-description">
             <p class="message">
               {{ changeAddressDescription }}
@@ -26,7 +26,7 @@
                   <SfInput
                     v-e2e="'billing-firstName'"
                     v-model="form.firstName"
-                    :label="inputsLabels[0]"
+                    :label="$t('First Name')"
                     name="firstName"
                     required
                     :valid="!errors[0]"
@@ -43,7 +43,7 @@
                   <SfInput
                     v-model="form.lastName"
                     name="lastName"
-                    :label="inputsLabels[1]"
+                    :label="$t('Last Name')"
                     required
                     :valid="!errors[0]"
                     :errorMessage="errors[0]"
@@ -59,7 +59,7 @@
                   <SfInput
                     v-model="form.streetName"
                     name="streetName"
-                    :label="inputsLabels[2]"
+                    :label="$t('Street Name')"
                     required
                     :valid="!errors[0]"
                     :errorMessage="errors[0]"
@@ -75,7 +75,7 @@
                   <SfInput
                     v-model="form.apartment"
                     name="apartment"
-                    :label="inputsLabels[3]"
+                    :label="$t('House/Apartment number')"
                     required
                     class="form__element"
                     :valid="!errors[0]"
@@ -91,7 +91,7 @@
                   <SfInput
                     v-model="form.city"
                     name="city"
-                    :label="inputsLabels[4]"
+                    :label="$t('City')"
                     required
                     :valid="!errors[0]"
                     :errorMessage="errors[0]"
@@ -107,7 +107,7 @@
                   <SfComponentSelect
                     v-model="form.state"
                     name="state"
-                    :label="inputsLabels[5]"
+                    :label="$t('State/Province')"
                     :disabled="states.length <= 0"
                     required
                     :valid="!errors[0]"
@@ -133,7 +133,7 @@
                   <SfInput
                     v-model="form.zipCode"
                     name="zipCode"
-                    :label="inputsLabels[6]"
+                    :label="$t('Zip-Code')"
                     required
                     :valid="!errors[0]"
                     :errorMessage="errors[0]"
@@ -149,7 +149,7 @@
                   <SfComponentSelect
                     v-model="form.country"
                     name="country"
-                    :label="selectLabel"
+                    :label="$t('Country')"
                     required
                     :valid="!errors[0]"
                     :errorMessage="errors[0]"
@@ -174,7 +174,7 @@
                   <SfInput
                     v-model="form.phoneNumber"
                     name="phone"
-                    :label="inputsLabels[7]"
+                    :label="$t('Phone number')"
                     required
                     :valid="!errors[0]"
                     :errorMessage="errors[0]"
@@ -183,22 +183,20 @@
                 </ValidationProvider>
 
                 <SfButton
-                  v-if="updateAddressButtonText"
                   type="submit"
                   @click.prevent="handleSubmit(updateAddress)"
                   class="action-button"
                   data-testid="update-address-button"
                 >
-                  {{ updateAddressButtonText }}</SfButton
+                  {{ $t('Update the address') }}</SfButton
                 >
                 <SfButton
-                  v-if="cancelButtonText"
                   type="button"
                   class="action-button color-secondary cancel-button"
                   data-testid="update-address-button"
                   @click="cancelEditing"
                 >
-                  {{ cancelButtonText }}</SfButton
+                  {{ $t('Cancel') }}</SfButton
                 >
               </slot>
             </form>
@@ -257,31 +255,28 @@
                     @click="setDefaultAddress(address)"
                   />
                   <SfButton
-                    v-if="changeButtonText"
                     data-testid="change-address"
                     @click="changeAddress(key, address)"
                   >
-                    {{ changeButtonText }}
+                    {{ $t('Change') }}
                   </SfButton>
                   <SfButton
-                    v-if="deleteButtonText"
                     class="shipping__button-delete desktop-only"
                     data-testid="delete-address"
                     @click="deleteAddress(address)"
                   >
-                    {{ deleteButtonText }}
+                    {{ $t('Delete') }}
                   </SfButton>
                 </div>
               </div>
             </slot>
           </transition-group>
           <SfButton
-            v-if="addNewAddressButtonText"
             class="action-button"
             data-testid="add-new-address"
             @click="changeAddress(-1)"
           >
-            {{ addNewAddressButtonText }}</SfButton
+            {{ $t('Add new address') }}</SfButton
           >
         </SfTab>
       </SfTabs>
@@ -316,10 +311,6 @@ export default {
       type: String,
       default: 'Shipping details'
     },
-    changeAddressTabTitle: {
-      type: String,
-      default: 'Change the address'
-    },
     addresses: {
       type: Array,
       default: () => []
@@ -331,26 +322,6 @@ export default {
     changeAddressDescription: {
       type: String,
       default: ''
-    },
-    changeButtonText: {
-      type: String,
-      default: 'Change'
-    },
-    deleteButtonText: {
-      type: String,
-      default: 'Delete'
-    },
-    addNewAddressButtonText: {
-      type: String,
-      default: 'Add new address'
-    },
-    updateAddressButtonText: {
-      type: String,
-      default: 'Update the address'
-    },
-    cancelButtonText: {
-      type: String,
-      default: 'Cancel'
     },
     inputsLabels: {
       type: Array,
@@ -364,10 +335,6 @@ export default {
         'Zip-Code',
         'Phone number'
       ]
-    },
-    selectLabel: {
-      type: String,
-      default: 'Country'
     },
     shipingTabDescription: {
       type: String,

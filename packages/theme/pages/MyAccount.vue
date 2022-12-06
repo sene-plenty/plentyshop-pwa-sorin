@@ -63,7 +63,6 @@
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
 import { useUser, useActiveShippingCountries, useUserBilling, useUserShipping } from '@vue-storefront/plentymarkets';
-import BillingDetails from './MyAccount/BillingDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import PsfAddressDetails from '../components/MyAccount/PsfAddressDetails';
@@ -80,7 +79,6 @@ export default {
     SfBreadcrumbs,
     SfContentPages,
     SfMyProfile,
-    BillingDetails,
     PsfAddressDetails,
     MyNewsletter,
     OrderHistory
@@ -115,7 +113,6 @@ export default {
       await loadBilling();
       await loadShipping();
       await loadActiveShippingCountries();
-
     });
 
     const changeActivePage = async (title) => {
