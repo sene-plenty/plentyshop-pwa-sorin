@@ -323,19 +323,6 @@ export default {
       type: String,
       default: ''
     },
-    inputsLabels: {
-      type: Array,
-      default: () => [
-        'First Name',
-        'Last Name',
-        'Street Name',
-        'House/Apartment number',
-        'City',
-        'State/Province',
-        'Zip-Code',
-        'Phone number'
-      ]
-    },
     shipingTabDescription: {
       type: String,
       default: ''

@@ -51,7 +51,7 @@ export default {
   'Personal details': 'Personal details',
   'Edit': 'Edit',
   'Shipping details': 'Shipping details',
-  'Billing address': 'Billing address',
+  'Billing details': 'Billing details',
   'Same as shipping address': 'Same as shipping address',
   'Payment method': 'Payment method',
   'Apply': 'Apply',
@@ -167,5 +167,17 @@ export default {
   'Login Register': 'Login / Register',
   'Login Register Text': 'You can login to your account or register a new one.',
   'Payment Method' : "Payment Method",
-  'Shipping Method' : "Shipping Method"
+  'Shipping Method' : "Shipping Method",
+  'First Name': 'First Name',
+  'Last Name': 'Last Name',
+  'Street Name': 'Street Name',
+  'House/Apartment number': 'House/Apartment number',
+  'City': 'City',
+  'State/Province': 'State/Province',
+  'Zip-Code': 'Zip-Code',
+  'Phone number': 'Phone number',
+  'Country': 'Country',
+  'Change the address': 'Change the address',
+  'Update the address':  'Update the address',
+  'Add new address': 'Add new address'
 };

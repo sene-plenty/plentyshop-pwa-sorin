@@ -21,8 +21,9 @@
           />
         </SfContentPage>
 
-        <SfContentPage title="Shipping details">
+        <SfContentPage :title="$t('Shipping details')">
           <PsfAddressDetails
+            :shipping-tab-title="$t('Shipping details')"
             :addresses="shipping"
             :countries="countries"
             data-testid="shipping-details-tabs"
@@ -32,9 +33,9 @@
           />
         </SfContentPage>
 
-        <SfContentPage title="Billing details">
+        <SfContentPage :title="$t('Billing details')">
           <PsfAddressDetails
-            :shipping-tab-title="'Billing details'"
+            :shipping-tab-title="$t('Billing details')"
             :addresses="billing"
             :countries="countries"
             data-testid="shipping-details-tabs"
