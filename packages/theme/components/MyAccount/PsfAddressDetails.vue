@@ -53,15 +53,29 @@
                 required
                 class="form__element form__element--half"
               />
-              <SfInput
+              <SfComponentSelect
                 v-model="form.state"
-                name="state"
+                name="country"
                 :label="inputsLabels[5]"
+                :disabled="states.length <= 0"
                 required
                 class="
-                  form__element form__element--half form__element--half-even
+                  sf-component-select--underlined
+                  form__select
+                  form__element
+                  form__element--half
+                  form__element--half-even
                 "
-              />
+                data-testid="country"
+              >
+                <SfComponentSelectOption
+                  v-for="state in states"
+                  :key="state.id"
+                  :value="state.id.toString()"
+                >
+                  {{ state.name }}
+                </SfComponentSelectOption>
+              </SfComponentSelect>
               <SfInput
                 v-model="form.zipCode"
                 name="zipCode"
@@ -143,7 +157,7 @@
                       {{ address.streetName }} {{ address.apartment }}<br />{{
                         address.zipCode
                       }}
-                      {{ address.city }},<br />{{ address.country }}
+                      {{ address.city }},<br />{{ getCountryName(address.country) }}
                     </p>
                     <p class="shipping__address">
                       {{ address.phoneNumber }}
@@ -207,7 +221,7 @@ import {
   SfComponentSelect,
   SfIcon
 } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
+import { ref, watch } from '@nuxtjs/composition-api';
 
 export default {
   name: 'PsfAddressDetails',
@@ -290,6 +304,7 @@ export default {
 
     const editAddress = ref(false);
     const editedAddress = ref(-1);
+    const states = ref([]);
     const form = ref({
       firstName: '',
       lastName: '',
@@ -300,6 +315,19 @@ export default {
       zipCode: '',
       country: '',
       phoneNumber: ''
+    });
+
+    const getCountryName = (id) => {
+      const country = props.countries.find((country) => Number(country.id) === Number(id));
+      return country.name || country.isoCode2;
+    };
+
+    watch(() => form.value.country, async (newValue) => {
+      const country = props.countries.find((country) => Number(country.id) === Number(newValue));
+      if (country?.states <= 0) {
+        form.value.state = null;
+      }
+      states.value = country?.states || [];
     });
 
     const setDefaultAddress = (shipping) => {
@@ -351,7 +379,7 @@ export default {
       emit('delete-address', address);
     };
 
-    return { setDefaultAddress, changeAddress, updateAddress, deleteAddress, cancelEditing, form, editAddress, editedAddress };
+    return { form, editAddress, editedAddress, states, setDefaultAddress, changeAddress, updateAddress, deleteAddress, cancelEditing, getCountryName};
   }
 };
 </script>

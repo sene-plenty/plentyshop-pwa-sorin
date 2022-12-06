@@ -135,7 +135,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { changeActivePage, activePage, billing, shipping, countries, user, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling, changePassword};
+    return { activePage, billing, shipping, countries, user, changeActivePage, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling, changePassword};
   },
 
   data() {
