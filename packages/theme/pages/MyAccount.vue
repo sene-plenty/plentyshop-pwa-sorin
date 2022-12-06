@@ -22,8 +22,8 @@
         </SfContentPage>
 
         <SfContentPage title="Shipping details">
-          <SfShippingDetails
-            :account="shippingAccount"
+          <PsfAddressDetails
+            :addresses="shipping"
             :countries="countries"
             data-testid="shipping-details-tabs"
             @set-default-address="setDefaultShipping({address: $event })"
@@ -33,9 +33,9 @@
         </SfContentPage>
 
         <SfContentPage title="Billing details">
-          <SfShippingDetails
+          <PsfAddressDetails
             :shipping-tab-title="'Billing details'"
-            :account="billingAccount"
+            :addresses="billing"
             :countries="countries"
             data-testid="shipping-details-tabs"
             @set-default-address="setDefaultBilling({address: $event })"
@@ -66,7 +66,7 @@ import { useUser, useActiveShippingCountries, useUserBilling, useUserShipping } 
 import BillingDetails from './MyAccount/BillingDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
-import SfShippingDetails from '../components/MyAccount/SfShippingDetails';
+import PsfAddressDetails from '../components/MyAccount/PsfAddressDetails';
 import SfMyProfile from '../components/MyAccount/SfMyProfile.vue';
 import { onSSR } from '@vue-storefront/core';
 import {
@@ -81,7 +81,7 @@ export default {
     SfContentPages,
     SfMyProfile,
     BillingDetails,
-    SfShippingDetails,
+    PsfAddressDetails,
     MyNewsletter,
     OrderHistory
   },
@@ -97,20 +97,6 @@ export default {
     const { load: loadShipping, addAddress: addShipping, deleteAddress: deleteShipping, shipping, setDefaultAddress: setDefaultShipping } = useUserShipping();
     const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
-
-    const shippingAccount = computed(() => {
-      return {
-        shipping: shipping.value,
-        ...user.value
-      };
-    });
-
-    const billingAccount = computed(() => {
-      return {
-        shipping: billing.value,
-        ...user.value
-      };
-    });
 
     const activePage = computed(() => {
       const { pageName } = route.value.params;
@@ -149,7 +135,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { changeActivePage, activePage, shippingAccount, billingAccount, countries, user, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling, changePassword};
+    return { changeActivePage, activePage, billing, shipping, countries, user, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling, changePassword};
   },
 
   data() {

@@ -17,14 +17,14 @@
           <div class="form">
             <slot name="form">
               <SfInput
-                v-model="firstName"
+                v-model="form.firstName"
                 name="firstName"
                 :label="inputsLabels[0]"
                 required
                 class="form__element form__element--half"
               />
               <SfInput
-                v-model="lastName"
+                v-model="form.lastName"
                 name="lastName"
                 :label="inputsLabels[1]"
                 required
@@ -33,28 +33,28 @@
                 "
               />
               <SfInput
-                v-model="streetName"
+                v-model="form.streetName"
                 name="streetName"
                 :label="inputsLabels[2]"
                 required
                 class="form__element"
               />
               <SfInput
-                v-model="apartment"
+                v-model="form.apartment"
                 name="apartment"
                 :label="inputsLabels[3]"
                 required
                 class="form__element"
               />
               <SfInput
-                v-model="city"
+                v-model="form.city"
                 name="city"
                 :label="inputsLabels[4]"
                 required
                 class="form__element form__element--half"
               />
               <SfInput
-                v-model="state"
+                v-model="form.state"
                 name="state"
                 :label="inputsLabels[5]"
                 required
@@ -63,14 +63,14 @@
                 "
               />
               <SfInput
-                v-model="zipCode"
+                v-model="form.zipCode"
                 name="zipCode"
                 :label="inputsLabels[6]"
                 required
                 class="form__element form__element--half"
               />
               <SfComponentSelect
-                v-model="country"
+                v-model="form.country"
                 name="country"
                 :label="selectLabel"
                 required
@@ -92,7 +92,7 @@
                 </SfComponentSelectOption>
               </SfComponentSelect>
               <SfInput
-                v-model="phoneNumber"
+                v-model="form.phoneNumber"
                 name="phone"
                 :label="inputsLabels[7]"
                 required
@@ -128,25 +128,25 @@
           <transition-group tag="div" :name="transition" class="shipping-list">
             <slot name="shipping-list">
               <div
-                v-for="(shipping, key) in account.shipping"
-                :key="(shipping.id)"
+                v-for="(address, key) in addresses"
+                :key="(address.id)"
                 class="shipping"
-                :class="{ primaryAaddress: shipping.primary === 1 }"
+                :class="{ primaryAaddress: address.primary === 1 }"
                 data-testid="shipping-address-list-item"
               >
                 <div class="shipping__content">
                   <slot name="shipping-details">
                     <p class="shipping__address">
                       <span class="shipping__client-name"
-                        >{{ shipping.firstName }} {{ shipping.lastName }}</span
+                        >{{ address.firstName }} {{ address.lastName }}</span
                       ><br />
-                      {{ shipping.streetName }} {{ shipping.apartment }}<br />{{
-                        shipping.zipCode
+                      {{ address.streetName }} {{ address.apartment }}<br />{{
+                        address.zipCode
                       }}
-                      {{ shipping.city }},<br />{{ shipping.country }}
+                      {{ address.city }},<br />{{ address.country }}
                     </p>
                     <p class="shipping__address">
-                      {{ shipping.phoneNumber }}
+                      {{ address.phoneNumber }}
                     </p>
                   </slot>
                 </div>
@@ -157,20 +157,20 @@
                     size="14px"
                     role="button"
                     class="smartphone-only"
-                    @click="deleteAddress(key, shipping)"
+                    @click="deleteAddress(key, address)"
                   />
                   <SfIcon
-                    :icon="shipping.primary ? 'heart_fill' : 'heart'"
+                    :icon="address.primary ? 'heart_fill' : 'heart'"
                     color="gray"
                     size="xxl"
                     class="primary-icon"
                     role="button"
-                    @click="setDefaultAddress(shipping)"
+                    @click="setDefaultAddress(address)"
                   />
                   <SfButton
                     v-if="changeButtonText"
                     data-testid="change-address"
-                    @click="changeAddress(key, shipping)"
+                    @click="changeAddress(key, address)"
                   >
                     {{ changeButtonText }}
                   </SfButton>
@@ -178,7 +178,7 @@
                     v-if="deleteButtonText"
                     class="shipping__button-delete desktop-only"
                     data-testid="delete-address"
-                    @click="deleteAddress(key, shipping)"
+                    @click="deleteAddress(address)"
                   >
                     {{ deleteButtonText }}
                   </SfButton>
@@ -207,8 +207,10 @@ import {
   SfComponentSelect,
   SfIcon
 } from '@storefront-ui/vue';
+import { ref } from '@nuxtjs/composition-api';
+
 export default {
-  name: 'SfShippingDetails',
+  name: 'PsfAddressDetails',
   components: {
     SfTabs,
     SfInput,
@@ -225,9 +227,9 @@ export default {
       type: String,
       default: 'Change the address'
     },
-    account: {
-      type: Object,
-      default: () => ({})
+    addresses: {
+      type: Array,
+      default: () => ([])
     },
     transition: {
       type: String,
@@ -283,10 +285,12 @@ export default {
       default: () => []
     }
   },
-  data() {
-    return {
-      editAddress: false,
-      editedAddress: -1,
+
+  setup(props, { emit }) {
+
+    const editAddress = ref(false);
+    const editedAddress = ref(-1);
+    const form = ref({
       firstName: '',
       lastName: '',
       streetName: '',
@@ -296,63 +300,58 @@ export default {
       zipCode: '',
       country: '',
       phoneNumber: ''
+    });
+
+    const setDefaultAddress = (shipping) => {
+      emit('set-default-address', shipping);
     };
-  },
-  methods: {
-    setDefaultAddress(shipping) {
-      this.$emit('set-default-address', shipping);
-    },
-    changeAddress(index) {
-      const account = this.account;
-      const shipping = account.shipping[index];
+
+    const changeAddress = (index) => {
+      const address = props.addresses[index];
       if (index > -1) {
-        this.firstName = shipping.firstName;
-        this.lastName = shipping.lastName;
-        this.streetName = shipping.streetName;
-        this.apartment = shipping.apartment;
-        this.city = shipping.city;
-        this.state = shipping.state;
-        this.zipCode = shipping.zipCode;
-        this.country = shipping.country;
-        this.phoneNumber = shipping.phoneNumber;
-        this.editedAddress = index;
-      }
-      this.editAddress = true;
-      this.$emit('change-address', index);
-    },
-    updateAddress() {
-      const account = { ...this.account };
-      const shipping = {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        apartment: this.apartment,
-        streetName: this.streetName,
-        city: this.city,
-        state: this.state,
-        zipCode: this.zipCode,
-        country: this.country,
-        phoneNumber: this.phoneNumber
-      };
-      const index = this.editedAddress;
-      if (index > -1) {
-        account.shipping[index] = shipping;
-        this.editedAddress = -1;
+        form.value.firstName = address.firstName;
+        form.value.lastName = address.lastName;
+        form.value.streetName = address.streetName;
+        form.value.apartment = address.apartment;
+        form.value.city = address.city;
+        form.value.state = address.state;
+        form.value.zipCode = address.zipCode;
+        form.value.country = address.country;
+        form.value.phoneNumber = address.phoneNumber;
+        editedAddress.value = index;
       } else {
-        account.shipping.push(shipping);
+        form.value = {};
       }
-      this.editAddress = false;
-      this.$emit('update:shipping', shipping);
-    },
-    cancelEditing() {
-      const account = this.account;
-      this.editAddress = false;
-      this.$emit('cancel-editing', account);
-    },
-    deleteAddress(index, address) {
-      const account = { ...this.account };
-      account.shipping.splice(index, 1);
-      this.$emit('delete-address', address);
-    }
+      editAddress.value = true;
+      emit('change-address', index);
+    };
+
+    const updateAddress = () => {
+      const address = {
+        firstName: form.value.firstName,
+        lastName: form.value.lastName,
+        apartment: form.value.apartment,
+        streetName: form.value.streetName,
+        city: form.value.city,
+        state: form.value.state,
+        zipCode: form.value.zipCode,
+        country: form.value.country,
+        phoneNumber: form.value.phoneNumber
+      };
+
+      editAddress.value = false;
+      emit('update:shipping', address);
+    };
+
+    const cancelEditing = () => {
+      editAddress.value = false;
+    };
+
+    const deleteAddress = (address) => {
+      emit('delete-address', address);
+    };
+
+    return { setDefaultAddress, changeAddress, updateAddress, deleteAddress, cancelEditing, form, editAddress, editedAddress };
   }
 };
 </script>
@@ -360,5 +359,6 @@ export default {
 @import "~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss";
 .primary-icon {
   margin-right: var(--spacer-sm);
+  cursor: pointer;
 }
 </style>
