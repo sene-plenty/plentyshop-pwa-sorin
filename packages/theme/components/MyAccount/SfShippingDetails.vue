@@ -131,7 +131,6 @@
                 v-for="(shipping, key) in account.shipping"
                 :key="(shipping.id)"
                 class="shipping"
-                @click="setDefaultAddress(shipping)"
                 :class="{ primaryAaddress: shipping.primary === 1 }"
                 data-testid="shipping-address-list-item"
               >
@@ -159,6 +158,14 @@
                     role="button"
                     class="smartphone-only"
                     @click="deleteAddress(key, shipping)"
+                  />
+                  <SfIcon
+                    :icon="shipping.primary ? 'heart_fill' : 'heart'"
+                    color="gray"
+                    size="xxl"
+                    class="primary-icon"
+                    role="button"
+                    @click="setDefaultAddress(shipping)"
                   />
                   <SfButton
                     v-if="changeButtonText"
@@ -351,10 +358,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss";
-.primaryAaddress {
-  background: var(--content-pages-sidebar-background);
-}
 .shipping {
   cursor: pointer;
+}
+.primary-icon {
+  margin-right: var(--spacer-sm);
 }
 </style>
