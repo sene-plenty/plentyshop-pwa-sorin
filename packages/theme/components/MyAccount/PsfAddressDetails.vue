@@ -14,122 +14,195 @@
               {{ changeAddressDescription }}
             </p>
           </slot>
-          <div class="form">
-            <slot name="form">
-              <SfInput
-                v-model="form.firstName"
-                name="firstName"
-                :label="inputsLabels[0]"
-                required
-                class="form__element form__element--half"
-              />
-              <SfInput
-                v-model="form.lastName"
-                name="lastName"
-                :label="inputsLabels[1]"
-                required
-                class="
-                  form__element form__element--half form__element--half-even
-                "
-              />
-              <SfInput
-                v-model="form.streetName"
-                name="streetName"
-                :label="inputsLabels[2]"
-                required
-                class="form__element"
-              />
-              <SfInput
-                v-model="form.apartment"
-                name="apartment"
-                :label="inputsLabels[3]"
-                required
-                class="form__element"
-              />
-              <SfInput
-                v-model="form.city"
-                name="city"
-                :label="inputsLabels[4]"
-                required
-                class="form__element form__element--half"
-              />
-              <SfComponentSelect
-                v-model="form.state"
-                name="country"
-                :label="inputsLabels[5]"
-                :disabled="states.length <= 0"
-                required
-                class="
-                  sf-component-select--underlined
-                  form__select
-                  form__element
-                  form__element--half
-                  form__element--half-even
-                "
-                data-testid="country"
-              >
-                <SfComponentSelectOption
-                  v-for="state in states"
-                  :key="state.id"
-                  :value="state.id.toString()"
+          <ValidationObserver v-slot="{ handleSubmit }">
+            <form class="form">
+              <slot name="form">
+                <ValidationProvider
+                  name="firstName"
+                  rules="required|min:2"
+                  v-slot="{ errors }"
+                  slim
                 >
-                  {{ state.name }}
-                </SfComponentSelectOption>
-              </SfComponentSelect>
-              <SfInput
-                v-model="form.zipCode"
-                name="zipCode"
-                :label="inputsLabels[6]"
-                required
-                class="form__element form__element--half"
-              />
-              <SfComponentSelect
-                v-model="form.country"
-                name="country"
-                :label="selectLabel"
-                required
-                class="
-                  sf-component-select--underlined
-                  form__select
-                  form__element
-                  form__element--half
-                  form__element--half-even
-                "
-                data-testid="country"
-              >
-                <SfComponentSelectOption
-                  v-for="countryOption in countries"
-                  :key="countryOption.id"
-                  :value="countryOption.id.toString()"
+                  <SfInput
+                    v-e2e="'billing-firstName'"
+                    v-model="form.firstName"
+                    :label="inputsLabels[0]"
+                    name="firstName"
+                    required
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                    class="form__element form__element--half"
+                  />
+                </ValidationProvider>
+                <ValidationProvider
+                  name="lastName"
+                  rules="required|min:2"
+                  v-slot="{ errors }"
+                  slim
                 >
-                  {{ countryOption.name }}
-                </SfComponentSelectOption>
-              </SfComponentSelect>
-              <SfInput
-                v-model="form.phoneNumber"
-                name="phone"
-                :label="inputsLabels[7]"
-                required
-                class="form__element"
-              />
-              <SfButton
-                v-if="updateAddressButtonText"
-                class="action-button"
-                data-testid="update-address-button"
-                @click="updateAddress"
-              >
-                {{ updateAddressButtonText }}</SfButton
-              >
-              <SfButton
-                v-if="cancelButtonText"
-                class="action-button color-secondary cancel-button"
-                data-testid="update-address-button"
-                @click="cancelEditing"
-              >
-                {{ cancelButtonText }}</SfButton
-              >
-            </slot>
-          </div>
+                  <SfInput
+                    v-model="form.lastName"
+                    name="lastName"
+                    :label="inputsLabels[1]"
+                    required
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                    class="form__element form__element--half form__element--half-even"
+                  />
+                </ValidationProvider>
+                <ValidationProvider
+                  name="streetName"
+                  rules="required|min:2"
+                  v-slot="{ errors }"
+                  slim
+                >
+                  <SfInput
+                    v-model="form.streetName"
+                    name="streetName"
+                    :label="inputsLabels[2]"
+                    required
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                    class="form__element"
+                  />
+                </ValidationProvider>
+                <ValidationProvider
+                  name="apartment"
+                  rules="required|min:1"
+                  v-slot="{ errors }"
+                  slim
+                >
+                  <SfInput
+                    v-model="form.apartment"
+                    name="apartment"
+                    :label="inputsLabels[3]"
+                    required
+                    class="form__element"
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                  />
+                </ValidationProvider>
+                <ValidationProvider
+                  name="city"
+                  rules="required|min:2"
+                  v-slot="{ errors }"
+                  slim
+                >
+                  <SfInput
+                    v-model="form.city"
+                    name="city"
+                    :label="inputsLabels[4]"
+                    required
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                    class="form__element form__element--half"
+                  />
+                </ValidationProvider>
+                <ValidationProvider
+                  name="state"
+                  rules=""
+                  v-slot="{ errors }"
+                  slim
+                >
+                  <SfComponentSelect
+                    v-model="form.state"
+                    name="state"
+                    :label="inputsLabels[5]"
+                    :disabled="states.length <= 0"
+                    required
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                    class="sf-component-select--underlined form__select form__element form__element--half form__element--half-even"
+                    data-testid="state"
+                  >
+                    <SfComponentSelectOption
+                      v-for="state in states"
+                      :key="state.id"
+                      :value="state.id.toString()"
+                    >
+                      {{ state.name }}
+                    </SfComponentSelectOption>
+                  </SfComponentSelect>
+                </ValidationProvider>
+                <ValidationProvider
+                  name="zipCode"
+                  rules="required|min:2"
+                  v-slot="{ errors }"
+                  slim
+                >
+                  <SfInput
+                    v-model="form.zipCode"
+                    name="zipCode"
+                    :label="inputsLabels[6]"
+                    required
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                    class="form__element form__element--half"
+                  />
+                </ValidationProvider>
+                <ValidationProvider
+                  name="country"
+                  rules="required|min:1"
+                  v-slot="{ errors }"
+                  slim
+                >
+                  <SfComponentSelect
+                    v-model="form.country"
+                    name="country"
+                    :label="selectLabel"
+                    required
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                    class="sf-component-select--underlined form__select form__element form__element--half form__element--half-even"
+                    data-testid="country"
+                  >
+                    <SfComponentSelectOption
+                      v-for="countryOption in countries"
+                      :key="countryOption.id"
+                      :value="countryOption.id.toString()"
+                    >
+                      {{ countryOption.name }}
+                    </SfComponentSelectOption>
+                  </SfComponentSelect>
+                </ValidationProvider>
+                <ValidationProvider
+                  name="phoneNumber"
+                  rules="required|min:5"
+                  v-slot="{ errors }"
+                  slim
+                >
+                  <SfInput
+                    v-model="form.phoneNumber"
+                    name="phone"
+                    :label="inputsLabels[7]"
+                    required
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                    class="form__element"
+                  />
+                </ValidationProvider>
+
+                <SfButton
+                  v-if="updateAddressButtonText"
+                  type="submit"
+                  @click.prevent="handleSubmit(updateAddress)"
+                  class="action-button"
+                  data-testid="update-address-button"
+                >
+                  {{ updateAddressButtonText }}</SfButton
+                >
+                <SfButton
+                  v-if="cancelButtonText"
+                  type="button"
+                  class="action-button color-secondary cancel-button"
+                  data-testid="update-address-button"
+                  @click="cancelEditing"
+                >
+                  {{ cancelButtonText }}</SfButton
+                >
+              </slot>
+            </form>
+          </ValidationObserver>
         </SfTab>
       </SfTabs>
       <SfTabs v-else key="address-list" :open-tab="1" class="tab-orphan">
@@ -143,7 +216,7 @@
             <slot name="shipping-list">
               <div
                 v-for="(address, key) in addresses"
-                :key="(address.id)"
+                :key="address.id"
                 class="shipping"
                 :class="{ primaryAaddress: address.primary === 1 }"
                 data-testid="shipping-address-list-item"
@@ -157,7 +230,9 @@
                       {{ address.streetName }} {{ address.apartment }}<br />{{
                         address.zipCode
                       }}
-                      {{ address.city }},<br />{{ getCountryName(address.country) }}
+                      {{ address.city }},<br />{{
+                        getCountryName(address.country)
+                      }}
                     </p>
                     <p class="shipping__address">
                       {{ address.phoneNumber }}
@@ -222,6 +297,8 @@ import {
   SfIcon
 } from '@storefront-ui/vue';
 import { ref, watch } from '@nuxtjs/composition-api';
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { required, min } from 'vee-validate/dist/rules';
 
 export default {
   name: 'PsfAddressDetails',
@@ -230,7 +307,9 @@ export default {
     SfInput,
     SfButton,
     SfComponentSelect,
-    SfIcon
+    SfIcon,
+    ValidationProvider,
+    ValidationObserver
   },
   props: {
     shippingTabTitle: {
@@ -243,7 +322,7 @@ export default {
     },
     addresses: {
       type: Array,
-      default: () => ([])
+      default: () => []
     },
     transition: {
       type: String,
@@ -301,11 +380,19 @@ export default {
   },
 
   setup(props, { emit }) {
+    extend('required', {
+      ...required,
+      message: 'This field is required'
+    });
+    extend('min', {
+      ...min,
+      message: 'The field should have at least {length} characters'
+    });
 
     const editAddress = ref(false);
     const editedAddress = ref(-1);
     const states = ref([]);
-    const form = ref({
+    const newForm = {
       firstName: '',
       lastName: '',
       streetName: '',
@@ -315,20 +402,28 @@ export default {
       zipCode: '',
       country: '',
       phoneNumber: ''
-    });
+    };
+    const form = ref({ ...newForm });
 
     const getCountryName = (id) => {
-      const country = props.countries.find((country) => Number(country.id) === Number(id));
+      const country = props.countries.find(
+        (country) => Number(country.id) === Number(id)
+      );
       return country.name || country.isoCode2;
     };
 
-    watch(() => form.value.country, async (newValue) => {
-      const country = props.countries.find((country) => Number(country.id) === Number(newValue));
-      if (country?.states <= 0) {
-        form.value.state = null;
+    watch(
+      () => form.value.country,
+      async (newValue) => {
+        const country = props.countries.find(
+          (country) => Number(country.id) === Number(newValue)
+        );
+        if (country?.states <= 0) {
+          form.value.state = null;
+        }
+        states.value = country?.states || [];
       }
-      states.value = country?.states || [];
-    });
+    );
 
     const setDefaultAddress = (shipping) => {
       emit('set-default-address', shipping);
@@ -348,7 +443,7 @@ export default {
         form.value.phoneNumber = address.phoneNumber;
         editedAddress.value = index;
       } else {
-        form.value = {};
+        form.value = { ...newForm };
       }
       editAddress.value = true;
       emit('change-address', index);
@@ -379,12 +474,23 @@ export default {
       emit('delete-address', address);
     };
 
-    return { form, editAddress, editedAddress, states, setDefaultAddress, changeAddress, updateAddress, deleteAddress, cancelEditing, getCountryName};
+    return {
+      form,
+      editAddress,
+      editedAddress,
+      states,
+      setDefaultAddress,
+      changeAddress,
+      updateAddress,
+      deleteAddress,
+      cancelEditing,
+      getCountryName
+    };
   }
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss";
+@import '~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss';
 .primary-icon {
   margin-right: var(--spacer-sm);
   cursor: pointer;
