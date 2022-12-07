@@ -11,17 +11,38 @@
       class="my-account"
       @click:change="changeActivePage"
     >
-      <SfContentCategory title="Personal Details">
-        <SfContentPage title="My profile">
-          <MyProfile />
+      <SfContentCategory :title="$t('Personal details')">
+        <SfContentPage :title="$t('My profile')">
+          <PsfMyProfile
+            :account="user"
+            data-testid="my-profile-tabs"
+            @update:personal="user = { ...user, ...$event }"
+            @update:password="changePassword({ currentUser: user, current: $event.currentPassword, new: $event.newPassword })"
+          />
         </SfContentPage>
 
-        <SfContentPage title="Shipping details">
-          <ShippingDetails />
+        <SfContentPage :title="$t('Shipping details')">
+          <PsfAddressDetails
+            :shipping-tab-title="$t('Shipping details')"
+            :addresses="shipping"
+            :countries="countries"
+            data-testid="shipping-details-tabs"
+            @set-default-address="setDefaultShipping({address: $event })"
+            @delete-address="deleteShipping({address: $event})"
+            @update:shipping="addShipping({address: $event})"
+          />
         </SfContentPage>
 
-        <SfContentPage title="Billing details">
-          <BillingDetails />
+        <SfContentPage :title="$t('Billing details')">
+          <PsfAddressDetails
+            :shipping-tab-title="$t('Billing details')"
+            :addresses="billing"
+            :countries="countries"
+            data-testid="shipping-details-tabs"
+            @set-default-address="setDefaultBilling({address: $event })"
+            @delete-address="deleteBilling({address: $event})"
+            @update:shipping="addBilling({address: $event})"
+          />
         </SfContentPage>
 
         <SfContentPage title="My newsletter">
@@ -42,12 +63,12 @@
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useUser } from '@vue-storefront/plentymarkets';
-import MyProfile from './MyAccount/MyProfile';
-import ShippingDetails from './MyAccount/ShippingDetails';
-import BillingDetails from './MyAccount/BillingDetails';
+import { useUser, useActiveShippingCountries, useUserBilling, useUserShipping } from '@vue-storefront/plentymarkets';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
+import PsfAddressDetails from '../components/MyAccount/PsfAddressDetails';
+import PsfMyProfile from '../components/MyAccount/PsfMyProfile.vue';
+import { onSSR } from '@vue-storefront/core';
 import {
   mapMobileObserver,
   unMapMobileObserver
@@ -58,9 +79,8 @@ export default {
   components: {
     SfBreadcrumbs,
     SfContentPages,
-    MyProfile,
-    ShippingDetails,
-    BillingDetails,
+    PsfMyProfile,
+    PsfAddressDetails,
     MyNewsletter,
     OrderHistory
   },
@@ -71,8 +91,12 @@ export default {
     const route = useRoute();
     const router = useRouter();
 
-    const { logout } = useUser();
+    const { user, load: loadUser, logout, changePassword } = useUser();
+    const { load: loadBilling, addAddress: addBilling, deleteAddress: deleteBilling, billing, setDefaultAddress: setDefaultBilling } = useUserBilling();
+    const { load: loadShipping, addAddress: addShipping, deleteAddress: deleteShipping, shipping, setDefaultAddress: setDefaultShipping } = useUserShipping();
+    const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
+
     const activePage = computed(() => {
       const { pageName } = route.value.params;
 
@@ -83,6 +107,13 @@ export default {
       } else {
         return '';
       }
+    });
+
+    onSSR(async () => {
+      await loadUser();
+      await loadBilling();
+      await loadShipping();
+      await loadActiveShippingCountries();
     });
 
     const changeActivePage = async (title) => {
@@ -102,7 +133,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { changeActivePage, activePage };
+    return { activePage, billing, shipping, countries, user, changeActivePage, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling, changePassword};
   },
 
   data() {

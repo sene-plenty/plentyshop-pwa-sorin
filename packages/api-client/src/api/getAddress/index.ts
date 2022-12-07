@@ -30,6 +30,19 @@ export async function saveAddress(context: Context, typeId: AddressType = Addres
   return data.data;
 }
 
+export async function setAddressAsDefault(context: Context, addressId: number, typeId: number): Promise<any> {
+  const url: URL = new URL(`/rest/io/customer/address/${addressId}`, context.config.api.url);
+  url.searchParams.set('typeId', typeId.toString());
+  return await context.client.put(url.href);
+}
+
+export async function deleteAddress(context: Context, addressId: number, typeId: number): Promise<any> {
+  const url: URL = new URL(`/rest/io/customer/address/${addressId}`, context.config.api.url);
+  url.searchParams.set('typeId', typeId.toString());
+  const { data } = await context.client.delete(url.href);
+  return Boolean(data);
+}
+
 function mapAddressForServer(addressData): object {
   return {
     id: addressData.id,
@@ -43,9 +56,9 @@ function mapAddressForServer(addressData): object {
     contactPerson: '',
     address1: addressData.streetName,
     address2: addressData.apartment,
-    postalCode: addressData.postalCode,
+    postalCode: addressData.postalCode || addressData.zipCode,
     town: addressData.city,
-    telephone: addressData.phone,
+    telephone: addressData.phone || addressData.phoneNumber,
     stateId: addressData.state
   };
 }
@@ -60,14 +73,17 @@ function mapAddressForClient(addressData: AddressData) {
     city: addressData.town,
     state: addressData.stateId?.toString(),
     country: addressData.countryId?.toString(),
-    postalCode: addressData.postalCode,
+    zipCode: addressData.postalCode,
+    phoneNumber: null,
     phone: null,
-    email: 'null'
+    email: 'null',
+    primary: addressData.primary
   };
 
   addressData.options.forEach(option => {
     switch (option.typeId) {
       case AddressOptionType.Telephone:
+        address.phoneNumber = option.value;
         address.phone = option.value;
         break;
       case AddressOptionType.Email:

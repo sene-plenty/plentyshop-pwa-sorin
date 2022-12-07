@@ -169,7 +169,7 @@
           <SfInput
             v-e2e="'billing-zipcode'"
             v-model="form.postalCode"
-            label="Zip-code"
+            label="ZIP Code"
             name="zipCode"
             class="form__element form__element--half form__element--half-even"
             required

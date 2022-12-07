@@ -488,6 +488,7 @@ export type AddressData = {
     title: string;
     contactPerson: string;
     options: AddressOption[];
+    primary: boolean;
 }
 
 export type ShippingCountryName = {
@@ -599,6 +600,8 @@ export interface PlentymarketsApiMethods {
 
   logoutUser(): Promise<boolean>
 
+  changePassword(currentPassword, newPassword): Promise<boolean>
+
   getShippingProvider(): Promise<ShippingProvider>
 
   selectShippingProvider(shippingId: number): Promise<string>
@@ -608,6 +611,10 @@ export interface PlentymarketsApiMethods {
   loadAddresses(typeId: AddressType): Promise<AddressData[]>
 
   saveAddress(typeId: AddressType, addressData: TODO): Promise<any>
+
+  setAddressAsDefault(addressId: number, typeId: number): Promise<any>;
+
+  deleteAddress(addressId: number, typeId: number): Promise<any>;
 
   getActiveShippingCountries(): Promise<ActiveShippingCountry[]>
 
