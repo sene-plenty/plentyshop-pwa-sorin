@@ -67,7 +67,7 @@ import { useUser, useActiveShippingCountries, useUserBilling, useUserShipping } 
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import PsfAddressDetails from '../components/MyAccount/PsfAddressDetails';
-import SfMyProfile from '../components/MyAccount/SfMyProfile.vue';
+import PsfMyProfile from '../components/MyAccount/PsfMyProfile.vue';
 import { onSSR } from '@vue-storefront/core';
 import {
   mapMobileObserver,
@@ -79,7 +79,7 @@ export default {
   components: {
     SfBreadcrumbs,
     SfContentPages,
-    SfMyProfile,
+    PsfMyProfile,
     PsfAddressDetails,
     MyNewsletter,
     OrderHistory

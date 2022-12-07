@@ -108,7 +108,7 @@
 <script>
 import { SfTabs, SfInput, SfButton } from '@storefront-ui/vue';
 export default {
-  name: 'SfMyProfile',
+  name: 'PsfMyProfile',
   components: {
     SfTabs,
     SfInput,
@@ -176,6 +176,7 @@ export default {
     },
     updatePassword() {
 
+      // TODO: add notification for error and success
       if (this.newPassword !== this.repeatPassword) {
         console.error('Passwords dont match');
         return;
