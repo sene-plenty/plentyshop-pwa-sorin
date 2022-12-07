@@ -406,6 +406,7 @@ export default {
         editedAddress.value = index;
       } else {
         form.value = { ...newForm };
+        editedAddress.value = index;
       }
       editAddress.value = true;
       emit('change-address', index);
