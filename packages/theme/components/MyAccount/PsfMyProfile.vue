@@ -108,7 +108,7 @@
 <script>
 import { SfTabs, SfInput, SfButton } from '@storefront-ui/vue';
 export default {
-  name: 'SfMyProfile',
+  name: 'PsfMyProfile',
   components: {
     SfTabs,
     SfInput,
