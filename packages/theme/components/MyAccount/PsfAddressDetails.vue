@@ -133,7 +133,7 @@
                   <SfInput
                     v-model="form.zipCode"
                     name="zipCode"
-                    :label="$t('Zip-Code')"
+                    :label="$t('ZIP Code')"
                     required
                     :valid="!errors[0]"
                     :errorMessage="errors[0]"
