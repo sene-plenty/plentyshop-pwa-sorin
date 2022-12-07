@@ -13,7 +13,7 @@
     >
       <SfContentCategory :title="$t('Personal details')">
         <SfContentPage :title="$t('My profile')">
-          <SfMyProfile
+          <PsfMyProfile
             :account="user"
             data-testid="my-profile-tabs"
             @update:personal="user = { ...user, ...$event }"
