@@ -20,6 +20,7 @@ import { loginAsGuest, loginUser, logoutUser, registerUser } from './api/getUser
 import { getActiveShippingCountries } from './api/getActiveShippingCountries';
 import { getPaymentProviders, setPaymentProvider } from './api/getPaymentProvider';
 import { additionalInformation, executePayment, placeOrder, preparePayment } from './api/getOrder';
+import { getOrders } from './api/getOrders';
 
 /**
  * Event flow
@@ -120,6 +121,7 @@ const { createApiClient } = apiClientFactory<Settings, Endpoints>({
     additionalInformation,
     preparePayment,
     placeOrder,
+    getOrders,
     executePayment
   },
   extensions: [cookieExtension]

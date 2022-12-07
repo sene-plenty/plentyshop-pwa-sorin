@@ -58,7 +58,7 @@
               >{{ tableHeader }}</SfTableHeader>
             <SfTableHeader class="orders__element--right" />
           </SfTableHeading>
-          <SfTableRow v-for="order in orderGetters.getItems(orders)" :key="orderGetters.getId(order)">
+          <SfTableRow v-for="order in orders" :key="orderGetters.getId(order)">
             <SfTableData v-e2e="'order-number'">{{ orderGetters.getId(order) }}</SfTableData>
             <SfTableData>{{ orderGetters.getDate(order) }}</SfTableData>
             <SfTableData>{{ $n(orderGetters.getPrice(order), 'currency') }}</SfTableData>
@@ -116,6 +116,7 @@ export default {
       await search();
     });
 
+    // translations?
     const tableHeaders = [
       'Order ID',
       'Payment date',

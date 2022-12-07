@@ -3,12 +3,12 @@ import type { Order, OrderItem } from '@vue-storefront/plentymarkets-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDate(order: Order): string {
-  return '';
+  return order.order.createdAt.toString() || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getId(order: Order): string {
-  return '1';
+  return order.order.id.toString() || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,7 +18,7 @@ function getStatus(order: Order): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(order: Order): number | null {
-  return 0;
+  return order?.order.amounts[0]?.grossTotal || 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
