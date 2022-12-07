@@ -4,20 +4,21 @@ export default async ({ app, $vsf }) => {
   if (!currentPath) {
     return;
   }
-
-  const cart = await $vsf.$plentymarkets.api.getCart();
-
+  const BILLING_TYPE = 1;
+  const address = await $vsf.$plentymarkets.api.loadAddresses(BILLING_TYPE);
   const redirectWithLocalePath = path => app.context.redirect(app.localePath(path));
 
   switch (currentPath) {
     case 'login':
-      console.log('navigate to login');
+      if (address) {
+        redirectWithLocalePath('billing');
+      }
       break;
     case 'billing':
       console.log('navigate to billing');
       break;
     case 'shipping':
-      if (!cart.customerInvoiceAddressId) {
+      if (!address) {
         redirectWithLocalePath('billing');
       }
       break;
