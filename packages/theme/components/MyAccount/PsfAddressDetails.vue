@@ -8,7 +8,7 @@
         class="tab-orphan"
         data-testid="shipping-details-tabs"
       >
-        <SfTab :title="$t('Change the address')">
+        <SfTab :title="editedAddress > -1 ? $t('Change the address') : $t('Create address')">
           <slot name="change-address-description">
             <p class="message">
               {{ changeAddressDescription }}
@@ -188,14 +188,14 @@
                   class="action-button"
                   data-testid="update-address-button"
                 >
-                  {{ $t('Update the address') }}</SfButton
-                >
+                  <template v-if="editedAddress > -1">{{ $t('Update the address') }}</template>
+                  <template v-if="editedAddress === -1">{{ $t('Create address') }}</template>
+                </SfButton>
                 <SfButton
                   type="button"
                   class="action-button color-secondary cancel-button"
                   data-testid="update-address-button"
-                  @click="cancelEditing"
-                >
+                  @click="cancelEditing">
                   {{ $t('Cancel') }}</SfButton
                 >
               </slot>
@@ -359,7 +359,15 @@ export default {
     };
     const form = ref({ ...newForm });
 
+    // show form if there are no saved addresses
+    if (props?.addresses?.length <= 0) {
+      editAddress.value = true;
+    }
+
     const getCountryName = (id) => {
+      if (!props.countries) {
+        return '';
+      }
       const country = props.countries.find(
         (country) => Number(country.id) === Number(id)
       );
@@ -448,5 +456,9 @@ export default {
 .primary-icon {
   margin-right: var(--spacer-sm);
   cursor: pointer;
+}
+.shipping-list{
+  max-height: 40vh;
+  overflow-y: auto;
 }
 </style>

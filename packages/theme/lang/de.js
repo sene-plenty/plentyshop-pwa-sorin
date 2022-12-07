@@ -179,6 +179,7 @@ export default {
   'Country': 'Land',
   'Change the address': ' Adresse ändern',
   'Update the address':  'Adresse speichern',
+  'Create address': 'Adresse erstellen',
   'Add new address': 'Neue Adresse erstellen',
   'My profile': 'Mein Profil',
   'Personal Details': 'Persönliche Daten'
