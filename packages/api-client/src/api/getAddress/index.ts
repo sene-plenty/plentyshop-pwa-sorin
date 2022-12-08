@@ -6,7 +6,7 @@ export async function loadAddresses(context: Context, typeId: AddressType): Prom
 
   const { data } = await context.client.get(url.href);
 
-  return (data.data as AddressData[]).map(addressData => mapAddressForClient(addressData));
+  return (data.data as AddressData[]).map(addressData => mapAddressForClient(addressData)) || [];
 }
 
 export async function saveBillingIsShipping(context: Context): Promise<any> {
