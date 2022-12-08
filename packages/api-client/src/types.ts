@@ -262,8 +262,8 @@ export interface OrderVat {
   vatField: number;
   vatRate: number;
   value: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   netTotal: number;
   grossTotal: number;
 }
@@ -281,8 +281,8 @@ export interface OrderAmount {
   invoiceTotal: number;
   paidAmount: number;
   giftCardAmount: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   shippingCostsGross: number;
   shippingCostsNet: number;
   taxlessAmount: number;
@@ -292,9 +292,10 @@ export interface OrderAmount {
 
 export type OrderDetails = {
   id: number,
-  createdAt: Date,
-  updatedAt: Date,
-  amounts: OrderAmount[]
+  createdAt: string,
+  updatedAt: string,
+  amounts: OrderAmount[],
+  statusName: string
 };
 
 export type Order = {

@@ -3,22 +3,26 @@ import type { Order, OrderItem } from '@vue-storefront/plentymarkets-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDate(order: Order): string {
-  return order.order.createdAt.toString() || '';
-}
+  if (order && order.order) {
+    return new Date(order.order.createdAt).toLocaleString();
+  }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getId(order: Order): string {
-  return order.order.id.toString() || '';
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getStatus(order: Order): string {
   return '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getId(order: Order): string {
+  return order.order?.id.toString() || '';
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getStatus(order: Order): string {
+  return order?.order?.statusName || '';
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(order: Order): number | null {
-  return order?.order.amounts[0]?.grossTotal || 0;
+  return order?.order?.amounts[0]?.grossTotal || 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -52,8 +56,8 @@ function getFormattedPrice(price: number): string {
 }
 
 // eslint-disable-next-line
-function getOrdersTotal(orders: any): number {
-  return 1;
+function getOrdersTotal(orders: Orders[]): number {
+  return orders?.length || 0;
 }
 
 export const orderGetters: UserOrderGetters<Order, OrderItem> = {
