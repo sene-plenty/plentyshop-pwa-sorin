@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SfPersonalDetails
+    <PsfPersonalDetails
       :value="{}"
       buttonText="Log into your account"
       logInInfo="or fill the details below:"
@@ -14,34 +14,40 @@
       createAccountInputLabel="Create Password"
       @input="logInput($event)"
       @log-in="toggleLoginModal()"
-      @create-account=""
     />
     <SfButton
         type="button"
         class="sf-button color-secondary summary__back-button"
-        @click="router.push('/checkout/billing')"
+        @click="goToBilling"
       >
-      {{ $t('Go to shipping') }}
+      {{ $t('Go to billing') }}
     </SfButton>
     </div>
 </template>
 <script>
 import { useRouter, watch } from '@nuxtjs/composition-api';
-import { SfButton, SfPersonalDetails } from '@storefront-ui/vue';
+import { SfButton } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import { useUser } from '@vue-storefront/plentymarkets';
+import PsfPersonalDetails from '~/components/Checkout/PsfPersonalDetails';
 
 export default {
   name: 'Login',
   components: {
     SfButton,
-    SfPersonalDetails
+    PsfPersonalDetails
   },
   setup() {
 
     const { isLoginModalOpen, toggleLoginModal } = useUiState();
     const router = useRouter();
-    const { isAuthenticated } = useUser();
+    const { isAuthenticated, register } = useUser();
+    let user = {
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: ''
+    };
 
     watch(isAuthenticated, () => {
       if (isAuthenticated) {
@@ -51,6 +57,13 @@ export default {
 
     const logInput = (event) => {
       console.log(event);
+      user = event;
+    };
+
+    const goToBilling = async () => {
+      console.log({ user });
+      await register({ user });
+      router.push('/checkout/billing');
     };
 
     return {
@@ -58,7 +71,8 @@ export default {
       isAuthenticated,
       isLoginModalOpen,
       toggleLoginModal,
-      logInput
+      logInput,
+      goToBilling
     };
   }
 };
