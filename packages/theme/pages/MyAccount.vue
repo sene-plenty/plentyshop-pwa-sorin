@@ -13,36 +13,15 @@
     >
       <SfContentCategory :title="$t('Personal details')">
         <SfContentPage :title="$t('My profile')">
-          <PsfMyProfile
-            :account="user"
-            data-testid="my-profile-tabs"
-            @update:personal="user = { ...user, ...$event }"
-            @update:password="changePassword({ currentUser: user, current: $event.currentPassword, new: $event.newPassword })"
-          />
+          <ProfileDetails/>
         </SfContentPage>
 
         <SfContentPage :title="$t('Shipping details')">
-          <PsfAddressDetails
-            :shipping-tab-title="$t('Shipping details')"
-            :addresses="shipping"
-            :countries="countries"
-            data-testid="shipping-details-tabs"
-            @set-default-address="setDefaultShipping({address: $event })"
-            @delete-address="deleteShipping({address: $event})"
-            @update:shipping="addShipping({address: $event})"
-          />
+          <ShippingDetails/>
         </SfContentPage>
 
         <SfContentPage :title="$t('Billing details')">
-          <PsfAddressDetails
-            :shipping-tab-title="$t('Billing details')"
-            :addresses="billing"
-            :countries="countries"
-            data-testid="shipping-details-tabs"
-            @set-default-address="setDefaultBilling({address: $event })"
-            @delete-address="deleteBilling({address: $event})"
-            @update:shipping="addBilling({address: $event})"
-          />
+          <BillingDetails/>
         </SfContentPage>
 
         <SfContentPage title="My newsletter">
@@ -66,8 +45,9 @@ import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composit
 import { useUser, useActiveShippingCountries, useUserBilling, useUserShipping } from '@vue-storefront/plentymarkets';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
-import PsfAddressDetails from '../components/MyAccount/PsfAddressDetails';
-import PsfMyProfile from '../components/MyAccount/PsfMyProfile.vue';
+import ShippingDetails from './MyAccount/ShippingDetails';
+import BillingDetails from './MyAccount/BillingDetails';
+import ProfileDetails from './MyAccount/ProfileDetails';
 import { onSSR } from '@vue-storefront/core';
 import {
   mapMobileObserver,
@@ -79,8 +59,9 @@ export default {
   components: {
     SfBreadcrumbs,
     SfContentPages,
-    PsfMyProfile,
-    PsfAddressDetails,
+    ShippingDetails,
+    BillingDetails,
+    ProfileDetails,
     MyNewsletter,
     OrderHistory
   },
