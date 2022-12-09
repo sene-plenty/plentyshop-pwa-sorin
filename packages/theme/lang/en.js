@@ -181,5 +181,14 @@ export default {
   'Update the address':  'Update the address',
   'Create address': 'Create address',
   'Add new address': 'Add new address',
-  'My profile': 'My profile'
+  'My profile': 'My profile',
+  'Order ID': 'Order Id',
+  'Order date': 'Order date',
+  'Amount': 'Amount',
+  'Total orders': 'Total orders',
+  'My orders': 'My orders',
+  'Returns': 'Returns',
+  'Order details': 'Order details',
+  'Order history': 'Order history',
+  'My Account': 'My Account',
 };

@@ -183,12 +183,12 @@ export default {
   'Add new address': 'Neue Adresse erstellen',
   'My profile': 'Mein Profil',
   'Order ID': 'Auftrags-ID',
-  'Payment date': 'Zahlungsdatum',
+  'Order date': 'Auftragsdatum',
   'Amount': 'Summe',
   'Total orders': 'Gesamtanzahl Aufträge',
   'My orders': 'Meine Aufträge',
   'Returns': 'Retouren',
   'Order details': 'Bestelldetails',
   'Order history': 'Auftragshistorie',
-  'My Account': 'Mein Konto'
+  'My Account': 'Mein Konto',
 };

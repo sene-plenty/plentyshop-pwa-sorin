@@ -119,7 +119,7 @@ export default {
     // translations?
     const tableHeaders = [
       'Order ID',
-      'Payment date',
+      'Order date',
       'Amount',
       'Status'
     ];
