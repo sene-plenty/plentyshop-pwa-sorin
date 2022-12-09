@@ -1,6 +1,6 @@
 <template>
   <SfTabs :open-tab="1">
-    <SfTab title="My orders">
+    <SfTab :title="$t('My orders')">
       <div v-if="currentOrder">
         <SfButton class="sf-button--text all-orders" @click="currentOrder = null">All Orders</SfButton>
         <div class="highlighted highlighted--total">
@@ -55,7 +55,7 @@
             <SfTableHeader
               v-for="tableHeader in tableHeaders"
               :key="tableHeader"
-              >{{ tableHeader }}</SfTableHeader>
+              >{{ $t(tableHeader) }}</SfTableHeader>
             <SfTableHeader class="orders__element--right" />
           </SfTableHeading>
           <SfTableRow v-for="order in orders" :key="orderGetters.getId(order)">
@@ -72,10 +72,10 @@
             </SfTableData>
           </SfTableRow>
         </SfTable>
-        <p>Total orders - {{ totalOrders }}</p>
+        <p>{{ $t('Total orders') }} - {{ totalOrders }}</p>
       </div>
     </SfTab>
-    <SfTab title="Returns">
+    <SfTab :title="$t('Returns')">
       <p class="message">
         This feature is not implemented yet! Please take a look at
         <br />

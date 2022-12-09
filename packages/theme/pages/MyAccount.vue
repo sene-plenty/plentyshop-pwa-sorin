@@ -6,7 +6,7 @@
     />
     <SfContentPages
       v-e2e="'my-account-content-pages'"
-      title="My Account"
+      :title="$t('My Account')"
       :active="activePage"
       class="my-account"
       @click:change="changeActivePage"
@@ -29,8 +29,8 @@
         </SfContentPage>
       </SfContentCategory>
 
-      <SfContentCategory title="Order details">
-        <SfContentPage title="Order history">
+      <SfContentCategory :title="$t('Order details')">
+        <SfContentPage :title="$t('Order history')">
           <OrderHistory />
         </SfContentPage>
       </SfContentCategory>

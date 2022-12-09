@@ -56,7 +56,7 @@ function getFormattedPrice(price: number): string {
 }
 
 // eslint-disable-next-line
-function getOrdersTotal(orders: Orders[]): number {
+function getOrdersTotal(orders: any): number {
   return orders?.length || 0;
 }
 

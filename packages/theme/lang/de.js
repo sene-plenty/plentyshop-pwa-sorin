@@ -181,5 +181,14 @@ export default {
   'Update the address':  'Adresse speichern',
   'Create address': 'Adresse erstellen',
   'Add new address': 'Neue Adresse erstellen',
-  'My profile': 'Mein Profil'
+  'My profile': 'Mein Profil',
+  'Order ID': 'Auftrags-ID',
+  'Payment date': 'Zahlungsdatum',
+  'Amount': 'Summe',
+  'Total orders': 'Gesamtanzahl Aufträge',
+  'My orders': 'Meine Aufträge',
+  'Returns': 'Retouren',
+  'Order details': 'Bestelldetails',
+  'Order history': 'Auftragshistorie',
+  'My Account': 'Mein Konto'
 };
