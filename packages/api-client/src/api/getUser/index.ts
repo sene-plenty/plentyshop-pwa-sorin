@@ -46,6 +46,16 @@ export async function registerUser(context: Context, params: RegisterParams): Pr
   return data;
 }
 
+export async function changePassword(context: Context, currentPassword: string, newPassword: string): Promise<any> {
+  const url: URL = new URL('/rest/io/customer/password/', context.config.api.url);
+  const { data } = await context.client.post(url.href, {
+    oldPassword: currentPassword,
+    password: newPassword,
+    password2: newPassword
+  });
+  return data;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function updateUser(context: Context): Promise<any> {
   // TODO: implement updateUser()

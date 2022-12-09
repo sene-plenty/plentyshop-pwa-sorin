@@ -11,17 +11,17 @@
       class="my-account"
       @click:change="changeActivePage"
     >
-      <SfContentCategory title="Personal Details">
-        <SfContentPage title="My profile">
-          <MyProfile />
+      <SfContentCategory :title="$t('Personal details')">
+        <SfContentPage :title="$t('My profile')">
+          <ProfileDetails/>
         </SfContentPage>
 
-        <SfContentPage title="Shipping details">
-          <ShippingDetails />
+        <SfContentPage :title="$t('Shipping details')">
+          <ShippingDetails/>
         </SfContentPage>
 
-        <SfContentPage title="Billing details">
-          <BillingDetails />
+        <SfContentPage :title="$t('Billing details')">
+          <BillingDetails/>
         </SfContentPage>
 
         <SfContentPage title="My newsletter">
@@ -43,11 +43,11 @@
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
 import { useUser } from '@vue-storefront/plentymarkets';
-import MyProfile from './MyAccount/MyProfile';
-import ShippingDetails from './MyAccount/ShippingDetails';
-import BillingDetails from './MyAccount/BillingDetails';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
+import ShippingDetails from './MyAccount/ShippingDetails';
+import BillingDetails from './MyAccount/BillingDetails';
+import ProfileDetails from './MyAccount/ProfileDetails';
 import {
   mapMobileObserver,
   unMapMobileObserver
@@ -58,9 +58,9 @@ export default {
   components: {
     SfBreadcrumbs,
     SfContentPages,
-    MyProfile,
     ShippingDetails,
     BillingDetails,
+    ProfileDetails,
     MyNewsletter,
     OrderHistory
   },
@@ -73,6 +73,7 @@ export default {
 
     const { logout } = useUser();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
+
     const activePage = computed(() => {
       const { pageName } = route.value.params;
 
@@ -102,7 +103,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { changeActivePage, activePage };
+    return { activePage, changeActivePage };
   },
 
   data() {

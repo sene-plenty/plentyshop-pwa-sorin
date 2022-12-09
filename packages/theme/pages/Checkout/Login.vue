@@ -7,7 +7,7 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <p class="customer__text">
-      {{ $t('Login Register Text') }}
+      {{ $t('Login register Text') }}
     </p>
     <SfButton
             :disabled="isAuthenticated"
@@ -15,7 +15,7 @@
             class="sf-button"
             @click="toggleLoginModal()"
           >
-            {{ $t('Login Register') }}
+            {{ $t('Login register') }}
     </SfButton>
     <hr class="sf-divider customer-text">
     <SfButton

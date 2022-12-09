@@ -65,9 +65,10 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    console.log('Mocked: useUser.changePassword');
-    return {};
+  changePassword: async (context: Context, { currentPassword, newPassword }) => {
+    await context.$plentymarkets.api.changePassword(currentPassword, newPassword);
+    const data = await context.$plentymarkets.api.getSession(false);
+    return data.user;
   }
 };
 
