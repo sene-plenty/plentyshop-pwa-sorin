@@ -42,13 +42,12 @@
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useUser, useActiveShippingCountries, useUserBilling, useUserShipping } from '@vue-storefront/plentymarkets';
+import { useUser } from '@vue-storefront/plentymarkets';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
 import ShippingDetails from './MyAccount/ShippingDetails';
 import BillingDetails from './MyAccount/BillingDetails';
 import ProfileDetails from './MyAccount/ProfileDetails';
-import { onSSR } from '@vue-storefront/core';
 import {
   mapMobileObserver,
   unMapMobileObserver
@@ -72,10 +71,7 @@ export default {
     const route = useRoute();
     const router = useRouter();
 
-    const { user, load: loadUser, logout, changePassword } = useUser();
-    const { load: loadBilling, addAddress: addBilling, deleteAddress: deleteBilling, billing, setDefaultAddress: setDefaultBilling } = useUserBilling();
-    const { load: loadShipping, addAddress: addShipping, deleteAddress: deleteShipping, shipping, setDefaultAddress: setDefaultShipping } = useUserShipping();
-    const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
+    const { logout } = useUser();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
 
     const activePage = computed(() => {
@@ -88,13 +84,6 @@ export default {
       } else {
         return '';
       }
-    });
-
-    onSSR(async () => {
-      await loadUser();
-      await loadBilling();
-      await loadShipping();
-      await loadActiveShippingCountries();
     });
 
     const changeActivePage = async (title) => {
@@ -114,7 +103,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { activePage, billing, shipping, countries, user, changeActivePage, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling, changePassword};
+    return { activePage, changeActivePage };
   },
 
   data() {
