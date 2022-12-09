@@ -13,36 +13,15 @@
     >
       <SfContentCategory :title="$t('Personal details')">
         <SfContentPage :title="$t('My profile')">
-          <PsfMyProfile
-            :account="user"
-            data-testid="my-profile-tabs"
-            @update:personal="user = { ...user, ...$event }"
-            @update:password="changePassword({ currentUser: user, current: $event.currentPassword, new: $event.newPassword })"
-          />
+          <ProfileDetails/>
         </SfContentPage>
 
         <SfContentPage :title="$t('Shipping details')">
-          <PsfAddressDetails
-            :shipping-tab-title="$t('Shipping details')"
-            :addresses="shipping"
-            :countries="countries"
-            data-testid="shipping-details-tabs"
-            @set-default-address="setDefaultShipping({address: $event })"
-            @delete-address="deleteShipping({address: $event})"
-            @update:shipping="addShipping({address: $event})"
-          />
+          <ShippingDetails/>
         </SfContentPage>
 
         <SfContentPage :title="$t('Billing details')">
-          <PsfAddressDetails
-            :shipping-tab-title="$t('Billing details')"
-            :addresses="billing"
-            :countries="countries"
-            data-testid="shipping-details-tabs"
-            @set-default-address="setDefaultBilling({address: $event })"
-            @delete-address="deleteBilling({address: $event})"
-            @update:shipping="addBilling({address: $event})"
-          />
+          <BillingDetails/>
         </SfContentPage>
 
         <SfContentPage title="My newsletter">
@@ -63,12 +42,12 @@
 <script>
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount, useRoute, useRouter } from '@nuxtjs/composition-api';
-import { useUser, useActiveShippingCountries, useUserBilling, useUserShipping } from '@vue-storefront/plentymarkets';
+import { useUser } from '@vue-storefront/plentymarkets';
 import MyNewsletter from './MyAccount/MyNewsletter';
 import OrderHistory from './MyAccount/OrderHistory';
-import PsfAddressDetails from '../components/MyAccount/PsfAddressDetails';
-import PsfMyProfile from '../components/MyAccount/PsfMyProfile.vue';
-import { onSSR } from '@vue-storefront/core';
+import ShippingDetails from './MyAccount/ShippingDetails';
+import BillingDetails from './MyAccount/BillingDetails';
+import ProfileDetails from './MyAccount/ProfileDetails';
 import {
   mapMobileObserver,
   unMapMobileObserver
@@ -79,8 +58,9 @@ export default {
   components: {
     SfBreadcrumbs,
     SfContentPages,
-    PsfMyProfile,
-    PsfAddressDetails,
+    ShippingDetails,
+    BillingDetails,
+    ProfileDetails,
     MyNewsletter,
     OrderHistory
   },
@@ -91,10 +71,7 @@ export default {
     const route = useRoute();
     const router = useRouter();
 
-    const { user, load: loadUser, logout, changePassword } = useUser();
-    const { load: loadBilling, addAddress: addBilling, deleteAddress: deleteBilling, billing, setDefaultAddress: setDefaultBilling } = useUserBilling();
-    const { load: loadShipping, addAddress: addShipping, deleteAddress: deleteShipping, shipping, setDefaultAddress: setDefaultShipping } = useUserShipping();
-    const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
+    const { logout } = useUser();
     const isMobile = computed(() => mapMobileObserver().isMobile.get());
 
     const activePage = computed(() => {
@@ -107,13 +84,6 @@ export default {
       } else {
         return '';
       }
-    });
-
-    onSSR(async () => {
-      await loadUser();
-      await loadBilling();
-      await loadShipping();
-      await loadActiveShippingCountries();
     });
 
     const changeActivePage = async (title) => {
@@ -133,7 +103,7 @@ export default {
       unMapMobileObserver();
     });
 
-    return { activePage, billing, shipping, countries, user, changeActivePage, deleteShipping, deleteBilling, addBilling, addShipping, setDefaultShipping, setDefaultBilling, changePassword};
+    return { activePage, changeActivePage };
   },
 
   data() {
