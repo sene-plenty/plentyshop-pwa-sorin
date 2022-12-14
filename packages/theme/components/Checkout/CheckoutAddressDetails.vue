@@ -1,7 +1,7 @@
 <template>
   <div class="sf-shipping-details">
     <transition :name="transition">
-      <div v-if="editAddress || addresses.length <= 0">
+      <div v-if="editAddress || addressList.length <= 0">
         <AddressInputForm
           ref="addressForm"
           :form="form"
@@ -21,7 +21,7 @@
           }}</template>
         </SfButton>
         <SfButton
-          v-if="(addresses.length > 0)"
+          v-if="(addressList.length > 0)"
           type="button"
           class="action-button color-secondary cancel-button"
           data-testid="update-address-button"
@@ -34,7 +34,7 @@
         <transition-group tag="div" :name="transition" class="shipping-list">
           <slot name="shipping-list">
             <div
-              v-for="(address, key) in addresses"
+              v-for="(address, key) in addressList"
               :key="address.id"
               class="shipping"
               :class="{ primaryAaddress: address.primary === 1 }"
@@ -105,7 +105,8 @@
 </template>
 <script>
 import { SfButton, SfIcon } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
+import { toRef } from '@nuxtjs/composition-api';
+import { useAddressForm } from '@vue-storefront/plentymarkets';
 import AddressInputForm from '~/components/AddressInputForm';
 
 export default {
@@ -135,56 +136,20 @@ export default {
   },
 
   setup(props, { emit, refs }) {
-    const editAddress = ref(false);
-    const editedAddress = ref(-1);
-    const newForm = {
-      firstName: '',
-      lastName: '',
-      streetName: '',
-      apartment: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      country: '',
-      phoneNumber: ''
-    };
-    const form = ref({ ...newForm });
-
-    // show form if there are no saved addresses
-    if (props?.addresses?.length <= 0) {
-      editAddress.value = true;
-    }
-
-    const getCountryName = (id) => {
-      if (!props.countries) {
-        return '';
-      }
-      const country = props.countries.find(
-        (country) => Number(country.id) === Number(id)
-      );
-      return country.name || country.isoCode2;
-    };
+    const {
+      form,
+      addresses: addressList,
+      getCountryName,
+      editAddress,
+      editedAddress,
+      changeAddress,
+      resetForm,
+      updateAddress,
+      cancelEditing
+    } = useAddressForm(props.countries, toRef(props, 'addresses'));
 
     const setDefaultAddress = (shipping) => {
       emit('set-default-address', shipping);
-    };
-
-    const changeAddress = (index) => {
-      const address = props.addresses[index];
-      if (index > -1) {
-        form.value = { ...address };
-        editedAddress.value = index;
-      } else {
-        form.value = { ...newForm };
-        editedAddress.value = index;
-      }
-      editAddress.value = true;
-      emit('change-address', index);
-    };
-
-    const updateAddress = () => {
-      editAddress.value = false;
-      emit('update:shipping', { ...form.value });
     };
 
     const submit = async () => {
@@ -193,26 +158,23 @@ export default {
       if (addressForm) {
         form.value = addressForm.value;
         updateAddress();
+        emit('update:shipping', { ...form.value });
       }
     };
 
-    const cancelEditing = () => {
-      editAddress.value = false;
-    };
-
     const deleteAddress = (address) => {
-      form.value = { ...newForm };
+      resetForm(address);
       emit('delete-address', address);
     };
 
     return {
       form,
       editAddress,
+      addressList,
       editedAddress,
       submit,
       setDefaultAddress,
       changeAddress,
-      updateAddress,
       deleteAddress,
       cancelEditing,
       getCountryName

@@ -40,7 +40,7 @@ import {
 } from '@storefront-ui/vue';
 import { useRouter } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useUser, useActiveShippingCountries, useUserBilling } from '@vue-storefront/plentymarkets';
+import { useActiveShippingCountries, useUserBilling } from '@vue-storefront/plentymarkets';
 import CheckoutAddressDetails from '~/components/Checkout/CheckoutAddressDetails';
 import AddressInputForm from '~/components/AddressInputForm';
 
@@ -57,7 +57,6 @@ export default {
   setup() {
     const router = useRouter();
     const { load, billing, setDefaultAddress, deleteAddress, addAddress } = useUserBilling();
-    const { isAuthenticated } = useUser();
     const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
 
     onSSR(async () => {
@@ -71,7 +70,6 @@ export default {
       addAddress,
       router,
       billing,
-      isAuthenticated,
       countries
     };
   }
