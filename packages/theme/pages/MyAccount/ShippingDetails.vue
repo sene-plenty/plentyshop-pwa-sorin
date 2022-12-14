@@ -1,5 +1,5 @@
 <template>
-  <PsfAddressDetails
+  <MyAccountAddressDetails
     :shipping-tab-title="$t('Shipping details')"
     :addresses="shipping"
     :countries="countries"
@@ -10,7 +10,7 @@
   />
 </template>
 <script>
-import PsfAddressDetails from '~/components/MyAccount/PsfAddressDetails';
+import MyAccountAddressDetails from '~/components/MyAccount/MyAccountAddressDetails';
 import {
   useUserShipping,
   useActiveShippingCountries
@@ -20,7 +20,7 @@ import { onSSR } from '@vue-storefront/core';
 export default {
   name: 'ShippingDetails',
   components: {
-    PsfAddressDetails
+    MyAccountAddressDetails
   },
   setup() {
     const { shipping, load, addAddress, deleteAddress, setDefaultAddress } = useUserShipping();

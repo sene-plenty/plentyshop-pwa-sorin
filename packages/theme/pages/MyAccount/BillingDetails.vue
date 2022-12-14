@@ -1,5 +1,5 @@
 <template>
-  <PsfAddressDetails
+  <MyAccountAddressDetails
     :shipping-tab-title="$t('Billing details')"
     :addresses="billing"
     :countries="countries"
@@ -10,14 +10,14 @@
   />
 </template>
 <script>
-import PsfAddressDetails from '~/components/MyAccount/PsfAddressDetails';
+import MyAccountAddressDetails from '~/components/MyAccount/MyAccountAddressDetails';
 import { useUserBilling, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
 import { onSSR } from '@vue-storefront/core';
 
 export default {
   name: 'BillingDetails',
   components: {
-    PsfAddressDetails
+    MyAccountAddressDetails
   },
   setup() {
     const { billing, load, addAddress, deleteAddress, setDefaultAddress } = useUserBilling();
