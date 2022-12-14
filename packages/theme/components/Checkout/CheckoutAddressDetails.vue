@@ -7,28 +7,30 @@
           :form="form"
           :countries="countries"
         ></AddressInputForm>
-        <SfButton
-          type="submit"
-          @click.prevent="submit()"
-          class="action-button"
-          data-testid="update-address-button"
-        >
-          <template v-if="editedAddress > -1">{{
-            $t('Update the address')
-          }}</template>
-          <template v-if="editedAddress === -1">{{
-            $t('Create address')
-          }}</template>
-        </SfButton>
-        <SfButton
-          v-if="(addressList.length > 0)"
-          type="button"
-          class="action-button color-secondary cancel-button"
-          data-testid="update-address-button"
-          @click="cancelEditing"
-        >
-          {{ $t('Cancel') }}</SfButton
-        >
+        <div class="buttons">
+          <SfButton
+            type="submit"
+            @click.prevent="submit()"
+            class="action-button"
+            data-testid="update-address-button"
+          >
+            <template v-if="editedAddress > -1">{{
+              $t('Update the address')
+            }}</template>
+            <template v-if="editedAddress === -1">{{
+              $t('Create address')
+            }}</template>
+          </SfButton>
+          <SfButton
+            v-if="(addressList.length > 0)"
+            type="button"
+            class="action-button color-secondary cancel-button"
+            data-testid="update-address-button"
+            @click="cancelEditing"
+          >
+            {{ $t('Cancel') }}</SfButton
+          >
+        </div>
       </div>
       <div v-else>
         <transition-group tag="div" :name="transition" class="shipping-list">
@@ -39,6 +41,7 @@
               class="shipping"
               :class="{ primaryAaddress: address.primary === 1 }"
               data-testid="shipping-address-list-item"
+              @click="setDefaultAddress(address)"
             >
               <div class="shipping__content">
                 <slot name="shipping-details">
@@ -56,6 +59,7 @@
                   <p class="shipping__address">
                     {{ address.phoneNumber }}
                   </p>
+                  <template v-if="(address.primary === 1)"><span class="color-secondary sf-badge">Selected address</span></template>
                 </slot>
               </div>
               <div class="shipping__actions">
@@ -66,14 +70,6 @@
                   role="button"
                   class="smartphone-only"
                   @click="deleteAddress(key, address)"
-                />
-                <SfIcon
-                  :icon="address.primary ? 'heart_fill' : 'heart'"
-                  color="gray"
-                  size="xxl"
-                  class="primary-icon"
-                  role="button"
-                  @click="setDefaultAddress(address)"
                 />
                 <SfButton
                   data-testid="change-address"
@@ -184,12 +180,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss';
-.primary-icon {
-  margin-right: var(--spacer-sm);
-  cursor: pointer;
-}
 .shipping-list {
   max-height: 40vh;
   overflow-y: auto;
+}
+.buttons {
+  display: flex;
+}
+.shipping {
+  cursor: pointer;
 }
 </style>

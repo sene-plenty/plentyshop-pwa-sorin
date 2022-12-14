@@ -23,27 +23,29 @@
             :form="form"
             :countries="countries"
           ></AddressInputForm>
-          <SfButton
-            type="submit"
-            @click.prevent="submit()"
-            class="action-button"
-            data-testid="update-address-button"
-          >
-            <template v-if="editedAddress > -1">{{
-              $t('Update the address')
-            }}</template>
-            <template v-if="editedAddress === -1">{{
-              $t('Create address')
-            }}</template>
-          </SfButton>
-          <SfButton
-            type="button"
-            class="action-button color-secondary cancel-button"
-            data-testid="update-address-button"
-            @click="cancelEditing"
-          >
-            {{ $t('Cancel') }}</SfButton
-          >
+          <div class="buttons">
+            <SfButton
+              type="submit"
+              @click.prevent="submit()"
+              class="action-button"
+              data-testid="update-address-button"
+            >
+              <template v-if="editedAddress > -1">{{
+                $t('Update the address')
+              }}</template>
+              <template v-if="editedAddress === -1">{{
+                $t('Create address')
+              }}</template>
+            </SfButton>
+            <SfButton
+              type="button"
+              class="action-button color-secondary cancel-button"
+              data-testid="update-address-button"
+              @click="cancelEditing"
+            >
+              {{ $t('Cancel') }}</SfButton
+            >
+          </div>
         </SfTab>
       </SfTabs>
       <SfTabs v-else key="address-list" :open-tab="1" class="tab-orphan">
@@ -168,7 +170,6 @@ export default {
   },
 
   setup(props, { emit, refs }) {
-
     const {
       form,
       addresses: addressList,
@@ -217,6 +218,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss';
+
 .primary-icon {
   margin-right: var(--spacer-sm);
   cursor: pointer;
@@ -224,5 +226,8 @@ export default {
 .shipping-list {
   max-height: 40vh;
   overflow-y: auto;
+}
+.buttons {
+  display: flex;
 }
 </style>
