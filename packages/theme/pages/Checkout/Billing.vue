@@ -1,5 +1,5 @@
 <template>
-  <div id="billing">
+  <div id="billing" v-if="!loading">
     <CheckoutAddressDetails
       class="spacer-top"
       :shipping-tab-title="$t('Billing details')"
@@ -51,7 +51,7 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const { load, billing, setDefaultAddress, deleteAddress, addAddress } = useUserBilling();
+    const { load, loading, billing, setDefaultAddress, deleteAddress, addAddress } = useUserBilling();
     const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
 
     onSSR(async () => {
@@ -65,7 +65,8 @@ export default {
       addAddress,
       router,
       billing,
-      countries
+      countries,
+      loading
     };
   }
 };

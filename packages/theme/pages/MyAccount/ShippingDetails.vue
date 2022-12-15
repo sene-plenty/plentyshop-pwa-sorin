@@ -1,5 +1,6 @@
 <template>
   <MyAccountAddressDetails
+    v-if="!loading"
     :shipping-tab-title="$t('Shipping details')"
     :addresses="shipping"
     :countries="countries"
@@ -23,7 +24,7 @@ export default {
     MyAccountAddressDetails
   },
   setup() {
-    const { shipping, load, addAddress, deleteAddress, setDefaultAddress } = useUserShipping();
+    const { shipping, loading, load, addAddress, deleteAddress, setDefaultAddress } = useUserShipping();
     const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
 
     onSSR(async () => {
@@ -34,6 +35,7 @@ export default {
     return {
       shipping,
       countries,
+      loading,
       addAddress,
       deleteAddress,
       setDefaultAddress

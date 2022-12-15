@@ -1,5 +1,5 @@
 <template>
-  <div id="shipping">
+  <div id="shipping" v-if="!loading">
     <div class="spacer-top">
       <SfCheckbox
         v-model="sameAsShipping"
@@ -59,7 +59,7 @@ export default {
   setup(props, context) {
     const sameAsShipping = ref(false);
     const router = useRouter();
-    const { load, shipping, setDefaultAddress, deleteAddress, addAddress } = useUserShipping();
+    const { load, loading, shipping, setDefaultAddress, deleteAddress, addAddress } = useUserShipping();
     const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
 
     onSSR(async () => {
@@ -82,7 +82,8 @@ export default {
       addAddress,
       router,
       shipping,
-      countries
+      countries,
+      loading
     };
   }
 };
