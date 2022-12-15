@@ -425,7 +425,8 @@ export type SessionSearchPramas = {
 
 export type SessionResult = {
   basket: any,
-  user: User
+  user: User,
+  guest: string
 }
 
 export type RegisterParams = {
@@ -593,6 +594,8 @@ export interface PlentymarketsApiMethods {
   ): Promise<Cart>
 
   getSession(initialRestCall: boolean): Promise<SessionResult>
+
+  loadUser(): Promise<any>
 
   loginUser(email: string, password: string): Promise<SessionResult>
 

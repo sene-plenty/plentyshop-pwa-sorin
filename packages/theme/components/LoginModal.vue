@@ -203,7 +203,7 @@ export default {
     const rememberMe = ref(false);
     const { register, login, loading, error: userError } = useUser();
     const { request, error: forgotPasswordError, loading: forgotPasswordLoading } = useForgotPassword();
-    const currentScreen = ref(SCREEN_REGISTER);
+    const currentScreen = ref(SCREEN_LOGIN);
 
     const error = reactive({
       login: null,

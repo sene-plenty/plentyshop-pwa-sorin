@@ -9,6 +9,7 @@ export async function getSession(context: Context, initialRestCall: boolean): Pr
   const { data } = await context.client.get(url.href);
 
   return {
+    guest: data.data.guest,
     user: data.data.customer,
     basket: data.data.basket
   };
