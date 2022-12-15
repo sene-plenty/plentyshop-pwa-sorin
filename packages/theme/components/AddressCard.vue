@@ -75,7 +75,9 @@ export default {
     };
 
     const setDefaultAddress = (address) => {
-      emit('set-default-address', address);
+      if (!address.primary) {
+        emit('set-default-address', address);
+      }
     };
 
     const getCountryName = (id) => {
