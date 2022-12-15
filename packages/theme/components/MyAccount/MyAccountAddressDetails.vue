@@ -59,10 +59,10 @@
             <slot name="shipping-list">
               <AddressCard v-for="(address, key) in addressList"
                             class="shipping"
-                            :class="{ primaryAaddress: address.primary === 1 }"
                             :key="address.id"
                             :address="address"
                             :countries="countries"
+                            @set-default-address="setDefaultAddress(address)"
                             @change-address="changeAddress(key)"
                             @delete-address="deleteAddress(address)">
               </AddressCard>
@@ -81,7 +81,7 @@
   </div>
 </template>
 <script>
-import { SfTabs, SfButton, SfIcon } from '@storefront-ui/vue';
+import { SfTabs, SfButton } from '@storefront-ui/vue';
 import { useAddressForm } from '@vue-storefront/plentymarkets';
 import AddressInputForm from '~/components/AddressInputForm';
 import AddressCard from '~/components/AddressCard';
@@ -92,7 +92,6 @@ export default {
   components: {
     SfTabs,
     SfButton,
-    SfIcon,
     AddressInputForm,
     AddressCard
   },
@@ -135,8 +134,8 @@ export default {
       closeForm
     } = useAddressForm(toRef(props, 'addresses'));
 
-    const setDefaultAddress = (shipping) => {
-      emit('set-default-address', shipping);
+    const setDefaultAddress = (address) => {
+      emit('set-default-address', address);
     };
 
     const submit = async () => {

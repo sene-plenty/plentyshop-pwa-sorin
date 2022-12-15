@@ -1,5 +1,5 @@
 <template>
-  <div class="shipping">
+  <div class="shipping" @click="setDefaultAddress(address)">
     <div class="shipping__content">
       <slot name="shipping-details">
         <p class="shipping__address">
@@ -66,14 +66,16 @@ export default {
 
   setup(props, {emit}) {
 
-    console.log(props.address);
-
     const deleteAddress = (address) => {
       emit('delete-address', address);
     };
 
     const changeAddress = (address) => {
       emit('change-address', address);
+    };
+
+    const setDefaultAddress = (address) => {
+      emit('set-default-address', address);
     };
 
     const getCountryName = (id) => {
@@ -89,7 +91,8 @@ export default {
     return {
       getCountryName,
       deleteAddress,
-      changeAddress
+      changeAddress,
+      setDefaultAddress
     };
   }
 };
@@ -97,4 +100,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss';
+.shipping {
+  cursor: pointer;
+}
 </style>

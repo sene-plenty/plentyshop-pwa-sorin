@@ -37,10 +37,10 @@
           <slot name="shipping-list">
             <AddressCard v-for="(address, key) in addressList"
                             class="shipping"
-                            :class="{ primaryAaddress: address.primary === 1 }"
                             :key="address.id"
                             :address="address"
                             :countries="countries"
+                            @set-default-address="setDefaultAddress(address)"
                             @change-address="changeAddress(key)"
                             @delete-address="deleteAddress(address)">
               </AddressCard>
@@ -58,7 +58,7 @@
   </div>
 </template>
 <script>
-import { SfButton, SfIcon } from '@storefront-ui/vue';
+import { SfButton } from '@storefront-ui/vue';
 import { toRef } from '@nuxtjs/composition-api';
 import { useAddressForm } from '@vue-storefront/plentymarkets';
 import AddressInputForm from '~/components/AddressInputForm';
@@ -68,7 +68,6 @@ export default {
   name: 'CheckoutAddressDetails',
   components: {
     SfButton,
-    SfIcon,
     AddressInputForm,
     AddressCard
   },
@@ -145,8 +144,5 @@ export default {
 }
 .buttons {
   display: flex;
-}
-.shipping {
-  cursor: pointer;
 }
 </style>
