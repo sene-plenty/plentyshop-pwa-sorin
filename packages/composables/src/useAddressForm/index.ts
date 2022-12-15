@@ -1,12 +1,10 @@
 // import { sharedRef } from '@vue-storefront/core';
 import { ref, Ref } from '@nuxtjs/composition-api';
 
-const countries = ref([]);
-export const useAddressForm = (_countries: any[], addresses: Ref<any[]>): any => {
+export const useAddressForm = (addresses: Ref<any[]>): any => {
 
   const editAddress = ref(false);
   const editedAddress = ref(-1);
-  countries.value = _countries;
 
   const formModel = {
     firstName: '',
@@ -26,16 +24,6 @@ export const useAddressForm = (_countries: any[], addresses: Ref<any[]>): any =>
     editAddress.value = true;
   }
 
-  const getCountryName = (id) => {
-    if (!countries.value) {
-      return '';
-    }
-    const country = countries.value.find(
-      (country) => Number(country.id) === Number(id)
-    );
-    return country.name || country.isoCode2;
-  };
-
   const changeAddress = (index) => {
     const address = addresses.value[index];
     if (index > -1) {
@@ -52,30 +40,17 @@ export const useAddressForm = (_countries: any[], addresses: Ref<any[]>): any =>
     form.value = {...formModel};
   };
 
-  const updateAddress = () => {
+  const closeForm = () => {
     editAddress.value = false;
-  };
-
-  const cancelEditing = () => {
-    editAddress.value = false;
-  };
-
-  const validateForm = (fn) => async () => {
-    const test = await fn();
-    console.log(test);
   };
 
   return {
     editAddress,
     editedAddress,
     addresses,
-    countries,
     form,
-    cancelEditing,
-    updateAddress,
+    closeForm,
     resetForm,
-    changeAddress,
-    validateForm,
-    getCountryName
+    changeAddress
   };
 };

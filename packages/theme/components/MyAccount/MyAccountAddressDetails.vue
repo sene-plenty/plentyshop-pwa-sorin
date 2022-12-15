@@ -41,7 +41,7 @@
               type="button"
               class="action-button color-secondary cancel-button"
               data-testid="update-address-button"
-              @click="cancelEditing"
+              @click="closeForm"
             >
               {{ $t('Cancel') }}</SfButton
             >
@@ -57,63 +57,15 @@
           </slot>
           <transition-group tag="div" :name="transition" class="shipping-list">
             <slot name="shipping-list">
-              <div
-                v-for="(address, key) in addressList"
-                :key="address.id"
-                class="shipping"
-                :class="{ primaryAaddress: address.primary === 1 }"
-                data-testid="shipping-address-list-item"
-              >
-                <div class="shipping__content">
-                  <slot name="shipping-details">
-                    <p class="shipping__address">
-                      <span class="shipping__client-name"
-                        >{{ address.firstName }} {{ address.lastName }}</span
-                      ><br />
-                      {{ address.streetName }} {{ address.apartment }}<br />{{
-                        address.zipCode
-                      }}
-                      {{ address.city }},<br />{{
-                        getCountryName(address.country)
-                      }}
-                    </p>
-                    <p class="shipping__address">
-                      {{ address.phoneNumber }}
-                    </p>
-                  </slot>
-                </div>
-                <div class="shipping__actions">
-                  <SfIcon
-                    icon="cross"
-                    color="gray"
-                    size="14px"
-                    role="button"
-                    class="smartphone-only"
-                    @click="deleteAddress(key, address)"
-                  />
-                  <SfIcon
-                    :icon="address.primary ? 'heart_fill' : 'heart'"
-                    color="gray"
-                    size="xxl"
-                    class="primary-icon"
-                    role="button"
-                    @click="setDefaultAddress(address)"
-                  />
-                  <SfButton
-                    data-testid="change-address"
-                    @click="changeAddress(key, address)"
-                  >
-                    {{ $t('Change') }}
-                  </SfButton>
-                  <SfButton
-                    class="shipping__button-delete desktop-only"
-                    data-testid="delete-address"
-                    @click="deleteAddress(address)"
-                  >
-                    {{ $t('Delete') }}
-                  </SfButton>
-                </div>
-              </div>
+              <AddressCard v-for="(address, key) in addressList"
+                            class="shipping"
+                            :class="{ primaryAaddress: address.primary === 1 }"
+                            :key="address.id"
+                            :address="address"
+                            :countries="countries"
+                            @change-address="changeAddress(key)"
+                            @delete-address="deleteAddress(address)">
+              </AddressCard>
             </slot>
           </transition-group>
           <SfButton
@@ -132,6 +84,7 @@
 import { SfTabs, SfButton, SfIcon } from '@storefront-ui/vue';
 import { useAddressForm } from '@vue-storefront/plentymarkets';
 import AddressInputForm from '~/components/AddressInputForm';
+import AddressCard from '~/components/AddressCard';
 import { toRef } from '@nuxtjs/composition-api';
 
 export default {
@@ -140,7 +93,8 @@ export default {
     SfTabs,
     SfButton,
     SfIcon,
-    AddressInputForm
+    AddressInputForm,
+    AddressCard
   },
   props: {
     addresses: {
@@ -178,9 +132,8 @@ export default {
       editedAddress,
       changeAddress,
       resetForm,
-      updateAddress,
-      cancelEditing
-    } = useAddressForm(props.countries, toRef(props, 'addresses'));
+      closeForm
+    } = useAddressForm(toRef(props, 'addresses'));
 
     const setDefaultAddress = (shipping) => {
       emit('set-default-address', shipping);
@@ -191,7 +144,7 @@ export default {
 
       if (addressForm) {
         form.value = addressForm.value;
-        updateAddress();
+        closeForm();
         emit('update:shipping', { ...form.value });
       }
     };
@@ -210,7 +163,7 @@ export default {
       setDefaultAddress,
       changeAddress,
       deleteAddress,
-      cancelEditing,
+      closeForm,
       getCountryName
     };
   }
