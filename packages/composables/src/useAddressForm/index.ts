@@ -1,12 +1,13 @@
 // import { sharedRef } from '@vue-storefront/core';
 import { ref, Ref } from '@nuxtjs/composition-api';
+import { Address } from '@vue-storefront/plentymarkets-api';
 
-export const useAddressForm = (addresses: Ref<any[]>): any => {
+export const useAddressForm = (addresses: Ref<Address[]>): any => {
 
   const editAddress = ref(false);
   const editedAddress = ref(-1);
 
-  const formModel = {
+  const formModel: Address = {
     firstName: '',
     lastName: '',
     streetName: '',
@@ -18,7 +19,7 @@ export const useAddressForm = (addresses: Ref<any[]>): any => {
     phoneNumber: ''
   };
 
-  const form = ref({...formModel});
+  const form: Ref<Address> = ref({...formModel});
 
   if (addresses.value?.length <= 0) {
     editAddress.value = true;

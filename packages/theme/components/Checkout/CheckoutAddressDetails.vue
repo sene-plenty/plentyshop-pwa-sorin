@@ -62,7 +62,7 @@ import { SfButton } from '@storefront-ui/vue';
 import { toRef } from '@nuxtjs/composition-api';
 import { useAddressForm } from '@vue-storefront/plentymarkets';
 import AddressInputForm from '~/components/AddressInputForm';
-import AddressCard from '~/components/addressCard';
+import AddressCard from '~/components/AddressCard';
 
 export default {
   name: 'CheckoutAddressDetails',

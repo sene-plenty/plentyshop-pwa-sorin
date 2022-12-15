@@ -488,7 +488,22 @@ export type AddressData = {
     title: string;
     contactPerson: string;
     options: AddressOption[];
-    primary: boolean;
+    primary: number;
+}
+
+export type Address = {
+  id?: number,
+  firstName: string,
+  lastName: string,
+  streetName: string,
+  apartment: string,
+  city: string,
+  state: string,
+  country: string,
+  zipCode: string,
+  phoneNumber: string,
+  email?: string,
+  primary?: number
 }
 
 export type ShippingCountryName = {
