@@ -1,6 +1,7 @@
 <template>
   <div>
     <PsfPersonalDetails
+      ref="PersonalDetails"
       :value="{}"
       :buttonText="$t('Log into your account')"
       :logInInfo="$t('or fill the details below')"
@@ -37,7 +38,7 @@ export default {
     SfButton,
     PsfPersonalDetails
   },
-  setup() {
+  setup(props, {refs}) {
 
     const { isLoginModalOpen, toggleLoginModal } = useUiState();
     const router = useRouter();
@@ -61,9 +62,12 @@ export default {
     };
 
     const goToBilling = async () => {
-      console.log({ user });
-      await register({ user });
-      router.push('/checkout/billing');
+      const { isValid } = await refs.PersonalDetails.validate();
+
+      if (isValid) {
+        await register({ user });
+        router.push('/checkout/billing');
+      }
     };
 
     return {

@@ -41,63 +41,84 @@
             required
             @input="updateField('lastName', $event)"
           /> -->
-          <SfInput
-            v-model="personalDetails.email"
-            :value="email"
-            :label="inputsLabels[2]"
-            name="email"
-            class="form__element"
-            required
-            @input="updateField('email', $event)"
-          />
-          <div class="info">
+          <ValidationObserver ref="validationObserver">
+            <form>
+              <ValidationProvider
+                rules="required|email"
+                name="email"
+                v-slot="{ errors }"
+                slim
+              >
+                <SfInput
+                  v-model="personalDetails.email"
+                  :value="email"
+                  :label="inputsLabels[2]"
+                  name="email"
+                  class="form__element"
+                  required
+                  :valid="!errors[0]"
+                  :errorMessage="errors[0]"
+                  @input="updateField('email', $event)"
+                />
+              </ValidationProvider>
+            <div class="info">
+              <slot
+                name="additional-info"
+                v-bind="{ additionalDetails, characteristics }"
+              >
+                <p class="info__heading">
+                  {{ additionalDetails }}
+                </p>
+                <SfCharacteristic
+                  v-for="(characteristic, key) in characteristics"
+                  :key="key"
+                  :description="characteristic.description"
+                  :icon="characteristic.icon"
+                  :size-icon="characteristic.size"
+                  class="info__characteristic"
+                />
+              </slot>
+            </div>
             <slot
-              name="additional-info"
-              v-bind="{ additionalDetails, characteristics }"
+              name="create-account"
+              v-bind="{
+                createAccountCheckboxLabel,
+                transition,
+                createAccountInputLabel,
+              }"
             >
-              <p class="info__heading">
-                {{ additionalDetails }}
-              </p>
-              <SfCharacteristic
-                v-for="(characteristic, key) in characteristics"
-                :key="key"
-                :description="characteristic.description"
-                :icon="characteristic.icon"
-                :size-icon="characteristic.size"
-                class="info__characteristic"
+              <SfCheckbox
+                v-model="createAccount"
+                name="createAccount"
+                :label="createAccountCheckboxLabel"
+                class="form__checkbox"
+                data-testid="create-account-checkbox"
+                @change="$emit('create-account', createAccount)"
               />
+              <transition :name="transition">
+                <ValidationProvider v-if="createAccount"
+                  rules="required|min:8"
+                  name="email"
+                  v-slot="{ errors }"
+                  slim
+                >
+                  <SfInput
+                    v-model="personalDetails.password"
+                    :has-show-password="true"
+                    type="password"
+                    :label="createAccountInputLabel"
+                    class="form__element"
+                    required
+                    data-testid="create-password-input"
+                    :valid="!errors[0]"
+                    :errorMessage="errors[0]"
+                    @input="updateField('password', $event)"
+                  />
+                </ValidationProvider>
+              </transition>
             </slot>
-          </div>
-          <slot
-            name="create-account"
-            v-bind="{
-              createAccountCheckboxLabel,
-              transition,
-              createAccountInputLabel,
-            }"
-          >
-            <SfCheckbox
-              v-model="createAccount"
-              name="createAccount"
-              :label="createAccountCheckboxLabel"
-              class="form__checkbox"
-              data-testid="create-account-checkbox"
-              @change="$emit('create-account', createAccount)"
-            />
-            <transition :name="transition">
-              <SfInput
-                v-if="createAccount"
-                v-model="personalDetails.password"
-                :has-show-password="true"
-                type="password"
-                :label="createAccountInputLabel"
-                class="form__element"
-                required
-                data-testid="create-password-input"
-                @input="updateField('password', $event)"
-              />
-            </transition>
-          </slot>
+            </form>
+          </ValidationObserver>
         </slot>
       </div>
     </div>
@@ -110,6 +131,18 @@ import {
   SfHeading,
   SfCharacteristic
 } from '@storefront-ui/vue';
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { required, min } from 'vee-validate/dist/rules';
+
+extend('required', {
+  ...required,
+  message: 'This field is required'
+});
+extend('min', {
+  ...min,
+  message: 'The field should have at least {length} characters'
+});
+
 export default {
   name: 'SfPersonalDetails',
   components: {
@@ -117,7 +150,9 @@ export default {
     SfCheckbox,
     SfButton,
     SfHeading,
-    SfCharacteristic
+    SfCharacteristic,
+    ValidationProvider,
+    ValidationObserver
   },
   props: {
     value: {
@@ -207,6 +242,9 @@ export default {
     }
   },
   methods: {
+    async validate() {
+      return this.$refs.validationObserver.validateWithInfo();
+    },
     updateField() {
       this.$emit('input', this.personalDetails);
     }
