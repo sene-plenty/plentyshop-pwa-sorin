@@ -64,9 +64,11 @@ export default {
   'Terms and conditions': 'Allgemeine Geschäftsbedingungen',
   'Pay for order': 'Für Bestellung bezahlen',
   'Log into your account': 'In dein Konto einloggen',
-  'or fill the details below': 'oder füllen Sie die Details unten',
-  'Enjoy your free account': 'Enjoy these perks with your free account!',
+  'or fill the details below': 'oder füllen Sie die Details unten aus',
+  'Enjoy your free account': 'Genießen Sie diese Vorteile mit Ihrem kostenlosen Konto!',
   'Continue to payment': 'Weiter zur Zahlung',
+  'I want to create an account': 'Ich möchte ein Konto erstellen',
+  'Create Password': 'Password erstellen',
   'Order No.': 'Bestellnummer',
   'Successful placed order': 'Sie haben die Bestellung erfolgreich aufgegeben. Sie können den Status Ihres Bestellen Sie über unsere Lieferstatusfunktion. Sie erhalten eine Bestellung Bestätigungs-E-Mail mit Details Ihrer Bestellung und einem Link zum Verfolgen der Bestellung Fortschritt.',
   'Info after order': 'Sie können sich mit E-Mail und definiertem Passwort in Ihrem Konto anmelden vorhin. Überprüfen Sie in Ihrem Konto Ihre Profildaten Transaktionsverlauf, Abonnement für Newsletter bearbeiten.',
@@ -149,6 +151,7 @@ export default {
   'Subscribe': 'Abonnieren',
   'Subscribe to newsletter': 'Anmeldung zum Newsletter',
   'Email address': 'E-Mail Adresse',
+  'Your email': 'Deine E-Mail',
   'I confirm subscription': 'Ich bestätige das Abonnement',
   'You can unsubscribe at any time': 'Sie können sich jederzeit abmelden',
   'show more': 'mehr anzeigen',
@@ -181,5 +184,6 @@ export default {
   'Update the address':  'Adresse speichern',
   'Create address': 'Adresse erstellen',
   'Add new address': 'Neue Adresse erstellen',
-  'My profile': 'Mein Profil'
+  'My profile': 'Mein Profil',
+  'Go to billing': 'Weiter zur Rechnungsadresse'
 };

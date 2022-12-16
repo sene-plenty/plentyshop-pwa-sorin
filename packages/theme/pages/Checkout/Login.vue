@@ -2,22 +2,22 @@
   <div>
     <PsfPersonalDetails
       :value="{}"
-      buttonText="Log into your account"
-      logInInfo="or fill the details below:"
-      headingTitle="Personal details"
+      :buttonText="$t('Log into your account')"
+      :logInInfo="$t('or fill the details below')"
+      :headingTitle="$t('Personal details')"
       :headingTitleLevel="2"
-      :inputsLabels='["First name","Last name","Your email"]'
-      additionalDetails="Enjoy these perks with your free account!"
+      :inputsLabels="[$t('First name'),$t('Last name'),$t('Your email')]"
+      :additionalDetails="$t('Enjoy your free account')"
       :characteristics='[{"description":"Faster checkout","icon":"clock","size":"24px"},{"description":"Earn credits with every purchase","icon":"credits","size":"24px"},{"description":"Full rewards program benefits","icon":"rewards","size":"24px"},{"description":"Manage your wishlist","icon":"heart","size":"24px"}]'
       transition="sf-fade"
-      createAccountCheckboxLabel="I want to create an account"
-      createAccountInputLabel="Create Password"
+      :createAccountCheckboxLabel="$t('I want to create an account')"
+      :createAccountInputLabel="$t('Create Password')"
       @input="logInput($event)"
       @log-in="toggleLoginModal()"
     />
     <SfButton
         type="button"
-        class="sf-button color-secondary summary__back-button"
+        class="sf-button color-primary summary__back-button"
         @click="goToBilling"
       >
       {{ $t('Go to billing') }}
