@@ -161,12 +161,12 @@
   </SfModal>
 </template>
 <script>
-import { ref, watch, reactive, computed } from '@nuxtjs/composition-api';
+import { ref, watch, reactive, computed, useContext } from '@nuxtjs/composition-api';
 import { SfModal, SfInput, SfButton, SfCheckbox, SfLoader, SfAlert, SfBar } from '@storefront-ui/vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
 import { useUser, useForgotPassword } from '@vue-storefront/plentymarkets';
-import { useUiState } from '~/composables';
+import { useUiState, useUiNotification } from '~/composables';
 
 extend('email', {
   ...email,
@@ -203,6 +203,9 @@ export default {
     const rememberMe = ref(false);
     const { register, login, loading, error: userError } = useUser();
     const { request, error: forgotPasswordError, loading: forgotPasswordLoading } = useForgotPassword();
+    const { send } = useUiNotification();
+    const { app } = useContext();
+
     const currentScreen = ref(SCREEN_LOGIN);
 
     const error = reactive({
@@ -242,13 +245,22 @@ export default {
       resetErrorValues();
       await fn({ user: form.value });
 
-      const hasUserErrors = userError.value.register || userError.value.login;
+      error.login = userError.value.login;
+      error.register = userError.value.register;
 
-      if (hasUserErrors) {
-        error.login = userError.value.login?.message;
-        error.register = userError.value.register?.message;
+      if (error.login) {
+        send({message: app.i18n.t('An error occurred while logging in'), type: 'danger', persist: true});
+        send({message: error.login, type: 'danger', persist: true});
         return;
       }
+
+      if (error.register) {
+        send({message: app.i18n.t('An error occurred during the registration'), type: 'danger', persist: true});
+        send({message: error.register, type: 'danger', persist: true});
+        return;
+      }
+
+      send({message: app.i18n.t('Login successful'), type: 'success'});
       toggleLoginModal();
     };
 

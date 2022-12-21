@@ -185,5 +185,9 @@ export default {
   'Create address': 'Adresse erstellen',
   'Add new address': 'Neue Adresse erstellen',
   'My profile': 'Mein Profil',
-  'Go to billing': 'Weiter zur Rechnungsadresse'
+  'Go to billing': 'Weiter zur Rechnungsadresse',
+  // Alerts
+  'Login successful': 'Anmeldung erfolgreich',
+  'An error occurred during the registration': 'Bei der Registrierung ist ein Fehler aufgetreten',
+  'An error occurred while logging in': 'Beim Einloggen ist ein Fehler aufgetreten'
 };

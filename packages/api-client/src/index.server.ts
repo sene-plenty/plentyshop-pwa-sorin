@@ -48,7 +48,10 @@ const filterCookies = (cookies: string): string => {
 function onCreate(settings: Settings) {
   const client = axios.create({
     baseURL: settings.api.url,
-    withCredentials: true
+    withCredentials: true,
+    validateStatus: (status) => {
+      return status >= 200 && status < 400 && status !== 226;
+    }
   });
 
   // Add a response interceptor

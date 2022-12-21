@@ -185,5 +185,10 @@ export default {
   'Create address': 'Create address',
   'Add new address': 'Add new address',
   'My profile': 'My profile',
-  'Go to billing': 'Go to billing'
+  'Go to billing': 'Go to billing',
+  // Alerts
+  'Login successful': 'Login successful',
+  'An error occurred during the registration': 'An error occurred during the registration',
+  'An error occurred while logging in': 'An error occurred while logging in'
+
 };

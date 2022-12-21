@@ -45,7 +45,7 @@
             <form>
               <ValidationProvider
                 rules="required|email"
-                name="email"
+                name="registerMail"
                 v-slot="{ errors }"
                 slim
               >
@@ -53,7 +53,7 @@
                   v-model="personalDetails.email"
                   :value="email"
                   :label="inputsLabels[2]"
-                  name="email"
+                  name="registerMail"
                   class="form__element"
                   required
                   :valid="!errors[0]"
@@ -98,13 +98,14 @@
               <transition :name="transition">
                 <ValidationProvider v-if="createAccount"
                   rules="required|min:8"
-                  name="email"
+                  name="registerPassword"
                   v-slot="{ errors }"
                   slim
                 >
                   <SfInput
                     v-model="personalDetails.password"
                     :has-show-password="true"
+                    name="registerPassword"
                     type="password"
                     :label="createAccountInputLabel"
                     class="form__element"
