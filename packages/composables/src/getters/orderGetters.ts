@@ -1,5 +1,5 @@
-import { UserOrderGetters } from '@vue-storefront/core';
-import type { Order, OrderItem } from '@vue-storefront/plentymarkets-api';
+import { AgnosticPagination, UserOrderGetters } from '@vue-storefront/core';
+import type { GetOrdersResponse, Order, OrderItem } from '@vue-storefront/plentymarkets-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDate(order: Order): string {
@@ -27,7 +27,7 @@ function getPrice(order: Order): number | null {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(order: Order): OrderItem[] {
-  return [];
+  return order.order.orderItems || [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -57,7 +57,25 @@ function getFormattedPrice(price: number): string {
 
 // eslint-disable-next-line
 function getOrdersTotal(orders: any): number {
+  console.log(orders);
   return orders?.length || 0;
+}
+
+function getPagination(params: GetOrdersResponse): AgnosticPagination {
+  console.log('pag: ', params);
+  const totalPages = params?.data?.lastPageNumber || 1;
+  const pageOptions = [params?.data?.itemsPerPage] || [10];
+  const totalItems = params?.data?.totalsCount || 1;
+  const currentPage = params?.data?.page || 1;
+  const itemsPerPage = params?.data?.itemsPerPage || 10;
+
+  return {
+    currentPage,
+    totalPages,
+    totalItems,
+    itemsPerPage,
+    pageOptions
+  };
 }
 
 export const orderGetters: UserOrderGetters<Order, OrderItem> = {
@@ -71,5 +89,6 @@ export const orderGetters: UserOrderGetters<Order, OrderItem> = {
   getItemQty,
   getItemPrice,
   getFormattedPrice,
-  getOrdersTotal
+  getOrdersTotal,
+  getPagination
 };

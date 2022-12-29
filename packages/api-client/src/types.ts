@@ -1,5 +1,6 @@
 import { IntegrationContext, ApiClientMethods, ProductsSearchParams, AgnosticCategoryTree } from '@vue-storefront/core';
 import { AxiosInstance } from 'axios';
+import { Order } from './types/new_order';
 
 export type TODO = unknown;
 
@@ -8,6 +9,17 @@ export type Settings = {
     url: string
   }
 };
+
+export type PaginatedResult<T> = {
+  firstOnPage: number,
+  isLastPage: boolean,
+  itemsPerPage: number,
+  lastOnPage: number,
+  lastPageNumber: number,
+  page: number,
+  totalsCount: number,
+  entries: T[]
+}
 
 export type ReviewAverage = {
   counts: {
@@ -192,115 +204,6 @@ export type Category = {
 export type Coupon = TODO;
 
 export type FacetSearchCriteria = TODO;
-
-export interface OrderItemGiftCard {
-  isGiftCard: boolean;
-  information: any[];
-  hasPdf: boolean;
-}
-
-export interface OrderItemProperty {
-  id: number;
-  orderItemId: number;
-  typeId: number;
-  value: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface OrderItemAmount {
-  id: number;
-  orderItemId: number;
-  isSystemCurrency: boolean;
-  currency: string;
-  exchangeRate: number;
-  purchasePrice: number;
-  priceOriginalGross: number;
-  priceOriginalNet: number;
-  priceGross: number;
-  priceNet: number;
-  surcharge: number;
-  discount: number;
-  isPercentage: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface OrderItem {
-  id: number;
-  orderId: number;
-  typeId: number;
-  referrerId: number;
-  itemVariationId: number;
-  quantity: number;
-  orderItemName: string;
-  attributeValues?: any;
-  shippingProfileId: number;
-  countryVatId: number;
-  vatField: number;
-  vatRate: number;
-  position: string;
-  createdAt: Date;
-  updatedAt: Date;
-  warehouseId: number;
-  bundleComponents?: any;
-  bundleType?: any;
-  giftCard: OrderItemGiftCard;
-  attributes: any[];
-  variationProperties?: any;
-  orderProperties: any[];
-  properties: OrderItemProperty[];
-  dates: any[];
-  amounts: OrderItemAmount[];
-  references: any[];
-}
-
-export interface OrderVat {
-  id: number;
-  orderAmountId: number;
-  countryVatId: number;
-  vatField: number;
-  vatRate: number;
-  value: number;
-  createdAt: string;
-  updatedAt: string;
-  netTotal: number;
-  grossTotal: number;
-}
-
-export interface OrderAmount {
-  id: number;
-  orderId: number;
-  isSystemCurrency: boolean;
-  isNet: boolean;
-  currency: string;
-  exchangeRate: number;
-  netTotal: number;
-  grossTotal: number;
-  vatTotal: number;
-  invoiceTotal: number;
-  paidAmount: number;
-  giftCardAmount: number;
-  createdAt: string;
-  updatedAt: string;
-  shippingCostsGross: number;
-  shippingCostsNet: number;
-  taxlessAmount: number;
-  prepaidAmount: number;
-  vats: OrderVat[];
-}
-
-export type OrderDetails = {
-  id: number,
-  createdAt: string,
-  updatedAt: string,
-  amounts: OrderAmount[],
-  statusName: string
-};
-
-export type Order = {
-  order: OrderDetails
-};
 
 export type PasswordResetResult = TODO;
 
@@ -648,19 +551,10 @@ export type CreateOrderResponse = {
   data: Order
 }
 
-export declare type GetOrdersResponse = {
-    events: any[];
-    data: {
-      page: number,
-      totalsCount: number,
-      isLastPage: boolean,
-      lastPageNumber: number,
-      firstOnPage: number,
-      lastOnPage: number,
-      itemsPerPage: number,
-      entries: Order[]
-    };
-};
+export type GetOrdersResponse = {
+  events: any[],
+  data: PaginatedResult<Order>
+}
 
 export interface PlentymarketsApiMethods {
   getProduct(
