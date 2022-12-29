@@ -72,6 +72,16 @@
             </SfTableData>
           </SfTableRow>
         </SfTable>
+        <LazyHydrate on-interaction>
+          <SfPagination
+            v-if="!loading"
+            class="products__pagination desktop-only"
+            v-show="pagination.totalPages > 1"
+            :current="pagination.currentPage"
+            :total="pagination.totalPages"
+            :visible="5"
+          />
+        </LazyHydrate>
         <p>{{ $t('Total orders') }} - {{ totalOrders }}</p>
       </div>
     </SfTab>
@@ -92,8 +102,10 @@ import {
   SfTable,
   SfButton,
   SfProperty,
-  SfLink
+  SfLink,
+  SfPagination
 } from '@storefront-ui/vue';
+import LazyHydrate from 'vue-lazy-hydration';
 import { computed, ref } from '@nuxtjs/composition-api';
 import { useUserOrder, orderGetters } from '@vue-storefront/plentymarkets';
 import { AgnosticOrderStatus } from '@vue-storefront/core';
@@ -106,11 +118,15 @@ export default {
     SfTable,
     SfButton,
     SfProperty,
-    SfLink
+    SfLink,
+    SfPagination,
+    LazyHydrate
   },
   setup() {
-    const { orders, search } = useUserOrder();
+    const { orders: orderResult, search, loading } = useUserOrder();
     const currentOrder = ref(null);
+    const pagination = computed(() => orderGetters.getPagination(orderResult.value));
+    const orders = computed(() => orderResult.value?.data?.entries);
 
     onSSR(async () => {
       await search();
@@ -139,6 +155,8 @@ export default {
     return {
       tableHeaders,
       orders,
+      pagination,
+      loading,
       totalOrders: computed(() => orderGetters.getOrdersTotal(orders.value)),
       getStatusTextClass,
       orderGetters,

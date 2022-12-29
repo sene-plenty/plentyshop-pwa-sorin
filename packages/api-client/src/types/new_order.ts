@@ -8,8 +8,6 @@ interface VariationStringMap {
   [variationId: string]: string
 }
 
-// =======================================
-
 export interface AddressRelation {
   id: number;
   orderId: number;

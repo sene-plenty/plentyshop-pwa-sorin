@@ -37,32 +37,30 @@ function getItemSku(item: OrderItem): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemName(item: OrderItem): string {
-  return '';
+  return item.orderItemName || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemQty(item: OrderItem): number {
-  return 0;
+  return item.quantity || 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemPrice(item: OrderItem): number {
-  return 0;
+  return item.amounts[0].priceOriginalGross || 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getFormattedPrice(price: number): string {
-  return '';
+  return price.toString() || '0';
 }
 
 // eslint-disable-next-line
 function getOrdersTotal(orders: any): number {
-  console.log(orders);
   return orders?.length || 0;
 }
 
 function getPagination(params: GetOrdersResponse): AgnosticPagination {
-  console.log('pag: ', params);
   const totalPages = params?.data?.lastPageNumber || 1;
   const pageOptions = [params?.data?.itemsPerPage] || [10];
   const totalItems = params?.data?.totalsCount || 1;
