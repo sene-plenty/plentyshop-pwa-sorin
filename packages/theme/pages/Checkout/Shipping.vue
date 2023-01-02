@@ -12,12 +12,11 @@
     <div v-if="!sameAsShipping">
       <CheckoutAddressDetails
         class="spacer-top"
-        :shipping-tab-title="$t('Shipping details')"
         :addresses="shipping"
         :countries="countries"
         @set-default-address="setDefaultAddress({ address: $event })"
         @delete-address="deleteAddress({ address: $event })"
-        @update:shipping="addAddress({ address: $event })"
+        @update-address="addAddress({ address: $event })"
       />
     </div>
     <div class="spacer-top buttons">

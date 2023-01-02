@@ -80,10 +80,6 @@ export default {
       type: Array,
       default: () => []
     },
-    shippingTabTitle: {
-      type: String,
-      default: 'Shipping details'
-    },
     transition: {
       type: String,
       default: 'sf-fade'
@@ -101,8 +97,8 @@ export default {
       closeForm
     } = useAddressForm(toRef(props, 'addresses'));
 
-    const setDefaultAddress = (shipping) => {
-      emit('set-default-address', shipping);
+    const setDefaultAddress = (address) => {
+      emit('set-default-address', address);
     };
 
     const submit = async () => {
@@ -111,7 +107,7 @@ export default {
       if (addressForm) {
         form.value = addressForm.value;
         closeForm();
-        emit('update:shipping', { ...form.value });
+        emit('update-address', { ...form.value });
       }
     };
 

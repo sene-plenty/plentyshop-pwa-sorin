@@ -1,13 +1,13 @@
 <template>
   <MyAccountAddressDetails
     v-if="!loading"
-    :shipping-tab-title="$t('Shipping details')"
+    :tab-title="$t('Shipping details')"
     :addresses="shipping"
     :countries="countries"
     data-testid="shipping-details-tabs"
     @set-default-address="setDefaultAddress({ address: $event })"
     @delete-address="deleteAddress({ address: $event })"
-    @update:shipping="addAddress({ address: $event })"
+    @update-address="addAddress({ address: $event })"
   />
 </template>
 <script>

@@ -2,12 +2,11 @@
   <div id="billing" v-if="!loading">
     <CheckoutAddressDetails
       class="spacer-top"
-      :shipping-tab-title="$t('Billing details')"
       :addresses="billing"
       :countries="countries"
       @set-default-address="setDefaultAddress({address: $event })"
       @delete-address="deleteAddress({address: $event})"
-      @update:shipping="addAddress({address: $event})"
+      @update-address="addAddress({address: $event})"
     />
     <div class="spacer-top buttons">
           <SfButton

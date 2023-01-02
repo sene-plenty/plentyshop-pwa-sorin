@@ -104,7 +104,7 @@ export default {
       type: Array,
       default: () => []
     },
-    shippingTabTitle: {
+    tabTitle: {
       type: String,
       default: 'Shipping details'
     },
@@ -143,7 +143,7 @@ export default {
       if (addressForm) {
         form.value = addressForm.value;
         closeForm();
-        emit('update:shipping', { ...form.value });
+        emit('update-address', { ...form.value });
       }
     };
 
@@ -169,10 +169,6 @@ export default {
 <style lang="scss" scoped>
 @import '~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss';
 
-.primary-icon {
-  margin-right: var(--spacer-sm);
-  cursor: pointer;
-}
 .shipping-list {
   max-height: 40vh;
   overflow-y: auto;
