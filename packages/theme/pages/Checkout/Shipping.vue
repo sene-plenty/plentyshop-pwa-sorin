@@ -31,7 +31,7 @@
           <SfButton
             class="form__action-button"
             @click="submit"
-            :disabled="shipping.length <= 0"
+            :disabled="shipping.length <= 0 && !sameAsShipping"
           >
             {{ $t('Continue to payment') }}
           </SfButton>
