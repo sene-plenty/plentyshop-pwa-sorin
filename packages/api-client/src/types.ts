@@ -506,6 +506,18 @@ export type Address = {
   primary?: number
 }
 
+export type State = {
+  id: number,
+  name: string
+}
+
+export type Country = {
+  id: number,
+  name: string,
+  isoCode2: string,
+  states: State[]
+}
+
 export type ShippingCountryName = {
   country_id: string,
   id: number,
@@ -560,6 +572,36 @@ export type CreateOrderResponse = {
   data: {
     order: Order
   }
+}
+
+export interface UserAddressGetters {
+  getAddresses: (addresses: Address[], criteria?: Record<string, any>) => Address[];
+  getDefault: (addresses: Address[]) => Address;
+  getTotal: (addresses: Address[]) => number;
+  getPostCode: (address: Address) => string;
+  getStreetName: (address: Address) => string;
+  getStreetNumber: (address: Address) => string | number;
+  getCity: (address: Address) => string;
+  getFirstName: (address: Address) => string;
+  getLastName: (address: Address) => string;
+  getCountry: (countries: Country[], id: string) => string;
+  getPhone: (address: Address) => string;
+  getEmail: (address: Address) => string;
+  getProvince: (address: Address) => string;
+  getCompanyName: (address: Address) => string;
+  getTaxNumber: (address: Address) => string;
+  getId: (address: Address) => string | number;
+  getApartmentNumber: (address: Address) => string | number;
+  isDefault: (address: Address) => boolean;
+}
+
+export interface CountryGetters {
+  getStates(country: Country): string,
+  getStateId(state: State): string,
+  getStateName(state: State): string,
+  getCountryId(country: Country): string,
+  getCountryName(country: Country): string,
+  getCountryIsoCode(country: Country): string
 }
 
 export interface PlentymarketsApiMethods {

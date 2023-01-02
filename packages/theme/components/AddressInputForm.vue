@@ -101,11 +101,11 @@
               data-testid="country"
             >
               <SfComponentSelectOption
-                v-for="countryOption in countries"
-                :key="countryOption.id"
-                :value="countryOption.id.toString()"
+                v-for="country in countries"
+                :key="countryGetters.getCountryId(country)"
+                :value="countryGetters.getCountryId(country)"
               >
-                {{ countryOption.name }}
+                {{ countryGetters.getCountryName(country) }}
               </SfComponentSelectOption>
             </SfComponentSelect>
           </ValidationProvider>
@@ -139,10 +139,10 @@
             >
               <SfComponentSelectOption
                 v-for="state in states"
-                :key="state.id"
-                :value="state.id.toString()"
+                :key="countryGetters.getStateId(state)"
+                :value="countryGetters.getStateId(state)"
               >
-                {{ state.name }}
+                {{ countryGetters.getStateName(state) }}
               </SfComponentSelectOption>
             </SfComponentSelect>
           </ValidationProvider>
@@ -178,6 +178,7 @@ import {
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, min } from 'vee-validate/dist/rules';
 import { watch, ref } from '@nuxtjs/composition-api';
+import { countryGetters } from '@vue-storefront/plentymarkets';
 
 export default {
   name: 'AddressInputForm',
@@ -236,23 +237,30 @@ export default {
       return false;
     };
 
+    const setStates = (countryId) => {
+      const country = props.countries.find(
+        (country) => Number(country.id) === Number(countryId)
+      );
+      if (countryGetters.getStates(country) <= 0) {
+        internalForm.value.state = null;
+      }
+      states.value = countryGetters.getStates(country);
+    };
+
     watch(
       () => internalForm.value.country,
-      async (newValue) => {
-        const country = props.countries.find(
-          (country) => Number(country.id) === Number(newValue)
-        );
-        if (country?.states <= 0) {
-          internalForm.value.state = null;
-        }
-        states.value = country?.states || [];
+      async (countryId) => {
+        setStates(countryId);
       }
     );
+
+    setStates(internalForm.value.country);
 
     return {
       validate,
       internalForm,
-      states
+      states,
+      countryGetters
     };
   }
 };

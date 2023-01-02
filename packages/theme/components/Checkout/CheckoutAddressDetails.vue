@@ -94,7 +94,6 @@ export default {
     const {
       form,
       addresses: addressList,
-      getCountryName,
       editAddress,
       editedAddress,
       changeAddress,
@@ -130,7 +129,6 @@ export default {
       setDefaultAddress,
       changeAddress,
       deleteAddress,
-      getCountryName,
       closeForm
     };
   }

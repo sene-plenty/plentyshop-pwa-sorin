@@ -4,17 +4,17 @@
       <slot name="shipping-details">
         <p class="shipping__address">
           <span class="shipping__client-name"
-            >{{ address.firstName }} {{ address.lastName }}</span
+            >{{ userAddressGetters.getFirstName(address) }} {{ userAddressGetters.getLastName(address) }}</span
           ><br />
-          {{ address.streetName }} {{ address.apartment }}<br />{{
-            address.zipCode
+          {{ userAddressGetters.getStreetName(address) }} {{ userAddressGetters.getStreetNumber(address) }}<br />{{
+            userAddressGetters.getPostCode(address)
           }}
-          {{ address.city }},<br />{{ getCountryName(address.country) }}
+          {{ userAddressGetters.getCity(address) }},<br />{{ userAddressGetters.getCountry(countries, address.country) }}
         </p>
         <p class="shipping__address">
-          {{ address.phoneNumber }}
+          {{ userAddressGetters.getPhone(address) }}
         </p>
-        <template v-if="address.primary === 1"
+        <template v-if="userAddressGetters.isDefault(address)"
           ><span class="color-secondary sf-badge">{{
             $t('Selected address')
           }}</span></template
@@ -49,6 +49,7 @@
 
 <script>
 import { SfButton, SfIcon } from '@storefront-ui/vue';
+import { userAddressGetters } from '@vue-storefront/plentymarkets';
 
 export default {
   name: 'AddressCard',
@@ -80,21 +81,11 @@ export default {
       }
     };
 
-    const getCountryName = (id) => {
-      if (!props.countries) {
-        return '';
-      }
-      const country = props.countries.find(
-        (country) => Number(country.id) === Number(id)
-      );
-      return country.name || country.isoCode2;
-    };
-
     return {
-      getCountryName,
       deleteAddress,
       changeAddress,
-      setDefaultAddress
+      setDefaultAddress,
+      userAddressGetters
     };
   }
 };
