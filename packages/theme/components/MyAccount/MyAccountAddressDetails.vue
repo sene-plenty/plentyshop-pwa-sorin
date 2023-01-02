@@ -49,7 +49,7 @@
         </SfTab>
       </SfTabs>
       <SfTabs v-else key="address-list" :open-tab="1" class="tab-orphan">
-        <SfTab :title="shippingTabTitle">
+        <SfTab :title="tabTitle">
           <slot name="shipping-tab-description">
             <p class="message">
               {{ shipingTabDescription }}
@@ -123,6 +123,9 @@ export default {
   },
 
   setup(props, { emit, refs }) {
+
+    console.log(props.addresses);
+
     const {
       form,
       addresses: addressList,
@@ -168,7 +171,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import '~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss';
-
 .shipping-list {
   max-height: 40vh;
   overflow-y: auto;
