@@ -124,8 +124,6 @@ export default {
 
   setup(props, { emit, refs }) {
 
-    console.log(props.addresses);
-
     const {
       form,
       addresses: addressList,
