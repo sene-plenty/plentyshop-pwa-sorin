@@ -227,8 +227,6 @@ export default {
     const internalForm = ref(props.form);
     const states = ref([]);
 
-    console.log(props);
-
     if (!internalForm?.value?.firstName) {
       internalForm.value = {
         firstName: '',
