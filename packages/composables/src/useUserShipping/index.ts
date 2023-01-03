@@ -13,7 +13,12 @@ import {
 const params: UseUserShippingFactoryParams<Address, AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, shippingDetails) => {
-    await context.$plentymarkets.api.saveAddress(AddressType.Shipping, shippingDetails.address);
+    if (!shippingDetails.address) {
+      return await context.$plentymarkets.api.saveBillingIsShipping();
+    } else {
+      await context.$plentymarkets.api.saveAddress(AddressType.Shipping, shippingDetails.address);
+    }
+
     const data = await context.$plentymarkets.api.loadAddresses(AddressType.Shipping);
     return data ?? null;
   },
@@ -34,7 +39,7 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, params): Promise<AddressData[]> => {
     const data = await context.$plentymarkets.api.loadAddresses(AddressType.Shipping);
-    return data ?? null;
+    return data?.length > 0 ? data : [];
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
