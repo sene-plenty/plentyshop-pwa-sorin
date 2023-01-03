@@ -1,4 +1,4 @@
-import { Address } from './address';
+import { Address } from '@vue-storefront/plentymarkets-api';
 
 export type Customer = {
   firstName?: string;

@@ -14,6 +14,7 @@
         class="spacer-top"
         :addresses="shipping"
         :countries="countries"
+        :type="'shipping'"
         @set-default-address="setDefaultAddress({ address: $event })"
         @delete-address="deleteAddress({ address: $event })"
         @update-address="addAddress({ address: $event })"
@@ -41,7 +42,7 @@
 <script>
 import { onSSR } from '@vue-storefront/core';
 import { SfButton, SfCheckbox } from '@storefront-ui/vue';
-import { ref, useRouter } from '@nuxtjs/composition-api';
+import { ref, useRouter, computed } from '@nuxtjs/composition-api';
 import {
   useActiveShippingCountries,
   useUserShipping
@@ -58,8 +59,12 @@ export default {
   setup(props, context) {
     const sameAsShipping = ref(false);
     const router = useRouter();
-    const { load, loading, shipping, setDefaultAddress, deleteAddress, addAddress } = useUserShipping();
-    const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
+    const { load, loading: loadingBilling, shipping, setDefaultAddress, deleteAddress, addAddress } = useUserShipping();
+    const { load: loadActiveShippingCountries, loading: loadingCountries, result: countries } = useActiveShippingCountries();
+
+    const loading = computed(() => {
+      return loadingBilling.value && loadingCountries.value;
+    });
 
     onSSR(async () => {
       await load();

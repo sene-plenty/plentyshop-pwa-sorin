@@ -4,7 +4,7 @@
     :tab-title="$t('Billing details')"
     :addresses="billing"
     :countries="countries"
-    data-testid="shipping-details-tabs"
+    :type="'billing'"
     @set-default-address="setDefaultAddress({address: $event })"
     @delete-address="deleteAddress({address: $event})"
     @update-address="addAddress({address: $event})"

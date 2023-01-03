@@ -4,7 +4,7 @@
     :tab-title="$t('Shipping details')"
     :addresses="shipping"
     :countries="countries"
-    data-testid="shipping-details-tabs"
+    :type="'shipping'"
     @set-default-address="setDefaultAddress({ address: $event })"
     @delete-address="deleteAddress({ address: $event })"
     @update-address="addAddress({ address: $event })"

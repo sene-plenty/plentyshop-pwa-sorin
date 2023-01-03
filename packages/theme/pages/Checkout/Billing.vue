@@ -2,6 +2,7 @@
   <div id="billing" v-if="!loading">
     <CheckoutAddressDetails
       class="spacer-top"
+      :type="'billing'"
       :addresses="billing"
       :countries="countries"
       @set-default-address="setDefaultAddress({address: $event })"
@@ -34,7 +35,7 @@ import {
   SfCheckbox,
   SfIcon
 } from '@storefront-ui/vue';
-import { useRouter } from '@nuxtjs/composition-api';
+import { computed, useRouter } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useActiveShippingCountries, useUserBilling } from '@vue-storefront/plentymarkets';
 import CheckoutAddressDetails from '~/components/Checkout/CheckoutAddressDetails';
@@ -50,8 +51,12 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const { load, loading, billing, setDefaultAddress, deleteAddress, addAddress } = useUserBilling();
-    const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
+    const { load, loading: loadingBilling, billing, setDefaultAddress, deleteAddress, addAddress } = useUserBilling();
+    const { load: loadActiveShippingCountries, loading: loadingCountry, result: countries } = useActiveShippingCountries();
+
+    const loading = computed(() => {
+      return loadingBilling.value && loadingCountry.value;
+    });
 
     onSSR(async () => {
       await load();

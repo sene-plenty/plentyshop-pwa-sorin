@@ -5,6 +5,7 @@
         <AddressInputForm
           ref="addressForm"
           :form="form"
+          :type="type"
           :countries="countries"
         ></AddressInputForm>
         <div class="buttons">
@@ -83,6 +84,10 @@ export default {
     transition: {
       type: String,
       default: 'sf-fade'
+    },
+    type: {
+      type: String,
+      default: () => 'shipping'
     }
   },
 

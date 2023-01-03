@@ -22,6 +22,7 @@
             ref="addressForm"
             :form="form"
             :countries="countries"
+            :type="type"
           ></AddressInputForm>
           <div class="buttons">
             <SfButton
@@ -103,6 +104,10 @@ export default {
     countries: {
       type: Array,
       default: () => []
+    },
+    type: {
+      type: String,
+      default: () => 'shipping'
     },
     tabTitle: {
       type: String,

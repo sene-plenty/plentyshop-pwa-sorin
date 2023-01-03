@@ -4,16 +4,16 @@
       <form class="form">
         <slot name="form">
           <ValidationProvider
-            name="firstName"
+            :name="type + '-firstName'"
             rules="required|min:2"
             v-slot="{ errors }"
             slim
           >
             <SfInput
-              v-e2e="'billing-firstName'"
+              v-e2e="type + '-firstName'"
               v-model="internalForm.firstName"
               :label="$t('First Name')"
-              name="firstName"
+              :name="type + '-firstName'"
               required
               :valid="!errors[0]"
               :errorMessage="errors[0]"
@@ -21,14 +21,15 @@
             />
           </ValidationProvider>
           <ValidationProvider
-            name="lastName"
+            :name="type + '-lastName'"
             rules="required|min:2"
             v-slot="{ errors }"
             slim
           >
             <SfInput
+              v-e2e="type + '-lastName'"
               v-model="internalForm.lastName"
-              name="lastName"
+              :name="type + '-lastName'"
               :label="$t('Last Name')"
               required
               :valid="!errors[0]"
@@ -37,14 +38,15 @@
             />
           </ValidationProvider>
           <ValidationProvider
-            name="streetName"
+            :name="type + '-streetName'"
             rules="required|min:2"
             v-slot="{ errors }"
             slim
           >
             <SfInput
+              v-e2e="type + '-streetName'"
               v-model="internalForm.streetName"
-              name="streetName"
+              :name="type + '-streetName'"
               :label="$t('Street Name')"
               required
               :valid="!errors[0]"
@@ -53,14 +55,15 @@
             />
           </ValidationProvider>
           <ValidationProvider
-            name="apartment"
+            :name="type + '-apartment'"
             rules="required|min:1"
             v-slot="{ errors }"
             slim
           >
             <SfInput
+              v-e2e="type + '-apartment'"
               v-model="internalForm.apartment"
-              name="apartment"
+              :name="type + '-apartment'"
               :label="$t('House/Apartment number')"
               required
               class="form__element"
@@ -69,14 +72,15 @@
             />
           </ValidationProvider>
           <ValidationProvider
-            name="city"
+            :name="type + '-city'"
             rules="required|min:2"
             v-slot="{ errors }"
             slim
           >
             <SfInput
+              v-e2e="type + '-city'"
               v-model="internalForm.city"
-              name="city"
+              :name="type + '-city'"
               :label="$t('City')"
               required
               :valid="!errors[0]"
@@ -85,39 +89,41 @@
             />
           </ValidationProvider>
           <ValidationProvider
-            name="country"
+            :name="type + '-country'"
             rules="required|min:1"
             v-slot="{ errors }"
             slim
           >
             <SfComponentSelect
+              :data-e2e="type + '-country'"
               v-model="internalForm.country"
-              name="country"
+              :name="type + '-country'"
               :label="$t('Country')"
               required
               :valid="!errors[0]"
               :errorMessage="errors[0]"
               class="sf-component-select--underlined form__select form__element form__element--half form__element--half-even"
-              data-testid="country"
             >
               <SfComponentSelectOption
                 v-for="country in countries"
                 :key="countryGetters.getCountryId(country)"
                 :value="countryGetters.getCountryId(country)"
+                :data-e2e="type + '-country-' + countryGetters.getCountryName(country)"
               >
                 {{ countryGetters.getCountryName(country) }}
               </SfComponentSelectOption>
             </SfComponentSelect>
           </ValidationProvider>
           <ValidationProvider
-            name="zipCode"
+            :name="type + '-zipCode'"
             rules="required|min:2"
             v-slot="{ errors }"
             slim
           >
             <SfInput
+              v-e2e="type + '-zipCode'"
               v-model="internalForm.zipCode"
-              name="zipCode"
+              :name="type + '-zipCode'"
               :label="$t('ZIP code')"
               required
               :valid="!errors[0]"
@@ -125,36 +131,38 @@
               class="form__element form__element--half"
             />
           </ValidationProvider>
-          <ValidationProvider name="state" rules="" v-slot="{ errors }" slim>
+          <ValidationProvider :name="type + '-state'" rules="" v-slot="{ errors }" slim>
             <SfComponentSelect
+              :data-e2e="type + '-state'"
               v-model="internalForm.state"
-              name="state"
+              :name="type + '-state'"
               :label="$t('State/Province')"
               :disabled="states.length <= 0"
               required
               :valid="!errors[0]"
               :errorMessage="errors[0]"
               class="sf-component-select--underlined form__select form__element form__element--half form__element--half-even"
-              data-testid="state"
             >
               <SfComponentSelectOption
                 v-for="state in states"
                 :key="countryGetters.getStateId(state)"
                 :value="countryGetters.getStateId(state)"
+                :data-e2e="type + '-state-' + countryGetters.getStateName(state)"
               >
                 {{ countryGetters.getStateName(state) }}
               </SfComponentSelectOption>
             </SfComponentSelect>
           </ValidationProvider>
           <ValidationProvider
-            name="phoneNumber"
+            :name="type + '-phoneNumber'"
             rules="required|min:5"
             v-slot="{ errors }"
             slim
           >
             <SfInput
+              v-e2e="type + '-phoneNumber'"
               v-model="internalForm.phoneNumber"
-              name="phone"
+              :name="type + '-phoneNumber'"
               :label="$t('Phone number')"
               required
               :valid="!errors[0]"
@@ -199,6 +207,10 @@ export default {
     countries: {
       type: Array,
       default: () => []
+    },
+    type: {
+      type: String,
+      default: () => 'shipping'
     }
   },
 
@@ -214,6 +226,8 @@ export default {
 
     const internalForm = ref(props.form);
     const states = ref([]);
+
+    console.log(props);
 
     if (!internalForm?.value?.firstName) {
       internalForm.value = {
@@ -241,10 +255,13 @@ export default {
       const country = props.countries.find(
         (country) => Number(country.id) === Number(countryId)
       );
-      if (countryGetters.getStates(country) <= 0) {
-        internalForm.value.state = null;
+
+      if (country) {
+        if (countryGetters.getStates(country) <= 0) {
+          internalForm.value.state = null;
+        }
+        states.value = countryGetters.getStates(country);
       }
-      states.value = countryGetters.getStates(country);
     };
 
     watch(
