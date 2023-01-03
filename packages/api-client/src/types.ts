@@ -1,4 +1,4 @@
-import { IntegrationContext, ApiClientMethods, ProductsSearchParams, AgnosticCategoryTree } from '@vue-storefront/core';
+import { IntegrationContext, ApiClientMethods, ProductsSearchParams, AgnosticCategoryTree, UseUserOrderSearchParams } from '@vue-storefront/core';
 import { AxiosInstance } from 'axios';
 import { Order } from './types/new_order';
 
@@ -637,7 +637,7 @@ export interface PlentymarketsApiMethods {
 
   placeOrder(): Promise<CreateOrderResponse>
 
-  getOrders(): Promise<GetOrdersResponse>
+  getOrders(params: UseUserOrderSearchParams): Promise<GetOrdersResponse>
 
   executePayment(orderId: number, paymentId: number): Promise<void>
 

@@ -11,7 +11,7 @@ import type {
 const params: UseUserOrderFactoryParams<GetOrdersResponse, SearchParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   searchOrders: async (context: Context, params) => {
-    const orders = await context.$plentymarkets.api.getOrders();
+    const orders = await context.$plentymarkets.api.getOrders(params);
     return orders;
   }
 };

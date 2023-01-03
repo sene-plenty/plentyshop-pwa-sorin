@@ -33,7 +33,7 @@
           </SfTableHeading>
           <SfTableRow v-for="(item, i) in orderGetters.getItems(currentOrder)" :key="i">
             <SfTableData class="products__name">
-              <nuxt-link :to="'/p/'+orderGetters.getItemSku(item)+'/'+orderGetters.getItemSku(item)">
+              <nuxt-link :to="localePath(orderGetters.getOrderItemLink(currentOrder, item.itemVariationId))">
                 {{orderGetters.getItemName(item)}}
               </nuxt-link>
             </SfTableData>
@@ -96,7 +96,7 @@
   </SfTabs>
 </template>
 
-<script>
+<script lang="js">
 import {
   SfTabs,
   SfTable,
@@ -107,6 +107,7 @@ import {
 } from '@storefront-ui/vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import { computed, ref } from '@nuxtjs/composition-api';
+import { getCurrentInstance } from '@nuxtjs/composition-api';
 import { useUserOrder, orderGetters } from '@vue-storefront/plentymarkets';
 import { AgnosticOrderStatus } from '@vue-storefront/core';
 import { onSSR } from '@vue-storefront/core';
@@ -123,13 +124,16 @@ export default {
     LazyHydrate
   },
   setup() {
+    const ctx = getCurrentInstance().root.proxy;
+    const { query } = ctx.$router.currentRoute;
+
     const { orders: orderResult, search, loading } = useUserOrder();
     const currentOrder = ref(null);
     const pagination = computed(() => orderGetters.getPagination(orderResult.value));
     const orders = computed(() => orderResult.value?.data?.entries);
 
     onSSR(async () => {
-      await search();
+      await search(query);
     });
 
     // translations?
@@ -157,7 +161,7 @@ export default {
       orders,
       pagination,
       loading,
-      totalOrders: computed(() => orderGetters.getOrdersTotal(orders.value)),
+      totalOrders: computed(() => orderGetters.getOrdersTotal(orderResult.value)),
       getStatusTextClass,
       orderGetters,
       currentOrder
