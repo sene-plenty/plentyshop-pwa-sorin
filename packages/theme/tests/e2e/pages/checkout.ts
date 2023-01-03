@@ -48,6 +48,10 @@ class Checkout {
     return el(`${this.step}-phoneNumber`);
   }
 
+  public get createAddress(): Cypress.Chainable {
+    return el('update-address-button');
+  }
+
 }
 
 class CheckoutLogin {
@@ -63,7 +67,7 @@ class Shipping extends Checkout {
   }
 
   get continueToPaymentButton(): Cypress.Chainable {
-    return cy.contains('Continue to payment');
+    return el('continue-to-payment');
   }
 
   get selectShippingButton(): Cypress.Chainable {
@@ -96,7 +100,7 @@ class Billing extends Checkout {
   }
 
   get continueToShipping(): Cypress.Chainable {
-    return cy.contains('Continue to shipping');
+    return el('continue-to-shipping');
   }
 
   public fillForm(customer: Customer): void {

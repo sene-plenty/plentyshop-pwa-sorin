@@ -33,14 +33,17 @@ context('Order placement', () => {
     // page.checkout.billing.heading.should('be.visible');
     page.checkout.billing.url();
     page.checkout.billing.fillForm(data.customer);
-    page.checkout.billing.continueToShipping.click();
+    page.checkout.billing.createAddress.click();
     cy.wait('@networkRequests').wait(500);
+    page.checkout.billing.continueToShipping.click();
 
     cy.intercept('/api/plentymarkets/*').as('networkRequests');
     page.checkout.shipping.heading.should('be.visible');
     page.checkout.shipping.fillForm(data.customer);
-    page.checkout.shipping.continueToPaymentButton.click();
+    page.checkout.billing.createAddress.click();
+
     cy.wait('@networkRequests').wait(500);
+    page.checkout.shipping.continueToPaymentButton.click();
 
     cy.intercept('/api/plentymarkets/*').as('networkRequests');
     page.checkout.payment.paymentMethods.first().click();

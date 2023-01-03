@@ -18,6 +18,7 @@
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
+            data-e2e="continue-to-shipping"
             class="form__action-button"
             @click="router.push(localePath({ name: 'shipping' }))"
             :disabled="(billing.length <= 0)"

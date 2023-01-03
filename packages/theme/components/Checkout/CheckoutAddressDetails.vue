@@ -13,7 +13,7 @@
             type="submit"
             @click.prevent="submit()"
             class="action-button"
-            data-testid="update-address-button"
+            data-e2e="update-address-button"
           >
             <template v-if="editedAddress > -1">{{
               $t('Update the address')
@@ -26,7 +26,7 @@
             v-if="(addressList.length > 0)"
             type="button"
             class="action-button color-secondary cancel-button"
-            data-testid="update-address-button"
+            data-e2e="close-address-button"
             @click="closeForm"
           >
             {{ $t('Cancel') }}</SfButton
