@@ -1,6 +1,6 @@
 import { IntegrationContext, ApiClientMethods, ProductsSearchParams, AgnosticCategoryTree, UseUserOrderSearchParams } from '@vue-storefront/core';
 import { AxiosInstance } from 'axios';
-import { Order } from './types/new_order';
+import { Order } from './types/order';
 
 export type TODO = unknown;
 
