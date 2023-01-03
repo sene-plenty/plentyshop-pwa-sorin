@@ -40,7 +40,7 @@ context('Order placement', () => {
     cy.intercept('/api/plentymarkets/*').as('networkRequests');
     page.checkout.shipping.heading.should('be.visible');
     page.checkout.shipping.fillForm(data.customer);
-    page.checkout.billing.createAddress.click();
+    page.checkout.shipping.createAddress.click();
 
     cy.wait('@networkRequests').wait(500);
     page.checkout.shipping.continueToPaymentButton.click();
