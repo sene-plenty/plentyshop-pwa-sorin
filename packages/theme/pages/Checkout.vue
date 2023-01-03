@@ -4,7 +4,7 @@
       <div class="checkout__main">
         <SfSteps v-if="!isThankYou" :active="currentStepIndex" :class="{ 'checkout__steps': true }"
           @change="handleStepClick">
-          <SfStep v-for="(step, key) in STEPS" :key="key" :name="step">
+          <SfStep v-for="(step, key) in STEPS" :key="key" :name="step" v-e2e="step">
             <nuxt-child />
           </SfStep>
         </SfSteps>
