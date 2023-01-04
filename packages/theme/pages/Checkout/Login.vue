@@ -19,6 +19,7 @@
     <SfButton
         type="button"
         class="sf-button color-primary summary__back-button"
+        data-e2e="continue-to-billing"
         @click="goToBilling"
       >
       {{ $t('Go to billing') }}
@@ -57,7 +58,6 @@ export default {
     });
 
     const logInput = (event) => {
-      console.log(event);
       user = event;
     };
 
@@ -66,7 +66,10 @@ export default {
 
       if (isValid) {
         await register({ user });
-        router.push('/checkout/billing');
+
+        if (isAuthenticated) {
+          router.push('/checkout/billing');
+        }
       }
     };
 

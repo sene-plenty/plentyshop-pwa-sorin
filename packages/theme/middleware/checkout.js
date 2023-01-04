@@ -4,14 +4,14 @@ export default async ({ app, $vsf }) => {
   if (!currentPath) {
     return;
   }
-  const session = await $vsf.$plentymarkets.api.getSession();
-  const isAuthenticated = session.user;
+  // const session = await $vsf.$plentymarkets.api.getSession();
+  // const isAuthenticated = session.user;
   const redirectWithLocalePath = path => app.context.redirect(app.localePath(path));
 
-  if (!isAuthenticated && currentPath !== 'login') {
+  /* if (!isAuthenticated && currentPath !== 'login') {
     redirectWithLocalePath('login');
     return;
-  }
+  } */
 
   switch (currentPath) {
     case 'login':

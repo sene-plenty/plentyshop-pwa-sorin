@@ -38,7 +38,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
     if (!password || password.length === 0) {
-      await context.$plentymarkets.api.loginAsGuest(email);
+      const data = await context.$plentymarkets.api.loginAsGuest(email);
+      return data;
     } else {
       await context.$plentymarkets.api.registerUser({ email, password, firstName, lastName });
       await context.$plentymarkets.api.loginUser(email, password);

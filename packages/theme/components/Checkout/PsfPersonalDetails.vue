@@ -51,6 +51,7 @@
               >
                 <SfInput
                   v-model="personalDetails.email"
+                  v-e2e="'register-mail-input'"
                   :value="email"
                   :label="inputsLabels[2]"
                   name="registerMail"
