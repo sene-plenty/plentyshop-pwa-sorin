@@ -1,6 +1,6 @@
 <template>
   <SfTabs :open-tab="1">
-    <SfTab title="My orders">
+    <SfTab :title="$t('My orders')">
       <div v-if="currentOrder">
         <SfButton class="sf-button--text all-orders" @click="currentOrder = null">All Orders</SfButton>
         <div class="highlighted highlighted--total">
@@ -33,7 +33,7 @@
           </SfTableHeading>
           <SfTableRow v-for="(item, i) in orderGetters.getItems(currentOrder)" :key="i">
             <SfTableData class="products__name">
-              <nuxt-link :to="'/p/'+orderGetters.getItemSku(item)+'/'+orderGetters.getItemSku(item)">
+              <nuxt-link :to="localePath(orderGetters.getOrderItemLink(currentOrder, item.itemVariationId))">
                 {{orderGetters.getItemName(item)}}
               </nuxt-link>
             </SfTableData>
@@ -55,7 +55,7 @@
             <SfTableHeader
               v-for="tableHeader in tableHeaders"
               :key="tableHeader"
-              >{{ tableHeader }}</SfTableHeader>
+              >{{ $t(tableHeader) }}</SfTableHeader>
             <SfTableHeader class="orders__element--right" />
           </SfTableHeading>
           <SfTableRow v-for="order in orders" :key="orderGetters.getId(order)">
@@ -72,10 +72,19 @@
             </SfTableData>
           </SfTableRow>
         </SfTable>
-        <p>Total orders - {{ totalOrders }}</p>
+        <LazyHydrate on-interaction>
+          <SfPagination
+            class="products__pagination desktop-only"
+            v-show="pagination.totalPages > 1"
+            :current="pagination.currentPage"
+            :total="pagination.totalPages"
+            :visible="5"
+          />
+        </LazyHydrate>
+        <p>{{ $t('Total orders') }} - {{ totalOrders }}</p>
       </div>
     </SfTab>
-    <SfTab title="Returns">
+    <SfTab :title="$t('Returns')">
       <p class="message">
         This feature is not implemented yet! Please take a look at
         <br />
@@ -86,15 +95,18 @@
   </SfTabs>
 </template>
 
-<script>
+<script lang="js">
 import {
   SfTabs,
   SfTable,
   SfButton,
   SfProperty,
-  SfLink
+  SfLink,
+  SfPagination
 } from '@storefront-ui/vue';
+import LazyHydrate from 'vue-lazy-hydration';
 import { computed, ref } from '@nuxtjs/composition-api';
+import { getCurrentInstance } from '@nuxtjs/composition-api';
 import { useUserOrder, orderGetters } from '@vue-storefront/plentymarkets';
 import { AgnosticOrderStatus } from '@vue-storefront/core';
 import { onSSR } from '@vue-storefront/core';
@@ -106,20 +118,27 @@ export default {
     SfTable,
     SfButton,
     SfProperty,
-    SfLink
+    SfLink,
+    SfPagination,
+    LazyHydrate
   },
   setup() {
-    const { orders, search } = useUserOrder();
+    const ctx = getCurrentInstance().root.proxy;
+    const { query } = ctx.$router.currentRoute;
+
+    const { orders: orderResult, search, loading } = useUserOrder();
     const currentOrder = ref(null);
+    const pagination = computed(() => orderGetters.getPagination(orderResult.value));
+    const orders = computed(() => orderResult.value?.data?.entries);
 
     onSSR(async () => {
-      await search();
+      await search(query);
     });
 
     // translations?
     const tableHeaders = [
       'Order ID',
-      'Payment date',
+      'Order date',
       'Amount',
       'Status'
     ];
@@ -139,7 +158,9 @@ export default {
     return {
       tableHeaders,
       orders,
-      totalOrders: computed(() => orderGetters.getOrdersTotal(orders.value)),
+      pagination,
+      loading,
+      totalOrders: computed(() => orderGetters.getOrdersTotal(orderResult.value)),
       getStatusTextClass,
       orderGetters,
       currentOrder

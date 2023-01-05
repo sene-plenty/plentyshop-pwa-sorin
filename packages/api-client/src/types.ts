@@ -1,5 +1,6 @@
-import { IntegrationContext, ApiClientMethods, ProductsSearchParams, AgnosticCategoryTree } from '@vue-storefront/core';
+import { IntegrationContext, ApiClientMethods, ProductsSearchParams, AgnosticCategoryTree, UseUserOrderSearchParams } from '@vue-storefront/core';
 import { AxiosInstance } from 'axios';
+import { Order } from './types/order';
 
 export type TODO = unknown;
 
@@ -8,6 +9,17 @@ export type Settings = {
     url: string
   }
 };
+
+export type PaginatedResult<T> = {
+  firstOnPage: number,
+  isLastPage: boolean,
+  itemsPerPage: number,
+  lastOnPage: number,
+  lastPageNumber: number,
+  page: number,
+  totalsCount: number,
+  entries: T[]
+}
 
 export type ReviewAverage = {
   counts: {
@@ -192,12 +204,6 @@ export type Category = {
 export type Coupon = TODO;
 
 export type FacetSearchCriteria = TODO;
-
-export type Order = {
-  id?: number
-};
-
-export type OrderItem = TODO;
 
 export type PasswordResetResult = TODO;
 
@@ -570,9 +576,12 @@ export type PreparePaymentResult = {
 
 export type CreateOrderResponse = {
   events: any[],
-  data: {
-    order: Order
-  }
+  data: Order
+}
+
+export type GetOrdersResponse = {
+  events: any[],
+  data: PaginatedResult<Order>
 }
 
 export interface UserAddressGetters {
@@ -685,6 +694,8 @@ export interface PlentymarketsApiMethods {
   preparePayment(): Promise<PreparePaymentResult>
 
   placeOrder(): Promise<CreateOrderResponse>
+
+  getOrders(params: UseUserOrderSearchParams): Promise<GetOrdersResponse>
 
   executePayment(orderId: number, paymentId: number): Promise<void>
 
