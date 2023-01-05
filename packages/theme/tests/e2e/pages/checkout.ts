@@ -64,6 +64,22 @@ class CheckoutLogin {
     return el('continue-to-billing');
   }
 
+  get createAccountCheckbox(): Cypress.Chainable {
+    return el('create-account-checkbox');
+  }
+
+  get setAccountPassword(): Cypress.Chainable {
+    return el('create-password-input');
+  }
+
+  public continueAsUser(customer: Customer): void {
+    const mail = uniquePlentyMarketsEmail(customer.email);
+    this.email.type(mail);
+    this.createAccountCheckbox.click();
+    this.setAccountPassword.type('Testuser1234');
+    this.continueToBilling.click();
+  }
+
   public continueAsGuest(customer: Customer): void {
     const mail = uniquePlentyMarketsEmail(customer.email);
     this.email.type(mail);

@@ -93,7 +93,7 @@
                 name="createAccount"
                 :label="createAccountCheckboxLabel"
                 class="form__checkbox"
-                data-testid="create-account-checkbox"
+                data-e2e="create-account-checkbox"
                 @change="$emit('create-account', createAccount)"
               />
               <transition :name="transition">
@@ -111,7 +111,7 @@
                     :label="createAccountInputLabel"
                     class="form__element"
                     required
-                    data-testid="create-password-input"
+                    data-e2e="create-password-input"
                     :valid="!errors[0]"
                     :errorMessage="errors[0]"
                     @input="updateField('password', $event)"
