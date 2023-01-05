@@ -1,4 +1,4 @@
-import { Product } from 'src/types';
+import { AddressData, Product } from 'src/types';
 
 interface VariationMap {
   [variationId: string]: Product
@@ -58,30 +58,6 @@ export interface Option {
   position: number;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface Address {
-  id: number;
-  gender: string;
-  name1: string;
-  name2: string;
-  name3: string;
-  name4: null;
-  address1: string;
-  address2: string;
-  address3: null;
-  address4: null;
-  postalCode: string;
-  town: string;
-  countryId: number;
-  stateId: null;
-  readOnly: boolean;
-  checkedAt: null;
-  createdAt: Date;
-  updatedAt: Date;
-  title: string;
-  contactPerson: string;
-  options: Option[];
 }
 
 export interface DateElement {
@@ -229,8 +205,8 @@ export interface OrderDetails {
   orderReferences: any[];
   orderItems: OrderItem[];
   addressRelations: AddressRelation[];
-  billingAddress: Address;
-  deliveryAddress: Address;
+  billingAddress: AddressData;
+  deliveryAddress: AddressData;
   documents: any[];
   accessKey: string;
 }

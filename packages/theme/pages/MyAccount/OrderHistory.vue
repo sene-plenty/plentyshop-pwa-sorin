@@ -74,7 +74,6 @@
         </SfTable>
         <LazyHydrate on-interaction>
           <SfPagination
-            v-if="!loading"
             class="products__pagination desktop-only"
             v-show="pagination.totalPages > 1"
             :current="pagination.currentPage"
