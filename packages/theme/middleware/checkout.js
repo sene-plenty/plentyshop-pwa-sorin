@@ -8,11 +8,6 @@ export default async ({ app, $vsf }) => {
   // const isAuthenticated = session.user;
   const redirectWithLocalePath = path => app.context.redirect(app.localePath(path));
 
-  /* if (!isAuthenticated && currentPath !== 'login') {
-    redirectWithLocalePath('login');
-    return;
-  } */
-
   switch (currentPath) {
     case 'login':
       break;
@@ -26,9 +21,8 @@ export default async ({ app, $vsf }) => {
       }
       break;
     case 'payment':
-      const SHIPPING_TYPE = 2;
-      const shipping = await $vsf.$plentymarkets.api.loadAddresses(SHIPPING_TYPE);
-      if (shipping.length <= 0) {
+      const _billing = await $vsf.$plentymarkets.api.loadAddresses(BILLING_TYPE);
+      if (_billing.length <= 0) {
         redirectWithLocalePath('shipping');
       }
       break;

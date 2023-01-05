@@ -74,8 +74,8 @@ function mapAddressForClient(addressData: AddressData): Address {
     state: addressData.stateId?.toString(),
     country: addressData.countryId?.toString(),
     zipCode: addressData.postalCode,
-    phoneNumber: 'null',
-    email: 'null',
+    phoneNumber: '',
+    email: '',
     primary: addressData.primary
   };
 
