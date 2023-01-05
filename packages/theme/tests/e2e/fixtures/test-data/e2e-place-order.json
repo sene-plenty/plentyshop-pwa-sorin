@@ -2,6 +2,7 @@
   "customer": {
     "firstName": "John",
     "lastName": "Doe",
+    "email": "johndoe@plentymarkets.com",
     "address": {
       "shipping": {
         "streetName": "1 VueStorefront Rd.",

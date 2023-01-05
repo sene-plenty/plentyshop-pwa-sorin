@@ -37,9 +37,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
-
     if (!password || password.length === 0) {
-      await context.$plentymarkets.api.loginAsGuest(email);
+      const data = await context.$plentymarkets.api.loginAsGuest(email);
+      return data;
     } else {
       await context.$plentymarkets.api.registerUser({ email, password, firstName, lastName });
       await context.$plentymarkets.api.loginUser(email, password);
@@ -49,19 +49,15 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
-    try {
-      await context.$plentymarkets.api.loginUser(username, password);
+    await context.$plentymarkets.api.loginUser(username, password);
 
-      const wishlist = await context.$plentymarkets.api.getWishlist();
-      context.useWishlist.setWishlist(wishlist);
+    const wishlist = await context.$plentymarkets.api.getWishlist();
+    context.useWishlist.setWishlist(wishlist);
 
-      const cart = await context.$plentymarkets.api.getCart();
-      context.useCart.setCart(cart);
+    const cart = await context.$plentymarkets.api.getCart();
+    context.useCart.setCart(cart);
 
-      return {};
-    } catch (e) {
-      throw new Error('Invalid username or password');
-    }
+    return {};
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

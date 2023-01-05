@@ -1,5 +1,5 @@
 import { Customer } from '../types/customer';
-import { el } from './utils/element';
+import { el, uniquePlentyMarketsEmail } from './utils/element';
 
 class Checkout {
   protected step: string;
@@ -55,8 +55,35 @@ class Checkout {
 }
 
 class CheckoutLogin {
-  get continueAsGuest(): Cypress.Chainable {
-    return el('checkoutlogin-continue-as-guest');
+
+  get email(): Cypress.Chainable {
+    return el('register-mail-input');
+  }
+
+  get continueToBilling(): Cypress.Chainable {
+    return el('continue-to-billing');
+  }
+
+  get createAccountCheckbox(): Cypress.Chainable {
+    return el('create-account-checkbox');
+  }
+
+  get setAccountPassword(): Cypress.Chainable {
+    return el('create-password-input');
+  }
+
+  public continueAsUser(customer: Customer): void {
+    const mail = uniquePlentyMarketsEmail(customer.email);
+    this.email.type(mail);
+    this.createAccountCheckbox.click();
+    this.setAccountPassword.type('Testuser1234');
+    this.continueToBilling.click();
+  }
+
+  public continueAsGuest(customer: Customer): void {
+    const mail = uniquePlentyMarketsEmail(customer.email);
+    this.email.type(mail);
+    this.continueToBilling.click();
   }
 }
 

@@ -27,10 +27,11 @@ context('Order placement', () => {
     page.cart.goToCheckoutButton.click();
     cy.wait(500);
 
-    page.checkout.checkoutlogin.continueAsGuest.click();
+    page.checkout.checkoutlogin.continueAsUser(data.customer);
+
+    cy.wait(500);
 
     cy.intercept('/api/plentymarkets/*').as('networkRequests');
-    // page.checkout.billing.heading.should('be.visible');
     page.checkout.billing.url();
     page.checkout.billing.fillForm(data.customer);
     page.checkout.billing.createAddress.click();

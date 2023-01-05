@@ -307,6 +307,7 @@ export type CategoryPage = {
 }
 
 export type User = {
+  guestMail?: string,
   accounts?: []
   anonymizeAt?: string
   birthdayAt?: string
@@ -425,7 +426,7 @@ export type SessionSearchPramas = {
 
 export type SessionResult = {
   basket: any,
-  user: User
+  user: User,
 }
 
 export type RegisterParams = {
@@ -470,8 +471,8 @@ export type AddressData = {
     id: number;
     gender: string;
     name1?: string;
-    name2?: string;
-    name3?: string;
+    name2: string;
+    name3: string;
     name4?: string;
     address1: string;
     address2: string;
@@ -479,8 +480,8 @@ export type AddressData = {
     address4?: string;
     postalCode: string;
     town: string;
-    countryId: number;
-    stateId?: number;
+    countryId: string | null;
+    stateId?: string | null;
     readOnly: boolean;
     checkedAt?: Date;
     createdAt: Date;
@@ -498,10 +499,10 @@ export type Address = {
   streetName: string,
   apartment: string,
   city: string,
-  state: string,
-  country: string,
+  state: string | null | undefined,
+  country: string | null | undefined,
   zipCode: string,
-  phoneNumber: string,
+  phoneNumber: string | null | undefined,
   email?: string,
   primary?: number
 }

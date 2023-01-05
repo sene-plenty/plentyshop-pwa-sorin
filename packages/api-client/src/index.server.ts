@@ -48,13 +48,19 @@ const filterCookies = (cookies: string): string => {
 function onCreate(settings: Settings) {
   const client = axios.create({
     baseURL: settings.api.url,
-    withCredentials: true
+    withCredentials: true,
+    validateStatus: (status) => {
+      return status >= 200 && status < 400 && status !== 226;
+    }
   });
 
   // Add a response interceptor
   // Triggered after middleware gets a response from connected apis
   client.interceptors.response.use((response) => {
-    cookies = filterCookies(response.headers['set-cookie'][0]);
+    const headers = response.headers['set-cookie'];
+    if (headers && headers?.length > 0) {
+      cookies = filterCookies(headers[0]);
+    }
     return response;
   }, (error) => {
     return Promise.reject(error);
@@ -62,7 +68,9 @@ function onCreate(settings: Settings) {
 
   // Triggered before middleware executes a request
   client.interceptors.request.use((request) => {
-    request.headers.cookie = Array.isArray(cookies) ? cookies[0] : cookies;
+    if (request.headers) {
+      request.headers.cookie = Array.isArray(cookies) ? cookies[0] : cookies;
+    }
     return request;
   }, (error) => {
     return Promise.reject(error);
