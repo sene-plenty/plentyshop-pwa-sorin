@@ -111,6 +111,8 @@ export default {
   'or': 'or',
   'login in to your account': 'login in to your account',
   'Create an account': 'Create an account',
+  'I want to create an account': 'I want to create an account',
+  'Create Password': 'Create Password',
   'Your bag is empty': 'Your bag is empty',
   'Cancel': 'Cancel',
   'See all results': 'See all results',
@@ -149,6 +151,7 @@ export default {
   'Subscribe': 'Subscribe',
   'Subscribe to newsletter': 'Subscribe to newsletter',
   'Email address': 'Email address',
+  'Your email': 'Your email',
   'I confirm subscription': 'I confirm subscription',
   'You can unsubscribe at any time': 'You can unsubscribe at any time',
   'show more': 'show more',
@@ -191,4 +194,10 @@ export default {
   'Order details': 'Order details',
   'Order history': 'Order history',
   'My Account': 'My Account',
+  'Go to billing': 'Go to billing',
+  // Alerts
+  'Login successful': 'Login successful',
+  'An error occurred during the registration': 'An error occurred during the registration',
+  'An error occurred while logging in': 'An error occurred while logging in'
+
 };

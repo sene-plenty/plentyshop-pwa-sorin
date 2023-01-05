@@ -4,7 +4,7 @@ import { sharedRef, useVSFContext } from '@vue-storefront/core';
 export const useActiveShippingCountries = (): any => {
   const context = useVSFContext();
 
-  const result = sharedRef(null, 'active-shipping-countries-result');
+  const result = sharedRef([], 'active-shipping-countries-result');
 
   const loading = sharedRef(false, 'active-shipping-countries-loading');
 

@@ -1,11 +1,15 @@
 import { Customer } from '../types/customer';
-import { el } from './utils/element';
+import { el, uniquePlentyMarketsEmail } from './utils/element';
 
 class Checkout {
   protected step: string;
 
   get heading(): Cypress.Chainable {
     return cy.get(`h3:contains("${Cypress._.capitalize(this.step)}")`);
+  }
+
+  public url(): Cypress.Chainable {
+    return cy.location('pathname').should('eq', `/checkout/${this.step}`);
   }
 
   get firstName(): Cypress.Chainable {
@@ -29,26 +33,57 @@ class Checkout {
   }
 
   get country(): Cypress.Chainable {
-    return el(`${this.step}-country`, 'select');
+    return el(`${this.step}-country`);
+  }
+
+  get state(): Cypress.Chainable {
+    return el(`${this.step}-state`);
   }
 
   get zipcode(): Cypress.Chainable {
-    return el(`${this.step}-zipcode`);
+    return el(`${this.step}-zipCode`);
   }
 
   get phone(): Cypress.Chainable {
-    return el(`${this.step}-phone`);
+    return el(`${this.step}-phoneNumber`);
   }
 
-  get email(): Cypress.Chainable {
-    return el(`${this.step}-email`, 'input');
+  public get createAddress(): Cypress.Chainable {
+    return el('update-address-button');
   }
 
 }
 
 class CheckoutLogin {
-  get continueAsGuest(): Cypress.Chainable {
-    return el('checkoutlogin-continue-as-guest');
+
+  get email(): Cypress.Chainable {
+    return el('register-mail-input');
+  }
+
+  get continueToBilling(): Cypress.Chainable {
+    return el('continue-to-billing');
+  }
+
+  get createAccountCheckbox(): Cypress.Chainable {
+    return el('create-account-checkbox');
+  }
+
+  get setAccountPassword(): Cypress.Chainable {
+    return el('create-password-input');
+  }
+
+  public continueAsUser(customer: Customer): void {
+    const mail = uniquePlentyMarketsEmail(customer.email);
+    this.email.type(mail);
+    this.createAccountCheckbox.click();
+    this.setAccountPassword.type('Testuser1234');
+    this.continueToBilling.click();
+  }
+
+  public continueAsGuest(customer: Customer): void {
+    const mail = uniquePlentyMarketsEmail(customer.email);
+    this.email.type(mail);
+    this.continueToBilling.click();
   }
 }
 
@@ -59,7 +94,7 @@ class Shipping extends Checkout {
   }
 
   get continueToPaymentButton(): Cypress.Chainable {
-    return cy.contains('Continue to payment');
+    return el('continue-to-payment');
   }
 
   get selectShippingButton(): Cypress.Chainable {
@@ -76,10 +111,12 @@ class Shipping extends Checkout {
     this.streetName.type(customer.address.shipping.streetName);
     this.apartment.type(customer.address.shipping.apartment);
     this.city.type(customer.address.shipping.city);
-    this.country.select(customer.address.shipping.country);
-    this.zipcode.type(customer.address.shipping.zipcode);
-    this.phone.type(customer.address.shipping.phone);
-    this.email.type(customer.address.shipping.email);
+    this.country.click();
+    el(`${this.step}-country-${customer.address.shipping.country}`).click();
+    this.zipcode.type(customer.address.shipping.zipCode);
+    this.state.click();
+    el(`${this.step}-state-${customer.address.shipping.state}`).click();
+    this.phone.type(customer.address.shipping.phoneNumber);
   }
 }
 
@@ -90,7 +127,7 @@ class Billing extends Checkout {
   }
 
   get continueToShipping(): Cypress.Chainable {
-    return cy.contains('Continue to shipping');
+    return el('continue-to-shipping');
   }
 
   public fillForm(customer: Customer): void {
@@ -99,10 +136,12 @@ class Billing extends Checkout {
     this.streetName.type(customer.address.billing.streetName);
     this.apartment.type(customer.address.billing.apartment);
     this.city.type(customer.address.billing.city);
-    this.country.select(customer.address.billing.country);
-    this.zipcode.type(customer.address.billing.zipcode);
-    this.phone.type(customer.address.billing.phone);
-    this.email.type(customer.address.shipping.email);
+    this.country.click();
+    el(`${this.step}-country-${customer.address.billing.country}`).click();
+    this.zipcode.type(customer.address.billing.zipCode);
+    this.state.click();
+    el(`${this.step}-state-${customer.address.billing.state}`).click();
+    this.phone.type(customer.address.billing.phoneNumber);
   }
 
 }

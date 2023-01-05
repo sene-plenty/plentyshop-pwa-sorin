@@ -1,16 +1,17 @@
 <template>
-  <PsfAddressDetails
-    :shipping-tab-title="$t('Shipping details')"
+  <MyAccountAddressDetails
+    v-if="!loading"
+    :tab-title="$t('Shipping details')"
     :addresses="shipping"
     :countries="countries"
-    data-testid="shipping-details-tabs"
+    :type="'shipping'"
     @set-default-address="setDefaultAddress({ address: $event })"
     @delete-address="deleteAddress({ address: $event })"
-    @update:shipping="addAddress({ address: $event })"
+    @update-address="addAddress({ address: $event })"
   />
 </template>
 <script>
-import PsfAddressDetails from '~/components/MyAccount/PsfAddressDetails';
+import MyAccountAddressDetails from '~/components/MyAccount/MyAccountAddressDetails';
 import {
   useUserShipping,
   useActiveShippingCountries
@@ -20,10 +21,10 @@ import { onSSR } from '@vue-storefront/core';
 export default {
   name: 'ShippingDetails',
   components: {
-    PsfAddressDetails
+    MyAccountAddressDetails
   },
   setup() {
-    const { shipping, load, addAddress, deleteAddress, setDefaultAddress } = useUserShipping();
+    const { shipping, loading, load, addAddress, deleteAddress, setDefaultAddress } = useUserShipping();
     const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
 
     onSSR(async () => {
@@ -34,6 +35,7 @@ export default {
     return {
       shipping,
       countries,
+      loading,
       addAddress,
       deleteAddress,
       setDefaultAddress

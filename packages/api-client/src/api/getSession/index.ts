@@ -9,7 +9,7 @@ export async function getSession(context: Context, initialRestCall: boolean): Pr
   const { data } = await context.client.get(url.href);
 
   return {
-    user: data.data.customer,
+    user: data.data.customer || (data.data.guest ? { guestMail: data.data.guest } : null),
     basket: data.data.basket
   };
 }

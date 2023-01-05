@@ -4,26 +4,27 @@ export default async ({ app, $vsf }) => {
   if (!currentPath) {
     return;
   }
-  const BILLING_TYPE = 1;
-  const address = await $vsf.$plentymarkets.api.loadAddresses(BILLING_TYPE);
+  // const session = await $vsf.$plentymarkets.api.getSession();
+  // const isAuthenticated = session.user;
   const redirectWithLocalePath = path => app.context.redirect(app.localePath(path));
 
   switch (currentPath) {
     case 'login':
-      if (address) {
-        redirectWithLocalePath('billing');
-      }
       break;
     case 'billing':
-      console.log('navigate to billing');
       break;
     case 'shipping':
-      if (!address) {
+      const BILLING_TYPE = 1;
+      const billing = await $vsf.$plentymarkets.api.loadAddresses(BILLING_TYPE);
+      if (billing.length <= 0) {
         redirectWithLocalePath('billing');
       }
       break;
     case 'payment':
-      console.log('navigate to payment');
+      const _billing = await $vsf.$plentymarkets.api.loadAddresses(BILLING_TYPE);
+      if (_billing.length <= 0) {
+        redirectWithLocalePath('shipping');
+      }
       break;
   }
 };

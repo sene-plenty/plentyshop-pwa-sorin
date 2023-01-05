@@ -1,6 +1,6 @@
-import { AddressData, AddressOptionType, AddressType, Context } from 'src/types';
+import { Address, AddressData, AddressOptionType, AddressType, Context } from 'src/types';
 
-export async function loadAddresses(context: Context, typeId: AddressType): Promise<any> {
+export async function loadAddresses(context: Context, typeId: AddressType): Promise<Address[]> {
   const url: URL = new URL('/rest/io/customer/address', context.config.api.url);
   url.searchParams.set('typeId', typeId.toString());
 
@@ -36,7 +36,7 @@ export async function setAddressAsDefault(context: Context, addressId: number, t
   return await context.client.put(url.href);
 }
 
-export async function deleteAddress(context: Context, addressId: number, typeId: number): Promise<any> {
+export async function deleteAddress(context: Context, addressId: number, typeId: number): Promise<boolean> {
   const url: URL = new URL(`/rest/io/customer/address/${addressId}`, context.config.api.url);
   url.searchParams.set('typeId', typeId.toString());
   const { data } = await context.client.delete(url.href);
@@ -56,14 +56,14 @@ function mapAddressForServer(addressData): object {
     contactPerson: '',
     address1: addressData.streetName,
     address2: addressData.apartment,
-    postalCode: addressData.postalCode || addressData.zipCode,
+    postalCode: addressData.zipCode,
     town: addressData.city,
-    telephone: addressData.phone || addressData.phoneNumber,
+    telephone: addressData.phoneNumber,
     stateId: addressData.state
   };
 }
 
-function mapAddressForClient(addressData: AddressData) {
+function mapAddressForClient(addressData: AddressData): Address {
   const address = {
     id: addressData.id,
     firstName: addressData.name2,
@@ -74,9 +74,8 @@ function mapAddressForClient(addressData: AddressData) {
     state: addressData.stateId?.toString(),
     country: addressData.countryId?.toString(),
     zipCode: addressData.postalCode,
-    phoneNumber: null,
-    phone: null,
-    email: 'null',
+    phoneNumber: '',
+    email: '',
     primary: addressData.primary
   };
 
@@ -84,7 +83,6 @@ function mapAddressForClient(addressData: AddressData) {
     switch (option.typeId) {
       case AddressOptionType.Telephone:
         address.phoneNumber = option.value;
-        address.phone = option.value;
         break;
       case AddressOptionType.Email:
         address.email = option.value;

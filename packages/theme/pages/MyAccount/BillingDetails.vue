@@ -1,26 +1,27 @@
 <template>
-  <PsfAddressDetails
-    :shipping-tab-title="$t('Billing details')"
+  <MyAccountAddressDetails
+    v-if="!loading"
+    :tab-title="$t('Billing details')"
     :addresses="billing"
     :countries="countries"
-    data-testid="shipping-details-tabs"
+    :type="'billing'"
     @set-default-address="setDefaultAddress({address: $event })"
     @delete-address="deleteAddress({address: $event})"
-    @update:shipping="addAddress({address: $event})"
+    @update-address="addAddress({address: $event})"
   />
 </template>
 <script>
-import PsfAddressDetails from '~/components/MyAccount/PsfAddressDetails';
+import MyAccountAddressDetails from '~/components/MyAccount/MyAccountAddressDetails';
 import { useUserBilling, useActiveShippingCountries } from '@vue-storefront/plentymarkets';
 import { onSSR } from '@vue-storefront/core';
 
 export default {
   name: 'BillingDetails',
   components: {
-    PsfAddressDetails
+    MyAccountAddressDetails
   },
   setup() {
-    const { billing, load, addAddress, deleteAddress, setDefaultAddress } = useUserBilling();
+    const { billing, load, loading, addAddress, deleteAddress, setDefaultAddress } = useUserBilling();
     const { load: loadActiveShippingCountries, result: countries } = useActiveShippingCountries();
 
     onSSR(async () => {
@@ -31,6 +32,7 @@ export default {
     return {
       billing,
       countries,
+      loading,
       addAddress,
       deleteAddress,
       setDefaultAddress

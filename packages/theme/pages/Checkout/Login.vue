@@ -1,51 +1,55 @@
 <template>
   <div>
-    <SfHeading
-      v-e2e="'login-heading'"
-      :level="3"
-      :title="$t('Login')"
-      class="sf-heading--left sf-heading--no-underline title"
+    <PsfPersonalDetails
+      ref="PersonalDetails"
+      :value="{}"
+      :buttonText="$t('Log into your account')"
+      :logInInfo="$t('or fill the details below')"
+      :headingTitle="$t('Personal details')"
+      :headingTitleLevel="2"
+      :inputsLabels="[$t('First name'),$t('Last name'),$t('Your email')]"
+      :additionalDetails="$t('Enjoy your free account')"
+      :characteristics='[{"description":"Faster checkout","icon":"clock","size":"24px"},{"description":"Earn credits with every purchase","icon":"credits","size":"24px"},{"description":"Full rewards program benefits","icon":"rewards","size":"24px"},{"description":"Manage your wishlist","icon":"heart","size":"24px"}]'
+      transition="sf-fade"
+      :createAccountCheckboxLabel="$t('I want to create an account')"
+      :createAccountInputLabel="$t('Create Password')"
+      @input="logInput($event)"
+      @log-in="toggleLoginModal()"
     />
-    <p class="customer__text">
-      {{ $t('Login register Text') }}
-    </p>
     <SfButton
-            :disabled="isAuthenticated"
-            type="button"
-            class="sf-button"
-            @click="toggleLoginModal()"
-          >
-            {{ $t('Login register') }}
+        type="button"
+        class="sf-button color-primary summary__back-button"
+        data-e2e="continue-to-billing"
+        @click="goToBilling"
+      >
+      {{ $t('Go to billing') }}
     </SfButton>
-    <hr class="sf-divider customer-text">
-    <SfButton
-            :disabled="isAuthenticated"
-            type="button"
-            class="sf-button"
-            @click="router.push('/checkout/billing')"
-            data-e2e="checkoutlogin-continue-as-guest"
-          >
-            {{ $t('Continue as guest') }}
-    </SfButton>
-  </div>
+    </div>
 </template>
 <script>
 import { useRouter, watch } from '@nuxtjs/composition-api';
-import { SfHeading, SfButton } from '@storefront-ui/vue';
+import { SfButton } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import { useUser } from '@vue-storefront/plentymarkets';
+import PsfPersonalDetails from '~/components/Checkout/PsfPersonalDetails';
 
 export default {
   name: 'Login',
   components: {
-    SfHeading,
-    SfButton
+    SfButton,
+    PsfPersonalDetails
   },
-  setup() {
+  setup(props, {refs}) {
 
     const { isLoginModalOpen, toggleLoginModal } = useUiState();
     const router = useRouter();
-    const { isAuthenticated } = useUser();
+    const { isAuthenticated, register } = useUser();
+    let user = {
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: ''
+    };
 
     watch(isAuthenticated, () => {
       if (isAuthenticated) {
@@ -53,11 +57,29 @@ export default {
       }
     });
 
+    const logInput = (event) => {
+      user = event;
+    };
+
+    const goToBilling = async () => {
+      const { isValid } = await refs.PersonalDetails.validate();
+
+      if (isValid) {
+        await register({ user });
+
+        if (isAuthenticated) {
+          router.push('/checkout/billing');
+        }
+      }
+    };
+
     return {
       router,
       isAuthenticated,
       isLoginModalOpen,
-      toggleLoginModal
+      toggleLoginModal,
+      logInput,
+      goToBilling
     };
   }
 };

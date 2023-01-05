@@ -35,7 +35,7 @@ const params: UseUserBillingFactoryParams<Address, AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context): Promise<AddressData[]> => {
     const data = await context.$plentymarkets.api.loadAddresses(AddressType.Billing);
-    return data ?? null;
+    return data?.length > 0 ? data : [];
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

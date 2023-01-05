@@ -313,6 +313,7 @@ export type CategoryPage = {
 }
 
 export type User = {
+  guestMail?: string,
   accounts?: []
   anonymizeAt?: string
   birthdayAt?: string
@@ -431,7 +432,7 @@ export type SessionSearchPramas = {
 
 export type SessionResult = {
   basket: any,
-  user: User
+  user: User,
 }
 
 export type RegisterParams = {
@@ -476,8 +477,8 @@ export type AddressData = {
     id: number;
     gender: string;
     name1?: string;
-    name2?: string;
-    name3?: string;
+    name2: string;
+    name3: string;
     name4?: string;
     address1: string;
     address2: string;
@@ -485,8 +486,8 @@ export type AddressData = {
     address4?: string;
     postalCode: string;
     town: string;
-    countryId: number;
-    stateId?: number;
+    countryId: string | null;
+    stateId?: string | null;
     readOnly: boolean;
     checkedAt?: Date;
     createdAt: Date;
@@ -494,7 +495,34 @@ export type AddressData = {
     title: string;
     contactPerson: string;
     options: AddressOption[];
-    primary: boolean;
+    primary: number;
+}
+
+export type Address = {
+  id?: number,
+  firstName: string,
+  lastName: string,
+  streetName: string,
+  apartment: string,
+  city: string,
+  state: string | null | undefined,
+  country: string | null | undefined,
+  zipCode: string,
+  phoneNumber: string | null | undefined,
+  email?: string,
+  primary?: number
+}
+
+export type State = {
+  id: number,
+  name: string
+}
+
+export type Country = {
+  id: number,
+  name: string,
+  isoCode2: string,
+  states: State[]
 }
 
 export type ShippingCountryName = {
@@ -554,6 +582,36 @@ export type CreateOrderResponse = {
 export type GetOrdersResponse = {
   events: any[],
   data: PaginatedResult<Order>
+}
+
+export interface UserAddressGetters {
+  getAddresses: (addresses: Address[], criteria?: Record<string, any>) => Address[];
+  getDefault: (addresses: Address[]) => Address;
+  getTotal: (addresses: Address[]) => number;
+  getPostCode: (address: Address) => string;
+  getStreetName: (address: Address) => string;
+  getStreetNumber: (address: Address) => string | number;
+  getCity: (address: Address) => string;
+  getFirstName: (address: Address) => string;
+  getLastName: (address: Address) => string;
+  getCountry: (countries: Country[], id: string) => string;
+  getPhone: (address: Address) => string;
+  getEmail: (address: Address) => string;
+  getProvince: (address: Address) => string;
+  getCompanyName: (address: Address) => string;
+  getTaxNumber: (address: Address) => string;
+  getId: (address: Address) => string | number;
+  getApartmentNumber: (address: Address) => string | number;
+  isDefault: (address: Address) => boolean;
+}
+
+export interface CountryGetters {
+  getStates(country: Country): string,
+  getStateId(state: State): string,
+  getStateName(state: State): string,
+  getCountryId(country: Country): string,
+  getCountryName(country: Country): string,
+  getCountryIsoCode(country: Country): string
 }
 
 export interface PlentymarketsApiMethods {
