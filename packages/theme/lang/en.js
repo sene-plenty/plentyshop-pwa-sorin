@@ -50,6 +50,7 @@ export default {
   'Go back shopping': 'Go back shopping',
   'Personal details': 'Personal details',
   'Edit': 'Edit',
+  'Edit Cart': 'Edit Cart',
   'Shipping details': 'Shipping details',
   'Billing details': 'Billing details',
   'Same as shipping address': 'Same as shipping address',
