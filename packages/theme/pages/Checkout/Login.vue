@@ -14,6 +14,7 @@
       :createAccountCheckboxLabel="$t('I want to create an account')"
       :createAccountInputLabel="$t('Create Password')"
       @input="logInput($event)"
+      @create-account='updateCheckbox($event)'
       @log-in="toggleLoginModal()"
     />
     <SfButton
@@ -21,8 +22,18 @@
         class="sf-button color-primary summary__back-button"
         data-e2e="continue-to-billing"
         @click="goToBilling"
+        v-if='!this.createAccountCheckbox'
       >
-      {{ $t('Go to billing') }}
+      {{ $t('Order as guest') }}
+    </SfButton>
+    <SfButton
+      type="button"
+      class="sf-button color-primary summary__back-button"
+      data-e2e="continue-to-billing"
+      @click="goToBilling"
+      v-if='this.createAccountCheckbox'
+    >
+      {{ $t('Register') }}
     </SfButton>
     </div>
 </template>
@@ -35,9 +46,20 @@ import PsfPersonalDetails from '~/components/Checkout/PsfPersonalDetails';
 
 export default {
   name: 'Login',
+  data() {
+    return {
+      createAccountCheckbox: false
+    };
+  },
   components: {
     SfButton,
     PsfPersonalDetails
+  },
+  methods: {
+    updateCheckbox(value) {
+      this.createAccountCheckbox = value;
+      console.log(this.createAccountCheckbox);
+    }
   },
   setup(props, {refs}) {
 

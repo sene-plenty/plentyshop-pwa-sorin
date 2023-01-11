@@ -52,6 +52,7 @@ export default {
   'Edit': 'Edit',
   'Shipping details': 'Shipping details',
   'Billing details': 'Billing details',
+  'Order as guest': 'Order as guest',
   'Same as shipping address': 'Same as shipping address',
   'Payment method': 'Payment method',
   'Apply': 'Apply',
