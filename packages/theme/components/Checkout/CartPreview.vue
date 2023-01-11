@@ -1,15 +1,16 @@
 <template>
   <div>
-    <div class="highlighted">
+    <div class="highlighted top-items">
       <SfHeading :level="3" :title="$t('Order summary')" class="sf-heading--left sf-heading--no-underline title" />
+      <SfLink class="notice__link edit-cart-link" href="#" @click='toggleCartSidebar'>{{ $t('Edit Cart') }}</SfLink>
     </div>
     <div class="highlighted">
       <SfProperty :name="$t('Products')" :value="totalItems"
-        class="sf-property--full-width sf-property--large property" />
+                  class="sf-property--full-width sf-property--large property" />
       <SfProperty :name="$t('Subtotal')" :value="$n(totals.subtotal, 'currency')"
-        :class="['sf-property--full-width', 'sf-property--large property']" />
+                  :class="['sf-property--full-width', 'sf-property--large property']" />
       <SfProperty v-if="totals.rebate" :name="$t('Discount')" :value="$n(totals.rebate, 'currency')"
-        class="sf-property--full-width sf-property--small property" />
+                  class="sf-property--full-width sf-property--small property" />
       <!--      <SfProperty-->
       <!--        v-if="selectedShippingMethod"-->
       <!--        :name="$t('Shipping')"-->
@@ -18,25 +19,26 @@
       <!--      />-->
 
       <SfProperty :name="$t('Total')" :value="$n(totals.total, 'currency')"
-        class="sf-property--full-width sf-property--large property-total" />
+                  class="sf-property--full-width sf-property--large property-total" />
     </div>
   </div>
 </template>
-<script lang="ts">
-import { SfHeading, SfProperty, SfCharacteristic } from '@storefront-ui/vue';
+<script>
+import { SfHeading, SfProperty, SfCharacteristic, SfLink } from '@storefront-ui/vue';
 import { computed, defineComponent } from '@nuxtjs/composition-api';
 import { cartGetters, useCart } from '@vue-storefront/plentymarkets';
-
+import { useUiState } from '~/composables';
 export default defineComponent({
   name: 'CartPreview',
   components: {
     SfHeading,
     SfProperty,
-    SfCharacteristic
+    SfCharacteristic,
+    SfLink
   },
   setup() {
     const { cart, removeItem, updateItemQty } = useCart();
-
+    const { toggleCartSidebar } = useUiState();
     const products = computed(() => cartGetters.getItems(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
@@ -48,7 +50,8 @@ export default defineComponent({
       totals,
       removeItem,
       updateItemQty,
-      cartGetters
+      cartGetters,
+      toggleCartSidebar
     };
   }
 });
@@ -90,5 +93,15 @@ export default defineComponent({
   &:not(:last-child) {
     margin-bottom: var(--spacer-base);
   }
+}
+.top-items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-cart-link {
+  color: dodgerblue;
+  cursor: pointer;
 }
 </style>
