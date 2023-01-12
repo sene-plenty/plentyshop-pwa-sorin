@@ -101,7 +101,7 @@ export default defineComponent({
 }
 
 .edit-cart-link {
-  color: #62a4f8;
+  color: var(--_c-blue-primary);
   cursor: pointer;
 }
 </style>
