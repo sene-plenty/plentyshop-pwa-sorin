@@ -36,7 +36,9 @@ export default {
   loading: { color: '#fff' },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '~/plugins/api-cookies'
+  ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -141,16 +143,32 @@ export default {
           lastCommit: process.env.LAST_COMMIT || ''
         })
       })
-    ]
+    ],
+    extend(config, ctx) {
+      if (ctx.isDev) {
+        config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
+      }
+    }
   },
 
   router: {
+    extendRoutes(routes, resolve) {
+      routes.find(route => route.path === '/Checkout').children.push(
+        {
+          path: 'login',
+          name: 'login',
+          component: resolve(__dirname, '_theme/pages/Checkout/Login.vue'),
+        },
+      )
+    },
     middleware: ['checkout']
   },
+
   publicRuntimeConfig: {
     middlewareUrl: process.env.MIDDLEWARE_URL || 'http://localhost:3000/api/',
     theme
   },
+
   pwa: {
     meta: {
       theme_color: '#5ECE7B'

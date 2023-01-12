@@ -9,7 +9,7 @@ function getTree(category: Category): AgnosticCategoryTree {
     slug: getCategoryDetails(category.details).nameUrl || '',
     items: category.children ? category.children.map(cat => getTree(cat)) : [],
     isCurrent: false,
-    count: category.itemCount[0].count || 0
+    count: category?.itemCount[0].count || 0
   };
 }
 
@@ -55,9 +55,9 @@ function getMappedBreadcrumbs(categories: Category[], categoryId: number): Agnos
   });
 }
 
-function getCategoryDetails(details:CategoryDetails[]): CategoryDetails {
+function getCategoryDetails(details:CategoryDetails[]): CategoryDetails | null {
   // TODO:  return correct details for selected language and webstoreId
-  return details[0];
+  return details ? details[0] : null;
 }
 
 export const categoryGetters: CategoryGetters<Category> = {

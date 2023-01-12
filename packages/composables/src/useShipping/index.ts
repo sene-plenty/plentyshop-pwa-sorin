@@ -3,7 +3,7 @@ import {
   useShippingFactory,
   UseShippingParams
 } from '@vue-storefront/core';
-import type { ShippingAddress } from '@vue-storefront/plentymarkets-api';
+import { AddressType, ShippingAddress } from '@vue-storefront/plentymarkets-api';
 import type {
   UseShippingAddParams as AddParams
 } from '../types';
@@ -11,14 +11,18 @@ import type {
 const params: UseShippingParams<ShippingAddress, AddParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
-    console.log('Mocked: useShipping.load');
-    return {};
+    const data = await context.$plentymarkets.api.loadAddresses(AddressType.Shipping);
+    return data ?? null;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save: async (context: Context, { shippingDetails, customQuery }) => {
-    console.log('Mocked: useShipping.save');
-    return {};
+
+    if (!shippingDetails) {
+      return await context.$plentymarkets.api.saveBillingIsShipping();
+    }
+
+    return await context.$plentymarkets.api.saveAddress(AddressType.Shipping, shippingDetails);
   }
 };
 

@@ -4,21 +4,29 @@ import {
   UseUserFactoryParams
 } from '@vue-storefront/core';
 import type { User } from '@vue-storefront/plentymarkets-api';
+import { useCart } from 'src/useCart';
+import { useWishlist } from 'src/useWishlist';
 import type {
   UseUserUpdateParams as UpdateParams,
   UseUserRegisterParams as RegisterParams
 } from '../types';
 
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
+  provide: () => ({
+    useCart: useCart(),
+    useWishlist: useWishlist()
+  }),
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    console.log('Mocked: useUser.load');
-    return {};
+    const data = await context.$plentymarkets.api.getSession(true);
+    return data.user;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logOut: async (context: Context) => {
-    console.log('Mocked: useUser.logOut');
+    await context.$plentymarkets.api.logoutUser();
+    context.useWishlist.setWishlist({ items: [] });
+    context.useCart.setCart({ items: [] });
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -29,20 +37,34 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
-    console.log('Mocked: useUser.register');
+    if (!password || password.length === 0) {
+      const data = await context.$plentymarkets.api.loginAsGuest(email);
+      return data;
+    } else {
+      await context.$plentymarkets.api.registerUser({ email, password, firstName, lastName });
+      await context.$plentymarkets.api.loginUser(email, password);
+    }
     return {};
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
-    console.log('Mocked: useUser.logIn');
+    await context.$plentymarkets.api.loginUser(username, password);
+
+    const wishlist = await context.$plentymarkets.api.getWishlist();
+    context.useWishlist.setWishlist(wishlist);
+
+    const cart = await context.$plentymarkets.api.getCart();
+    context.useCart.setCart(cart);
+
     return {};
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    console.log('Mocked: useUser.changePassword');
-    return {};
+  changePassword: async (context: Context, { currentPassword, newPassword }) => {
+    await context.$plentymarkets.api.changePassword(currentPassword, newPassword);
+    const data = await context.$plentymarkets.api.getSession(false);
+    return data.user;
   }
 };
 

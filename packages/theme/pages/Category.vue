@@ -248,14 +248,14 @@ export default {
 
     const removeProductFromWishlist = (productItem) => {
       const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-      const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
+      const product = productsInWhishlist.value.find(wishlistProduct => wishlistGetters.getId(wishlistProduct) === productGetters.getId(productItem));
       removeItemFromWishlist({ product });
     };
 
     const addToCart = ({ product, quantity }) => {
-      const { id, sku } = product;
       addItemToCart({
-        product: { id, sku },
+        // TODO only pass needed attrs?
+        product,
         quantity
       });
     };
