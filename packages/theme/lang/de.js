@@ -50,6 +50,7 @@ export default {
   'Go back shopping': 'Zurück einkaufen',
   'Personal details': 'Persönliche Daten',
   'Edit': 'Bearbeiten',
+  'Edit Cart': 'Warenkorb bearbeiten',
   'Shipping details': 'Lieferadressen',
   'Billing details': 'Rechnungsadressen',
   'Same as shipping address': 'Wie Versandadresse',

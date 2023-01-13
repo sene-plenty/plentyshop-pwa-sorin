@@ -165,6 +165,7 @@ export default {
   },
 
   publicRuntimeConfig: {
+    middlewareUrl: process.env.MIDDLEWARE_URL || 'http://localhost:3000/api/',
     theme
   },
 
