@@ -249,9 +249,6 @@ export default {
     },
     updateField() {
       this.$emit('input', this.personalDetails);
-    },
-    emitCheckbox() {
-      this.$emit('createAccountCheckbox', this.createAccount);
     }
   }
 };

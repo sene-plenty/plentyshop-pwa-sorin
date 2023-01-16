@@ -22,7 +22,7 @@
         class="sf-button color-primary summary__back-button"
         data-e2e="continue-to-billing"
         @click="goToBilling"
-        v-if='!this.createAccountCheckbox'
+        v-if='!createAccountCheckbox'
       >
       {{ $t('Order as guest') }}
     </SfButton>
@@ -31,14 +31,14 @@
       class="sf-button color-primary summary__back-button"
       data-e2e="continue-to-billing"
       @click="goToBilling"
-      v-if='this.createAccountCheckbox'
+      v-if='createAccountCheckbox'
     >
       {{ $t('Register') }}
     </SfButton>
     </div>
 </template>
 <script>
-import { useRouter, watch } from '@nuxtjs/composition-api';
+import { useRouter, watch, ref } from '@nuxtjs/composition-api';
 import { SfButton } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import { useUser } from '@vue-storefront/plentymarkets';
@@ -46,26 +46,17 @@ import PsfPersonalDetails from '~/components/Checkout/PsfPersonalDetails';
 
 export default {
   name: 'Login',
-  data() {
-    return {
-      createAccountCheckbox: false
-    };
-  },
   components: {
     SfButton,
     PsfPersonalDetails
-  },
-  methods: {
-    updateCheckbox(value) {
-      this.createAccountCheckbox = value;
-      console.log(this.createAccountCheckbox);
-    }
   },
   setup(props, {refs}) {
 
     const { isLoginModalOpen, toggleLoginModal } = useUiState();
     const router = useRouter();
     const { isAuthenticated, register } = useUser();
+    const createAccountCheckbox = ref(false);
+
     let user = {
       email: '',
       password: '',
@@ -82,7 +73,9 @@ export default {
     const logInput = (event) => {
       user = event;
     };
-
+    const updateCheckbox = (value) => {
+      createAccountCheckbox.value = value;
+    };
     const goToBilling = async () => {
       const { isValid } = await refs.PersonalDetails.validate();
 
@@ -101,7 +94,9 @@ export default {
       isLoginModalOpen,
       toggleLoginModal,
       logInput,
-      goToBilling
+      goToBilling,
+      createAccountCheckbox,
+      updateCheckbox
     };
   }
 };
