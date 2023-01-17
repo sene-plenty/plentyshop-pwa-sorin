@@ -15,10 +15,10 @@
             class="action-button"
             data-e2e="update-address-button"
           >
-            <template v-if="editedAddress > -1">{{
+            <template v-if="addressList.length > 0">{{
               $t('Update the address')
             }}</template>
-            <template v-if="editedAddress === -1">{{
+            <template v-if="addressList.length === 0">{{
               $t('Create address')
             }}</template>
           </SfButton>
