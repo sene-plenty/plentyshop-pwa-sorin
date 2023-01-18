@@ -82,7 +82,7 @@ const config = {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     ['nuxt-i18n', {
-      baseUrl: process.env.BASE_URL || 'http://localhost:80'
+      baseUrl: process.env.BASE_URL || `http://localhost:${appPort}`
     }],
     'cookie-universal-nuxt',
     'vue-scrollto/nuxt',
