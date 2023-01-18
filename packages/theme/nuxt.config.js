@@ -165,7 +165,6 @@ export default {
   },
 
   publicRuntimeConfig: {
-    middlewareUrl: process.env.MIDDLEWARE_URL || 'http://localhost:80/api/',
     theme
   },
 
