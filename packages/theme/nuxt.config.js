@@ -1,9 +1,11 @@
 import webpack from 'webpack';
 import theme from './themeConfig';
 
-export default {
+const appPort = process.env.PORT || 80;
+
+const config = {
   server: {
-    port: 3000,
+    port: appPort,
     host: '0.0.0.0'
   },
 
@@ -80,7 +82,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     ['nuxt-i18n', {
-      baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+      baseUrl: process.env.BASE_URL || 'http://localhost:80'
     }],
     'cookie-universal-nuxt',
     'vue-scrollto/nuxt',
@@ -165,12 +167,8 @@ export default {
   },
 
   publicRuntimeConfig: {
-    middlewareUrl: process.env.MIDDLEWARE_URL || 'http://localhost:3000/api/',
+    middlewareUrl: process.env.MIDDLEWARE_URL || `http://localhost:${appPort}/api/`,
     theme
-  },
-
-  privateRuntimeConfig: {
-    middlewareUrl: 'http://localhost:80/api/',
   },
 
   pwa: {
@@ -179,3 +177,9 @@ export default {
     }
   }
 };
+
+if (process.env.middlewareUrl) {
+  config.privateRuntimeConfig = `http://localhost:${appPort}/api/`;
+}
+
+export default config;
