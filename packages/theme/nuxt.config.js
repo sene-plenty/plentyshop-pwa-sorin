@@ -13,9 +13,9 @@ const config = {
   head: {
     title: 'Vue Storefront',
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      {charset: 'utf-8'},
+      {name: 'viewport', content: 'width=device-width, initial-scale=1'},
+      {hid: 'description', name: 'description', content: process.env.npm_package_description || ''}
     ],
     link: [
       {
@@ -35,7 +35,7 @@ const config = {
     ]
   },
 
-  loading: { color: '#fff' },
+  loading: {color: '#fff'},
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -93,18 +93,18 @@ const config = {
     currency: 'USD',
     country: 'US',
     countries: [
-      { name: 'US', label: 'United States', states: ['California', 'Nevada'] },
-      { name: 'AT', label: 'Austria' },
-      { name: 'DE', label: 'Germany' },
-      { name: 'NL', label: 'Netherlands' }
+      {name: 'US', label: 'United States', states: ['California', 'Nevada']},
+      {name: 'AT', label: 'Austria'},
+      {name: 'DE', label: 'Germany'},
+      {name: 'NL', label: 'Netherlands'}
     ],
     currencies: [
-      { name: 'EUR', label: 'Euro' },
-      { name: 'USD', label: 'Dollar' }
+      {name: 'EUR', label: 'Euro'},
+      {name: 'USD', label: 'Dollar'}
     ],
     locales: [
-      { code: 'en', label: 'English', file: 'en.js', iso: 'en' },
-      { code: 'de', label: 'German', file: 'de.js', iso: 'de' }
+      {code: 'en', label: 'English', file: 'en.js', iso: 'en'},
+      {code: 'de', label: 'German', file: 'de.js', iso: 'de'}
     ],
     defaultLocale: 'en',
     lazy: true,
@@ -129,7 +129,7 @@ const config = {
   },
 
   styleResources: {
-    scss: [require.resolve('@storefront-ui/shared/styles/_helpers.scss', { paths: [process.cwd()] })]
+    scss: [require.resolve('@storefront-ui/shared/styles/_helpers.scss', {paths: [process.cwd()]})]
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -179,7 +179,9 @@ const config = {
 };
 
 if (process.env.middlewareUrl) {
-  config.privateRuntimeConfig = `http://localhost:${appPort}/api/`;
+  config.privateRuntimeConfig = {
+    middlewareUrl: `http://localhost:${appPort}/api/`
+  }
 }
 
 export default config;
