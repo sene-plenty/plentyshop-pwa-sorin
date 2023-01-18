@@ -7,10 +7,10 @@ RUN apk add dumb-init
 
 # create destination directory
 
-EXPOSE 80
+EXPOSE 3000
 
 ENV NUXT_HOST=0.0.0.0
-ENV NUXT_PORT=80
+ENV NUXT_PORT=3000
 
 # copy the app, note .dockerignore
 COPY . /app
