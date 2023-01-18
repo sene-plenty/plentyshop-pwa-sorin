@@ -3,7 +3,7 @@ import theme from './themeConfig';
 
 export default {
   server: {
-    port: 80,
+    port: 3000,
     host: '0.0.0.0'
   },
 
@@ -80,7 +80,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     ['nuxt-i18n', {
-      baseUrl: process.env.BASE_URL || 'http://localhost:80'
+      baseUrl: process.env.BASE_URL || 'http://localhost:3000'
     }],
     'cookie-universal-nuxt',
     'vue-scrollto/nuxt',
@@ -165,7 +165,7 @@ export default {
   },
 
   publicRuntimeConfig: {
-    middlewareUrl: process.env.MIDDLEWARE_URL || 'http://localhost:80/api/',
+    middlewareUrl: process.env.MIDDLEWARE_URL || 'http://localhost:3000/api/',
     theme
   },
 
