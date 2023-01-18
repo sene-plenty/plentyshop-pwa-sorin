@@ -178,7 +178,7 @@ const config = {
   }
 };
 
-if (process.env.middlewareUrl) {
+if (process.env.MIDDLEWARE_URL) {
   config.privateRuntimeConfig = {
     middlewareUrl: `http://localhost:${appPort}/api/`
   }
