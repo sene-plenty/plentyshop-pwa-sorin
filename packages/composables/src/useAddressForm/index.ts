@@ -44,6 +44,16 @@ export const useAddressForm = (addresses: Ref<Address[]>): any => {
   const closeForm = () => {
     editAddress.value = false;
   };
+  const createOrUpdateLabel = () => {
+    console.log('entered function');
+    if (addresses.value?.length > 0 && editedAddress.value !== -1) {
+      console.log('var 1');
+      return true;
+    } else if (addresses.value?.length === 0 || editedAddress.value === -1) {
+      console.log('var 2');
+      return false;
+    }
+  };
 
   return {
     editAddress,
@@ -52,6 +62,7 @@ export const useAddressForm = (addresses: Ref<Address[]>): any => {
     form,
     closeForm,
     resetForm,
-    changeAddress
+    changeAddress,
+    createOrUpdateLabel
   };
 };
