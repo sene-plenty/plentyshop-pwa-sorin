@@ -46,12 +46,9 @@ export const useAddressForm = (addresses: Ref<Address[]>): any => {
   };
 
   const createOrUpdateLabel = computed(() => {
-    console.log('entered function');
     if (addresses.value?.length > 0 && editedAddress.value !== -1) {
-      console.log('var 1');
       return true;
     } else if (addresses.value?.length === 0 || editedAddress.value === -1) {
-      console.log('var 2');
       return false;
     }
   });
