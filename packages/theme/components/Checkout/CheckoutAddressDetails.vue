@@ -17,22 +17,20 @@
         ></AddressInputForm>
         <div class="buttons">
           <SfButton
+            v-if="inEditState"
             type="submit"
             @click.prevent="submit()"
-            class="action-button"
+            class="action-button update-button"
             data-e2e="update-address-button"
           >
-            <template v-if="createOrUpdateLabel">{{
+            <template v-if="inEditState">{{
               $t('Update the address')
-            }}</template>
-            <template v-if="!createOrUpdateLabel">{{
-              $t('Create address')
             }}</template>
           </SfButton>
           <SfButton
             v-if="(addressList.length > 0)"
             type="button"
-            class="action-button color-secondary cancel-button"
+            class="action-button color-secondary"
             data-e2e="close-address-button"
             @click="closeForm"
           >
@@ -44,14 +42,14 @@
         <transition-group tag="div" :name="transition" class="shipping-list">
           <slot name="shipping-list">
             <AddressCard v-for="(address, key) in addressList"
-                            class="shipping"
-                            :key="address.id"
-                            :address="address"
-                            :countries="countries"
-                            @set-default-address="setDefaultAddress(address)"
-                            @change-address="changeAddress(key)"
-                            @delete-address="deleteAddress(address)">
-            </AddressCard>
+              class="shipping"
+              :key="address.id"
+              :address="address"
+              :countries="countries"
+              @set-default-address="setDefaultAddress(address)"
+              @change-address="changeAddress(key)"
+              @delete-address="deleteAddress(address)">
+              </AddressCard>
           </slot>
         </transition-group>
         <SfButton
@@ -66,7 +64,7 @@
   </div>
 </template>
 <script>
-import { toRef } from '@nuxtjs/composition-api';
+import { toRef, useRouter, computed } from '@nuxtjs/composition-api';
 import { useAddressForm } from '@vue-storefront/plentymarkets';
 import AddressInputForm from '~/components/AddressInputForm';
 import AddressCard from '~/components/AddressCard';
@@ -109,7 +107,7 @@ export default {
     }
   },
 
-  setup(props, { emit, refs }) {
+  setup(props, { emit, refs, root }) {
     const {
       form,
       addresses: addressList,
@@ -117,21 +115,23 @@ export default {
       editedAddress,
       changeAddress,
       resetForm,
-      closeForm,
-      createOrUpdateLabel
+      closeForm
     } = useAddressForm(toRef(props, 'addresses'));
+
+    const router = useRouter();
 
     const setDefaultAddress = (address) => {
       emit('set-default-address', address);
     };
 
-    const submit = async () => {
+    const submit = async (path = '/checkout/billing') => {
       const addressForm = await refs.addressForm.validate();
 
       if (addressForm) {
         form.value = addressForm.value;
         closeForm();
-        emit('update-address', { ...form.value });
+        await emit('update-address', { ...form.value });
+        router.push(root.localePath(path));
       }
     };
 
@@ -139,8 +139,13 @@ export default {
       resetForm(address);
       emit('delete-address', address);
     };
+
+    const inEditState = computed(() => editedAddress.value > -1);
+    const inCreateState = computed(() => editedAddress.value === -1);
     return {
       form,
+      inCreateState,
+      inEditState,
       editAddress,
       addressList,
       editedAddress,
@@ -148,24 +153,26 @@ export default {
       setDefaultAddress,
       changeAddress,
       deleteAddress,
-      closeForm,
-      createOrUpdateLabel
+      closeForm
     };
   }
 };
 </script>
 <style lang="scss" scoped>
-  @import '~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss';
-  .shipping-list {
-    max-height: 40vh;
-    overflow-y: auto;
-  }
-  .buttons {
-    display: flex;
-  }
-  .title {
-    --heading-padding: var(--spacer-xl) 0 var(--spacer-base);
-    --heading-title-font-weight: var(--font-weight--bold);
-    --heading-title-font-size: var(--h3-font-size);
-  }
+@import '~@storefront-ui/shared/styles/components/templates/SfShippingDetails.scss';
+.shipping-list {
+  max-height: 40vh;
+  overflow-y: auto;
+}
+.buttons {
+  display: flex;
+}
+.update-button {
+  margin-right: var(--spacer-sm);
+}
+.title {
+  --heading-padding: var(--spacer-xl) 0 var(--spacer-base);
+  --heading-title-font-weight: var(--font-weight--bold);
+  --heading-title-font-size: var(--h3-font-size);
+}
 </style>

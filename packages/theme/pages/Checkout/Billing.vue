@@ -2,6 +2,7 @@
   <div id="billing" v-if="!loading">
     <CheckoutAddressDetails
       :type="'billing'"
+      ref="CheckoutAddressDetailsRef"
       :addresses="billing"
       :countries="countries"
       :headingTitle="$t('Billing details')"
@@ -21,8 +22,7 @@
       <SfButton
         data-e2e="continue-to-shipping"
         class="form__action-button"
-        @click="router.push(localePath({ name: 'shipping' }))"
-        :disabled="(billing.length <= 0)"
+        @click="continueToNextStep"
       >
         {{ $t('Continue to shipping') }}
       </SfButton>
@@ -37,7 +37,7 @@ import {
   SfCheckbox,
   SfIcon
 } from '@storefront-ui/vue';
-import { computed, useRouter } from '@nuxtjs/composition-api';
+import { computed, useRouter, ref } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { useActiveShippingCountries, useUserBilling } from '@vue-storefront/plentymarkets';
 import CheckoutAddressDetails from '~/components/Checkout/CheckoutAddressDetails';
@@ -51,8 +51,9 @@ export default {
     SfCheckbox,
     CheckoutAddressDetails
   },
-  setup() {
+  setup(props, {root}) {
     const router = useRouter();
+    const CheckoutAddressDetailsRef = ref(null);
     const { load, loading: loadingBilling, billing, setDefaultAddress, deleteAddress, addAddress } = useUserBilling();
     const { load: loadActiveShippingCountries, loading: loadingCountry, result: countries } = useActiveShippingCountries();
 
@@ -65,7 +66,17 @@ export default {
       await loadActiveShippingCountries();
     });
 
+    const continueToNextStep = () => {
+      if (CheckoutAddressDetailsRef.value.inCreateState) {
+        CheckoutAddressDetailsRef.value.submit('/checkout/shipping');
+      } else {
+        router.push(root.localePath({name: 'shipping'}));
+      }
+    };
+
     return {
+      CheckoutAddressDetailsRef,
+      continueToNextStep,
       setDefaultAddress,
       deleteAddress,
       addAddress,

@@ -11,6 +11,8 @@
     </div>
     <div v-if="!sameAsShipping">
       <CheckoutAddressDetails
+        ref="CheckoutAddressDetailsRef"
+        class="spacer-top"
         :type="'shipping'"
         :addresses="shipping"
         :countries="countries"
@@ -22,22 +24,22 @@
       />
     </div>
     <div class="spacer-top buttons">
-      <SfButton
-        class="sf-button color-secondary form__back-button"
-        type="button"
-        @click="router.push(localePath({ name: 'billing' }))"
-      >
-        {{ $t('Go back') }}
-      </SfButton>
-      <SfButton
-        data-e2e="continue-to-payment"
-        class="form__action-button"
-        @click="submit"
-        :disabled="shipping.length <= 0 && !sameAsShipping"
-      >
-        {{ $t('Continue to payment') }}
-      </SfButton>
-    </div>
+          <SfButton
+            class="sf-button color-secondary form__back-button"
+            type="button"
+            @click="router.push(localePath({ name: 'billing' }))"
+          >
+            {{ $t('Go back') }}
+          </SfButton>
+          <SfButton
+            data-e2e="continue-to-payment"
+            class="form__action-button"
+            @click="continueToNextStep"
+            :disabled="shipping.length <= 0 && !sameAsShipping"
+          >
+            {{ $t('Continue to payment') }}
+          </SfButton>
+      </div>
   </div>
 </template>
 
@@ -58,7 +60,8 @@ export default {
     SfCheckbox,
     CheckoutAddressDetails
   },
-  setup(props, context) {
+  setup(props, {root}) {
+    const CheckoutAddressDetailsRef = ref(null);
     const sameAsShipping = ref(false);
     const router = useRouter();
     const { load, loading: loadingBilling, shipping, setDefaultAddress, deleteAddress, addAddress } = useUserShipping();
@@ -73,15 +76,23 @@ export default {
       await loadActiveShippingCountries();
     });
 
-    const submit = async () => {
+    const continueToNextStep = async () => {
+
       if (sameAsShipping.value) {
         await addAddress({address: false});
+        router.push(root.localePath({name: 'payment' }));
       }
-      router.push(context.root.localePath('payment'));
+
+      if (CheckoutAddressDetailsRef.value.inCreateState) {
+        CheckoutAddressDetailsRef.value.submit('/checkout/payment');
+      } else {
+        router.push(root.localePath({name: 'payment' }));
+      }
     };
 
     return {
-      submit,
+      CheckoutAddressDetailsRef,
+      continueToNextStep,
       sameAsShipping,
       setDefaultAddress,
       deleteAddress,
