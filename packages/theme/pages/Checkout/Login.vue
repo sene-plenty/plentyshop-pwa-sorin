@@ -5,7 +5,7 @@
       :value="{}"
       :buttonText="$t('Login.Log into your account')"
       :logInInfo="$t('Login.or fill in the details below')"
-      :headingTitle="$t('Login.Personal details')"
+      :headingTitle="$t('Login.User data')"
       :headingTitleLevel="2"
       :inputsLabels="[$t('Login.First name'),$t('Login.Last name'),$t('Login.Email')]"
       :additionalDetails="$t('Login.Enjoy your free account')"
