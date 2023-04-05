@@ -1,11 +1,6 @@
 name: Test & Lint
 
 on:
-  push:
-    branches:
-      - master
-      - main
-      - develop
   pull_request:
     branches:
       - master
@@ -18,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
           cache: 'yarn'
@@ -35,10 +30,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
           cache: 'yarn'
@@ -50,15 +45,18 @@ jobs:
         run: yarn lint
 
   test:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
     name: Test all packages
     needs: prepare_dependencies
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
           cache: 'yarn'
