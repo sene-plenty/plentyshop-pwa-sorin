@@ -259,6 +259,9 @@ export default {
 </script>
 
   <style lang="scss" scoped>
+  body {
+    background:red!important;
+  }
   #home {
     box-sizing: border-box;
     padding: 0 var(--spacer-sm);
