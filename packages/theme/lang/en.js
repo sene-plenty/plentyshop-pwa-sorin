@@ -152,7 +152,7 @@ export default {
   'Home': {
     'Cocktail & Party': 'Cocktail & Party',
     'Cocktail dresses and party dresses': `Find stunning women's cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.`,
-    'Colorful summer dresses are already in store': 'Colorful summer dresses are already in store',
+    'Colorful summer dresses are already in store': 'Colorfulllllll summerrrrrrr dresses are already in store',
     'Cream Beach Bag': 'Cream Beach Bag',
     'Cream Beach Bag 2': 'Cream Beach Bag 2',
     'Cream Beach Bag 3': 'Cream Beach Bag 3',
