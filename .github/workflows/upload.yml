@@ -23,11 +23,8 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Create Zip Archive
-        uses: vimtor/action-zip@v1
-        with:
-          files: ./
-          dest: filename.zip
+      - name: Zip App
+        run: zip -r filename.zip .
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
