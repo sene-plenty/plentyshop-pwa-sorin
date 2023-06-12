@@ -24,7 +24,7 @@ jobs:
         run: yarn build
 
       - name: Zip App
-        run: zip -ry filename.zip .
+        run: zip -rXy filename.zip .
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
