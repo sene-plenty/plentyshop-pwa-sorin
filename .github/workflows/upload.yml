@@ -24,7 +24,7 @@ jobs:
         run: yarn build
 
       - name: Zip App
-        run: zip -rXy filename.zip .
+        run: tar -czvf pwa.tgz .
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
@@ -44,4 +44,4 @@ jobs:
         with:
           url: ${{ secrets.S3_UPLOAD_URL }}
           forms: '{ "tokenName": "${{ secrets.S3_UPLOAD_TOKEN }}" }'
-          fileForms: '{ "filename": "${{ github.workspace }}/filename.zip" }'
+          fileForms: '{ "filename": "${{ github.workspace }}/pwa.tgz" }'
