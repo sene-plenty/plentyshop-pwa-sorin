@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: zipped-artifact
-          path: ${{ github.workspace }}/filename.zip
+          path: ${{ github.workspace }}/pwa.tgz
 
       - name: Download Artifact
         uses: actions/download-artifact@v3
