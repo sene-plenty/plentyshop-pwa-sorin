@@ -24,7 +24,7 @@ jobs:
         run: yarn build
 
       - name: Zip App
-        run: tar -czvf pwa.tgz .
+        run: tar cvzf pwa.tgz .
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
