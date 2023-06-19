@@ -24,7 +24,7 @@ jobs:
         run: yarn build
 
       - name: Archive App
-        run: tar cfvz pwa.tar.gz . --exclude='.git'
+        run: tar cfvz pwa.tar.gz . --exclude=.github/
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
