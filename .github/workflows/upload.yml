@@ -23,8 +23,22 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Archive App
-        run: tar cfvz pwa.tar.gz . --exclude=.github/
+  archive-repository:
+    runs-on: ubuntu-latest
+    needs: install-and-build-dependencies
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Compress action step
+        uses: a7ul/tar-action@v1.1.0
+        id: compress
+        with:
+         command: c
+         cwd: ./
+         files: |
+           ./
+         outPath: pwa.tar.gz
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
@@ -34,7 +48,7 @@ jobs:
 
   send-zip:
     runs-on: ubuntu-latest
-    needs: install-and-build-dependencies
+    needs: archive-repository
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v3
