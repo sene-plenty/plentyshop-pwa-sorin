@@ -23,17 +23,14 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Create Zip Archive
-        uses: vimtor/action-zip@v1
-        with:
-          files: ./packages/theme
-          dest: filename.zip
+      - name: Zip App
+        run: tar cvzf pwa.tar.gz .
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: zipped-artifact
-          path: ${{ github.workspace }}/filename.zip
+          path: ${{ github.workspace }}/pwa.tar.gz
 
       - name: Download Artifact
         uses: actions/download-artifact@v3
@@ -47,4 +44,4 @@ jobs:
         with:
           url: ${{ secrets.URL_ENDPOINT }}
           forms: '{ "tokenName": "${{ secrets.URL_ENDPOINT_TOKEN }}" }'
-          fileForms: '{ "filename": "${{ github.workspace }}/filename.zip" }'
+          fileForms: '{ "filename": "${{ github.workspace }}/pwa.tar.gz" }'
