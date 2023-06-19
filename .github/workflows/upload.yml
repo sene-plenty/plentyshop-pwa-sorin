@@ -28,7 +28,7 @@ jobs:
     needs: install-and-build-dependencies
     steps:
       - name: Archive App
-        run: tar cfvz pwa.tar.gz ./
+        run: tar cfvz pwa.tar.gz . --exclude='./pwa.tar.gz'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
