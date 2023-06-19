@@ -23,14 +23,7 @@ jobs:
       - name: Build
         run: yarn build
 
-  archive-repository:
-    runs-on: ubuntu-latest
-    needs: install-and-build-dependencies
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Compress action step
+      - name: Compress repo to Tar
         uses: a7ul/tar-action@v1.1.0
         id: compress
         with:
@@ -48,7 +41,7 @@ jobs:
 
   send-zip:
     runs-on: ubuntu-latest
-    needs: archive-repository
+    needs: install-and-build-dependencies
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v3
