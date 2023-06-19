@@ -23,10 +23,6 @@ jobs:
       - name: Build
         run: yarn build
 
-  tar-archive:
-    runs-on: ubuntu-latest
-    needs: install-and-build-dependencies
-    steps:
       - name: Archive App
         run: tar cfvz pwa.tar.gz . --exclude='./pwa.tar.gz'
 
