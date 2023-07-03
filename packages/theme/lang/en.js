@@ -369,7 +369,8 @@ const en = {
     'Read reviews': 'Read reviews',
     'Reviews': 'Reviews',
     'Size guide': '@:App.sizeGuide',
-    'Try a different language': 'Try a different language'
+    'Try a different language': 'Try a different language',
+    'Content': 'Content'
   },
   // SearchResults
   'SearchResults': {

@@ -37,13 +37,21 @@
               />
             </div>
             <div class="product__price-and-rating">
-              <SfPrice
-                :regular="$n(productGetters.getRegularPrice(product), 'currency')"
-                :special="
-                  productGetters.getSpecialPrice(product) &&
-                    $n(productGetters.getSpecialPrice(product), 'currency')
-                "
-              />
+              <div>
+                <SfPrice
+                  :regular="
+                    $n(productGetters.getRegularPrice(product), 'currency')
+                  "
+                  :special="
+                    productGetters.getSpecialPrice(product) &&
+                      $n(productGetters.getSpecialPrice(product), 'currency')
+                  "
+                />
+                <BasePrice
+                  :product="product"
+                  :content-line-first="true"
+                />
+              </div>
               <div>
                 <div class="product__rating">
                   <SfRating
@@ -90,7 +98,10 @@
 
               <PayPalExpressButton
                 class="mt-4"
-                :value="{ type: 'SingleItem', data: { product, quantity: parseInt(qty) } }"
+                :value="{
+                  type: 'SingleItem',
+                  data: { product, quantity: parseInt(qty) },
+                }"
                 :disabled="loading || !isAttributeSelectionValid"
               />
             </div>
@@ -230,14 +241,19 @@ export default {
     LazyHydrate,
     AttributeSelection,
     SfImage,
-    SfLoader
+    SfLoader,
+    BasePrice: () => import('~/components/BasePrice')
   },
   transition: 'fade',
   setup() {
     const qty = ref(1);
     const route = useRoute();
     const th = useUiHelpers();
-    const { products, search, loading: productLoadingState } = useProduct('products');
+    const {
+      products,
+      search,
+      loading: productLoadingState
+    } = useProduct('products');
     const {
       products: relatedProducts,
       search: searchRelatedProducts,
@@ -261,7 +277,9 @@ export default {
     const stock = ref(5);
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
-    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value, breadcrumbCategories.value));
+    const breadcrumbs = computed(() =>
+      productGetters.getBreadcrumbs(product.value, breadcrumbCategories.value)
+    );
     const productGallery = computed(() =>
       productGetters.getGallery(product.value).map((img) => ({
         mobile: { url: addBasePath(img.small) },
@@ -290,7 +308,9 @@ export default {
     onSSR(async () => {
       await search({ id: id.value });
       await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
-      await searchReviews({ productId: productGetters.getItemId(product.value)});
+      await searchReviews({
+        productId: productGetters.getItemId(product.value)
+      });
     });
 
     return {

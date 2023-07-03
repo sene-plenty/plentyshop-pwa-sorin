@@ -367,7 +367,8 @@ const de = {
     'Read reviews': 'Bewertungen lesen',
     'Reviews': 'Bewertungen',
     'Size guide': '@:App.sizeGuide',
-    'Try a different language': 'Versuche die Sprache zu wechseln'
+    'Try a different language': 'Versuche die Sprache zu wechseln',
+    'Content': 'Inhalt'
   },
   // SearchResults
   'SearchResults': {
