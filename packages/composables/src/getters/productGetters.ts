@@ -5,7 +5,12 @@ import {
   ProductGetters,
   AgnosticBreadcrumb
 } from '@vue-storefront/core';
-import type { CategoryTreeItem, Product, ProductFilter, ProductVariation } from '@vue-storefront/plentymarkets-api';
+import type {
+  CategoryTreeItem,
+  Product,
+  ProductFilter,
+  ProductVariation
+} from '@vue-storefront/plentymarkets-api';
 import { productImageFilter } from '../helpers/productImageFilter';
 import { categoryTreeGetters } from './categoryTreeGetters';
 
@@ -43,12 +48,18 @@ function getGallery(product: Product): AgnosticMediaGalleryItem[] {
   return productImageFilter(product);
 }
 
-function getBreadcrumbs(product: Product, categories?: CategoryTreeItem[]): AgnosticBreadcrumb [] {
+function getBreadcrumbs(
+  product: Product,
+  categories?: CategoryTreeItem[]
+): AgnosticBreadcrumb[] {
   if (categories.length <= 0 || !product) {
     return [];
   }
 
-  const breadcrumbs = categoryTreeGetters.getMappedBreadcrumbs(categories, product.defaultCategories[0].id);
+  const breadcrumbs = categoryTreeGetters.getMappedBreadcrumbs(
+    categories,
+    product.defaultCategories[0].id
+  );
 
   return [
     {
@@ -84,9 +95,9 @@ function getAttributes(products: Product[], filterByAttributeName?: string[]): R
   // const productList = isSingleProduct ? [products] : products;
   const attributes = {};
 
-  products.forEach(product => {
-    product.variationAttributeMap?.attributes.forEach(attribute => {
-      attribute.values.forEach(attributeValue => {
+  products.forEach((product) => {
+    product.variationAttributeMap?.attributes.forEach((attribute) => {
+      attribute.values.forEach((attributeValue) => {
         if (!attributes[attribute.attributeId]) {
           attributes[attribute.attributeId] = {
             name: attribute.name,
@@ -94,7 +105,9 @@ function getAttributes(products: Product[], filterByAttributeName?: string[]): R
             label: attribute.name
           } as AgnosticAttribute;
         } else {
-          attributes[attribute.attributeId].value[attributeValue.attributeValueId] = attributeValue.name;
+          attributes[attribute.attributeId].value[
+            attributeValue.attributeValueId
+          ] = attributeValue.name;
         }
       });
     });
@@ -108,7 +121,7 @@ function getUnits(products: Product[]): Record<number, string> {
   // const productList = isSingleProduct ? [products] : products;
   const units = {};
 
-  products.forEach(product => {
+  products.forEach((product) => {
     if (product.variationAttributeMap?.variations) {
       for (const variation of product.variationAttributeMap.variations) {
         units[variation.unitCombinationId] = variation.unitName;
@@ -119,21 +132,36 @@ function getUnits(products: Product[]): Record<number, string> {
   return units;
 }
 
-function getVariationIdForAttributes(product: Product, selectedAttributes: Record<number, string>, unitCombinationId: string | null): number {
+function getVariationIdForAttributes(
+  product: Product,
+  selectedAttributes: Record<number, string>,
+  unitCombinationId: string | null
+): number {
   const variations = product?.variationAttributeMap?.variations || [];
 
-  const result = variations.find(variation => {
-    if (unitCombinationId && parseInt(unitCombinationId) !== variation.unitCombinationId) {
+  const result = variations.find((variation) => {
+    if (
+      unitCombinationId &&
+      parseInt(unitCombinationId) !== variation.unitCombinationId
+    ) {
       return false;
     }
 
     for (const selectedAttributeId in selectedAttributes) {
-      const selectedAttributeValueId = parseInt(selectedAttributes[selectedAttributeId]);
+      const selectedAttributeValueId = parseInt(
+        selectedAttributes[selectedAttributeId]
+      );
 
-      const variationAttribute = variation.attributes.find(variationAttribute =>
-        variationAttribute.attributeId === parseInt(selectedAttributeId));
+      const variationAttribute = variation.attributes.find(
+        (variationAttribute) =>
+          variationAttribute.attributeId === parseInt(selectedAttributeId)
+      );
 
-      if ((variationAttribute && variationAttribute.attributeValueId !== selectedAttributeValueId) || (!variationAttribute && selectedAttributeValueId !== NO_SELECTION_ID)) {
+      if (
+        (variationAttribute &&
+          variationAttribute.attributeValueId !== selectedAttributeValueId) ||
+        (!variationAttribute && selectedAttributeValueId !== NO_SELECTION_ID)
+      ) {
         return false;
       }
     }
@@ -144,8 +172,13 @@ function getVariationIdForAttributes(product: Product, selectedAttributes: Recor
   return result?.variationId;
 }
 
-function getVariariationById(product: Product, variationId: number): ProductVariation {
-  return product.variationAttributeMap.variations.find(variation => variation.variationId === variationId);
+function getVariariationById(
+  product: Product,
+  variationId: number
+): ProductVariation {
+  return product.variationAttributeMap.variations.find(
+    (variation) => variation.variationId === variationId
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -164,7 +197,11 @@ function getTechnicalData(product: Product): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCategoryIds(product: Product): string[] {
-  return product?.defaultCategories?.map(category => category.id.toString()) ?? [''];
+  return (
+    product?.defaultCategories?.map((category) => category.id.toString()) ?? [
+      ''
+    ]
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -187,6 +224,24 @@ function getTotalReviews(product: Product): number {
   return Number(product?.feedback?.counts?.ratingsCountTotal);
 }
 
+function showPricePerUnit(product: Product): Boolean {
+  return !(
+    product.unit.unitOfMeasurement === 'C62' && product.unit.content === 1
+  );
+}
+
+function getUnitContent(product: Product): number {
+  return Number(product?.unit?.content);
+}
+
+function getUnitName(product: Product): String {
+  return product?.unit?.names?.name;
+}
+
+function getDefaultBaseSinglePrice(product: Product): number {
+  return product?.prices?.default?.baseSinglePrice;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAverageRating(product: Product): number {
   return Number(product?.feedback?.counts?.averageValue);
@@ -198,6 +253,10 @@ function getMaxRating(product: Product): number {
 }
 
 export const productGetters: ProductGetters<Product, ProductFilter> = {
+  getUnitContent,
+  showPricePerUnit,
+  getUnitName,
+  getDefaultBaseSinglePrice,
   getName,
   getSlug,
   getPrice,

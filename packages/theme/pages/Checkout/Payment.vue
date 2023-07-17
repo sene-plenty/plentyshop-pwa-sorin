@@ -44,7 +44,10 @@
           </div>
         </SfTableData>
         <SfTableData
-          v-for="(value, key) in cartGetters.getItemAttributes(product, ['size', 'color'])"
+          v-for="(value, key) in cartGetters.getItemAttributes(product, [
+            'size',
+            'color',
+          ])"
           :key="key"
           class="table__data"
         >
@@ -54,9 +57,40 @@
           {{ cartGetters.getItemQty(product) }}
         </SfTableData>
         <SfTableData class="table__data price">
+          <div v-if="productGetters.showPricePerUnit(product.variation)">
+            <div class="sf-price">
+              <span class="sf-price__regular display-none">{{
+                $n(
+                  productGetters.getRegularPrice(product.variation),
+                  'currency'
+                )
+              }}</span>
+              <del class="sf-price__old">{{
+                $n(
+                  productGetters.getRegularPrice(product.variation),
+                  'currency'
+                )
+              }}</del>
+              <ins class="sf-price__special">{{
+                productGetters.getSpecialPrice(product.variation) &&
+                  $n(
+                    productGetters.getSpecialPrice(product.variation),
+                    'currency'
+                  )
+              }}</ins>
+            </div>
+            <BasePrice
+              :product="product.variation"
+              :content-line-first="false"
+            />
+          </div>
           <SfPrice
+            v-else
             :regular="$n(cartGetters.getRegularItemPrice(product), 'currency')"
-            :special="cartGetters.getSpecialItemPrice(product) && $n(cartGetters.getSpecialItemPrice(product), 'currency')"
+            :special="
+              cartGetters.getSpecialItemPrice(product) &&
+                $n(cartGetters.getSpecialItemPrice(product), 'currency')
+            "
             class="product-price"
           />
         </SfTableData>
@@ -73,7 +107,8 @@
         >
           <template #label>
             <div class="sf-checkbox__label">
-              {{ $t('Payment.I agree to') }} <SfLink link="#">
+              {{ $t('Payment.I agree to') }}
+              <SfLink link="#">
                 {{ $t('Payment.Terms and conditions') }}
               </SfLink>
             </div>
@@ -85,12 +120,20 @@
           class="summary__action"
         >
           <SfButton
+            v-if="paymentMethodId !== paypalPaymentId"
             :disabled="loading || !terms"
             class="summary__action-button"
             @click="processOrder"
           >
             {{ $t('Payment.Make an order') }}
           </SfButton>
+
+          <PayPalExpressButton
+            v-if="paymentMethodId === paypalPaymentId"
+            :value="{ type: 'Checkout' }"
+            :disabled="loading || !terms"
+            class="min-w-full"
+          />
         </div>
       </div>
     </div>
@@ -107,10 +150,18 @@ import {
   SfLink
 } from '@storefront-ui/vue';
 import { onSSR } from '@vue-storefront/core';
-import { ref, computed, useRouter } from '@nuxtjs/composition-api';
-import { useMakeOrder, useCart, cartGetters, orderGetters, useShippingProvider, usePaymentProvider } from '@vue-storefront/plentymarkets';
+import { ref, computed, useRouter, useContext } from '@nuxtjs/composition-api';
+import {
+  useMakeOrder,
+  useCart,
+  cartGetters,
+  productGetters,
+  orderGetters,
+  useShippingProvider,
+  usePaymentProvider,
+  paypalGetters
+} from '@vue-storefront/plentymarkets';
 import { addBasePath } from '@vue-storefront/core';
-import { v4 as uuid } from 'uuid';
 
 export default {
   name: 'ReviewOrder',
@@ -121,22 +172,29 @@ export default {
     SfImage,
     SfPrice,
     SfLink,
-    VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider'),
-    VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider'),
-    CartTotals: () => import('~/components/CartTotals')
+    VsfPaymentProvider: () =>
+      import('~/components/Checkout/VsfPaymentProvider'),
+    VsfShippingProvider: () =>
+      import('~/components/Checkout/VsfShippingProvider'),
+    CartTotals: () => import('~/components/CartTotals'),
+    PayPalExpressButton: () =>
+      import('~/components/PayPal/PayPalExpressButton'),
+    BasePrice: () => import('~/components/BasePrice')
   },
-  setup(props, context) {
+  setup() {
+    const { app } = useContext();
     const router = useRouter();
     const { cart, load, setCart } = useCart();
     const { order, make, loading } = useMakeOrder();
     const { load: loadShippingProvider } = useShippingProvider();
     const { load: loadPaymentProviders } = usePaymentProvider();
-    const paypalUuid = uuid();
 
     const isPaymentReady = ref(false);
     const terms = ref(false);
     const shippingPrivacyHintAccepted = ref(false);
     const paymentMethodId = ref(0);
+
+    const paypalPaymentId = paypalGetters.getPaymentId();
 
     onSSR(async () => {
       await load();
@@ -150,14 +208,16 @@ export default {
         shippingPrivacyHintAccepted: shippingPrivacyHintAccepted.value
       });
 
-      const thankYouPath = { name: 'thank-you',
+      const thankYouPath = {
+        name: 'thank-you',
         query: {
           orderId: orderGetters.getId(order.value),
           accessKey: orderGetters.getAccessKey(order.value)
-        }};
+        }
+      };
 
-      router.push(context.root.localePath(thankYouPath));
-      setCart({items: []});
+      router.push(app.localePath(thankYouPath));
+      setCart({ items: [] });
     };
 
     const selectionChangedPaymentProvider = (value) => {
@@ -176,9 +236,10 @@ export default {
       totals: computed(() => cartGetters.getTotals(cart.value)),
       tableHeaders: ['Description', 'Size', 'Color', 'Quantity', 'Amount'],
       cartGetters,
+      productGetters,
       processOrder,
       paymentMethodId,
-      paypalUuid,
+      paypalPaymentId,
       selectionChangedPaymentProvider
     };
   }
@@ -262,9 +323,9 @@ export default {
       margin: 0 var(--spacer-xl) 0 0;
       width: auto;
     }
-    color:  var(--c-white);
+    color: var(--c-white);
     &:hover {
-      color:  var(--c-white);
+      color: var(--c-white);
     }
   }
   &__property-total {

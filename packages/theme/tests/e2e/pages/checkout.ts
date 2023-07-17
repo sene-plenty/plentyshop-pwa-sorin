@@ -1,5 +1,6 @@
 import { Customer } from '../types/customer';
 import { el, uniquePlentyMarketsEmail } from './utils/element';
+import page from "~/tests/e2e/pages/factory";
 
 class Checkout {
   protected step: string;
@@ -60,6 +61,10 @@ class CheckoutLogin {
     return el('register-mail-input');
   }
 
+  get step(): Cypress.Chainable {
+    return cy.get('[data-testid=steps-button]').eq(0);
+  }
+
   get continueToBilling(): Cypress.Chainable {
     return el('continue-to-billing');
   }
@@ -80,8 +85,7 @@ class CheckoutLogin {
     this.continueToBilling.click();
   }
 
-  public continueAsGuest(customer: Customer): void {
-    const mail = uniquePlentyMarketsEmail(customer.email);
+  public continueAsGuest(mail: string): void {
     this.email.type(mail);
     this.continueToBilling.click();
   }
@@ -189,7 +193,35 @@ class ThankYou {
   }
 
   visit(orderId, accesskey, postcode): Cypress.Chainable {
-  return cy.visit('/checkout/thank-you?orderId=' + orderId + '&orderAccessKey=' + accesskey + '&postcode=' + postcode);
+    return cy.visit('/checkout/thank-you?orderId=' + orderId + '&orderAccessKey=' + accesskey + '&postcode=' + postcode);
+  }
+
+  validate() {
+    this.heading.should('be.visible');
+
+    this.itemsTable.should('be.visible');
+    cy.get('[data-e2e*="order-item-product-name"]').should('be.visible');
+
+    this.orderSummary.should('be.visible');
+    this.paymentSummary.should('be.visible');
+    this.shippingSummary.should('be.visible');
+    this.orderTotals.should('be.visible');
+
+    cy.get('head meta[name="robots"]').should(
+      'have.attr',
+      'content',
+      'noindex'
+    );
+  }
+}
+
+class ReadyOnlyCheckout {
+  get terms(): Cypress.Chainable {
+    return el('terms');
+  }
+
+  get makeOrderButton(): Cypress.Chainable {
+    return el('order-button');
   }
 }
 
@@ -198,5 +230,6 @@ export {
   Shipping,
   Billing,
   Payment,
-  ThankYou
+  ThankYou,
+  ReadyOnlyCheckout
 };

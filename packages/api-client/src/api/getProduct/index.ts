@@ -9,13 +9,13 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
     url.searchParams.set('variationIds[]', params.id);
     url.searchParams.set('resultFieldTemplate', 'SingleItem');
   } else if (params.term) {
-    url = new URL('/rest/io/item/search', context.config.api.url);
+    url = new URL('/rest/storefront/items', context.config.api.url);
     url.searchParams.set('query', params.term);
   } else {
 
     const categoryId = params.categoryId?.toString() || '16';
 
-    url = new URL('/rest/io/category', context.config.api.url);
+    url = new URL('/rest/storefront/items?type=category', context.config.api.url);
     url.searchParams.set('categoryId', categoryId);
     if (params.limit) {
       url.searchParams.set('items', params.limit);
@@ -43,7 +43,7 @@ export async function getProduct(context: Context, params: ProductsSearchParams)
     return products;
   } else {
     // TODO: load feedback for products
-    return data.data.itemList.documents.map(document => document.data);
+    return data.itemList.documents.map(document => document.data);
   }
 }
 

@@ -227,6 +227,13 @@ export interface OrderDetails {
   }
 }
 
+export interface OrderDocument {
+  pivot: {
+    plenty_document_reference_document_id: String,
+    plenty_document_reference_value: String
+  }
+}
+
 export interface Order {
   order: OrderDetails;
   status: string;
@@ -251,7 +258,6 @@ export type CreateOrderResponse = {
 }
 
 export type GetOrdersResponse = {
-  events: TODO[],
   data: PaginatedResult<Order>
 }
 

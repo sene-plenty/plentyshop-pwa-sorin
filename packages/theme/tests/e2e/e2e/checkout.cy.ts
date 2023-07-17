@@ -24,6 +24,7 @@ context('Order placement', () => {
     cy.intercept('/api/plentymarkets/preparePayment').as('preparePayment');
     cy.intercept('/api/plentymarkets/saveAddress').as('saveAddress');
     cy.intercept('/api/plentymarkets/registerUser').as('registerUser');
+    cy.intercept('/api/plentymarkets/getOrder').as('getOrder');
 
     // With the current data, the first category does not have items. Therefore, we need to replace the
     // following selector: page.home.header.categories.first().click();
@@ -47,9 +48,6 @@ context('Order placement', () => {
     page.checkout.billing.continueToShipping.click();
     cy.wait(['@saveAddress', '@loadAddresses', '@getActiveShippingCountries']);
 
-    cy.get('[data-e2e*="copy-address"]').click();
-    cy.wait('@loadAddresses');
-
     page.checkout.shipping.continueToPaymentButton.click();
     cy.wait(['@saveAddress', '@loadAddresses', '@getShippingProvider', '@getPaymentProviders']);
     cy.get('[data-e2e*="shipping-method"]').should('exist');
@@ -58,23 +56,9 @@ context('Order placement', () => {
     page.checkout.payment.paymentMethods.eq(1).click();
     page.checkout.payment.terms.click();
     page.checkout.payment.makeAnOrderButton.click();
-    cy.wait(['@additionalInformation', '@preparePayment', '@placeOrder', '@executePayment']);
+    cy.wait(['@additionalInformation', '@preparePayment', '@placeOrder', '@executePayment', '@getOrder']);
 
-    page.checkout.thankyou.heading.should('be.visible');
-
-    page.checkout.thankyou.itemsTable.should('be.visible');
-    cy.get('[data-e2e*="order-item-product-name"]').should('be.visible');
-
-    page.checkout.thankyou.orderSummary.should('be.visible');
-    page.checkout.thankyou.paymentSummary.should('be.visible');
-    page.checkout.thankyou.shippingSummary.should('be.visible');
-    page.checkout.thankyou.orderTotals.should('be.visible');
-
-    cy.get('head meta[name="robots"]').should(
-      'have.attr',
-      'content',
-      'noindex'
-    );
+    page.checkout.thankyou.validate();
 
     // TODO: #40624
     // cy.reload()
@@ -98,20 +82,7 @@ context('Check Thank You Page', () => {
 
     cy.wait('@getOrder');
 
-    page.checkout.thankyou.itemsTable.should('be.visible');
-    cy.get('[data-e2e*="order-item-product-name"]').should('be.visible');
-
-    page.checkout.thankyou.documentsList.should('be.visible');
-    page.checkout.thankyou.orderSummary.should('be.visible');
-    page.checkout.thankyou.paymentSummary.should('be.visible');
-    page.checkout.thankyou.shippingSummary.should('be.visible');
-    page.checkout.thankyou.orderTotals.should('be.visible');
-
-    cy.get('head meta[name="robots"]').should(
-      'have.attr',
-      'content',
-      'noindex'
-    );
+    page.checkout.thankyou.validate();
   });
 });
 

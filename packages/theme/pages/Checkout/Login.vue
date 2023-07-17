@@ -37,9 +37,9 @@
   </div>
 </template>
 <script>
-import { useRouter, watch, ref } from '@nuxtjs/composition-api';
+import { useRouter, watch, ref, useContext } from '@nuxtjs/composition-api';
 import { SfButton } from '@storefront-ui/vue';
-import { useUiState } from '~/composables';
+import { useUiState, useUiNotification } from '~/composables';
 import { useUser } from '@vue-storefront/plentymarkets';
 import PsfPersonalDetails from '~/components/Checkout/PsfPersonalDetails';
 
@@ -49,12 +49,14 @@ export default {
     SfButton,
     PsfPersonalDetails
   },
-  setup(props, {refs, root}) {
+  setup(props, {refs}) {
 
     const { isLoginModalOpen, toggleLoginModal } = useUiState();
     const router = useRouter();
-    const { isAuthenticated, register } = useUser();
+    const { isAuthenticated, isGuest, register, error } = useUser();
     const createAccountCheckbox = ref(false);
+    const { app } = useContext();
+    const { send } = useUiNotification();
 
     let user = {
       email: '',
@@ -64,10 +66,20 @@ export default {
     };
 
     watch(isAuthenticated, () => {
-      if (isAuthenticated) {
-        router.push(root.localePath('billing'));
+      if (isAuthenticated.value) {
+        router.push(app.localePath('billing'));
       }
     });
+
+    watch(isGuest, () => {
+      if (isGuest.value) {
+        router.push(app.localePath('billing'));
+      }
+    });
+
+    if (isAuthenticated.value || isGuest.value) {
+      router.push(app.localePath('billing'));
+    }
 
     const logInput = (event) => {
       user = event;
@@ -79,10 +91,13 @@ export default {
       const { isValid } = await refs.PersonalDetails.validate();
 
       if (isValid) {
-        await register({ user });
+        await register(user);
 
-        if (isAuthenticated) {
-          router.push(root.localePath('billing'));
+        if (error.value.register) {
+          send({ message: app.i18n.t('Login.Email exists'), type: 'info', persist: true });
+        }
+        if (isAuthenticated.value || isGuest.value) {
+          router.push(app.localePath('billing'));
         }
       }
     };
@@ -91,6 +106,7 @@ export default {
       user,
       router,
       isAuthenticated,
+      isGuest,
       isLoginModalOpen,
       toggleLoginModal,
       logInput,
